@@ -1,4 +1,8 @@
-import app
+"""
+Imports data from Tableau Dashboard into the database. This assumes the database has been created with the proper
+models and the data exist in the project directory in /data.
+"""
+
 from app import db
 from app.models import TableauDashboardGrade
 import os
@@ -7,7 +11,7 @@ import csv
 
 
 def main():
-    path_to_csv_files = os.path.join(os.path.abspath(os.path.dirname(app.__file__)), '..', 'data')
+    path_to_csv_files = os.path.join(os.path.abspath(os.path.dirname(__file__)), '..', 'data')
     csv_files = [f for f in os.listdir(path_to_csv_files) if re.match(r'.+.csv', f)]
     for csv_file in csv_files:
         csv_reader = csv.DictReader(open(os.path.join(path_to_csv_files, csv_file)))
