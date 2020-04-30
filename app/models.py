@@ -53,6 +53,43 @@ class PAIRReportsGrade(db.Model):
         return f"<PAIRReportsGrade {self.campus.name}-{self.year}{self.session.name}-{self.subject}-{self.course}" \
             f"{self.detail if self.detail != '' else ''}-{self.section}>"
 
+    def to_dict(self):
+        return {
+            "grades": {
+                "0-9%": self.grade_0_9,
+                "10-19%": self.grade_10_19,
+                "20-29%": self.grade_20_29,
+                "30-39%": self.grade_30_39,
+                "40-49%": self.grade_40_49,
+                "<50%": self.grade_lt50,
+                "50-54%": self.grade_50_54,
+                "55-59%": self.grade_55_59,
+                "60-63%": self.grade_60_63,
+                "64-67%": self.grade_64_67,
+                "68-71%": self.grade_68_71,
+                "72-75%": self.grade_72_75,
+                "76-79%": self.grade_76_79,
+                "80-84%": self.grade_80_84,
+                "85-89%": self.grade_85_89,
+                "90-100%": self.grade_90_100
+            },
+            "stats": {
+                "average": self.average,
+                "stdev": self.stdev,
+                "high": self.high,
+                "low": self.low,
+            },
+            "campus": self.campus.name,
+            "year": self.year,
+            "session": self.session.name,
+            "subject": self.subject,
+            "course": self.course,
+            "section": self.section,
+            "title": self.title,
+            "professor": self.professor,
+            "enrolled": self.enrolled
+        }
+
 
 class TableauDashboardGrade(db.Model):
     campus = db.Column(db.Enum(CampusEnum), primary_key=True)  # UBCV or UBCO
@@ -85,3 +122,35 @@ class TableauDashboardGrade(db.Model):
     def __repr__(self):
         return f"<TableauDashboardGrade {self.campus.name}-{self.year}{self.session.name}-{self.subject}-{self.course}" \
             f"{self.detail if self.detail != '' else ''}-{self.section}>"
+
+    def to_dict(self):
+        return {
+            "grades": {
+                "<50%": self.grade_lt50,
+                "50-54%": self.grade_50_54,
+                "55-59%": self.grade_55_59,
+                "60-63%": self.grade_60_63,
+                "64-67%": self.grade_64_67,
+                "68-71%": self.grade_68_71,
+                "72-75%": self.grade_72_75,
+                "76-79%": self.grade_76_79,
+                "80-84%": self.grade_80_84,
+                "85-89%": self.grade_85_89,
+                "90-100%": self.grade_90_100
+            },
+            "stats": {
+                "average": self.average,
+                "stdev": self.stdev,
+                "high": self.high,
+                "low": self.low,
+            },
+            "campus": self.campus.name,
+            "year": self.year,
+            "session": self.session.name,
+            "subject": self.subject,
+            "course": self.course,
+            "section": self.section,
+            "title": self.title,
+            "professor": self.professor,
+            "enrolled": self.enrolled
+        }

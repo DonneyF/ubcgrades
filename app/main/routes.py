@@ -1,6 +1,6 @@
-from app import app
+from app.main import bp
 
 
-@app.route('/')
+@bp.route('/')
 def index():
     return "Hello World!"

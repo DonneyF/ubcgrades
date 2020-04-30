@@ -3,9 +3,27 @@ from config import Config
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
-app = Flask(__name__)
-app.config.from_object(Config)
-db = SQLAlchemy(app)
-migrate = Migrate(app, db)
+db = SQLAlchemy()
+migrate = Migrate()
 
-from app import routes, models
+
+def create_app(config_class=Config):
+    app = Flask(__name__)
+    app.config.from_object(config_class)
+
+    db.init_app(app)
+    migrate.init_app(app, db)
+
+    # Main webpage
+    from app.main import bp as main_bp
+    app.register_blueprint(main_bp)
+
+    # Import API
+    from app.api import bp as api_bp
+    app.register_blueprint(api_bp)
+
+    return app, db
+
+
+from app import models
+
