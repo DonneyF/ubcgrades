@@ -1,0 +1,156 @@
+{% extends "base_site.html" %}
+
+{% block title %} Maps {% endblock title %}
+
+{% block stylesheets %}
+  {{ super() }}
+{% endblock stylesheets %}
+
+{% block header_card %}
+  <div class="card mb-2 mt-4">
+    <!-- Card header -->
+    <div class="card-header">
+      <div class="row">
+        <h1 class="mb-0 col">Statistics by Course</h1>
+        <div class="col-lg-6 col-5 text-right align-self-center">
+          <a href="#" class="btn btn-sm btn-neutral">Submit by ID</a>
+        </div>
+      </div>
+    </div>
+    <!-- Card body -->
+    <div class="card-body">
+      <!-- Form groups used in grid -->
+      <form id="sv-form" class="row">
+        <div class="col-lg col-6">
+          <select id="sv-dropdown-year" class="mb-sm-2 form-control col" required>
+            <option value="" disabled selected>YearSession</option>
+          </select>
+        </div>
+        <div class="col-lg col-6">
+          <select id="sv-dropdown-subject" class="mb-sm-2 form-control col" required>
+            <option value="" disabled selected>Subject</option>
+          </select>
+        </div>
+        <div class="col-lg col-6">
+          <select id="sv-dropdown-course" class="mb-sm-2 form-control col" required>
+            <option value="" disabled selected>Course #</option>
+          </select>
+        </div>
+        <div class="col-lg-2 col-6 text-center">
+          <button id="form-submit-button" class="submit-margin btn btn-xl btn-primary" type="submit">
+            Submit
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}
+
+
+{% block content %}
+
+  {#  {% include "site_template/navigation.html" %}#}
+
+  <div class="container mt--7">
+    <div class="row mb-4">
+      <div class="col-md-3 col-6">
+        <div class="card card-stats mb-4 mb-xl-0">
+          <div class="card-body">
+            <div class="row">
+              <div class="col">
+                <h5 class="card-title text-uppercase text-muted mb-0">Average (All Years)</h5>
+                <span class="h2 font-weight-bold mb-0">81.19</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-6">
+        <div class="card card-stats mb-4 mb-xl-0">
+          <div class="card-body">
+            <div class="row">
+              <div class="col">
+                <h5 class="card-title text-uppercase text-muted mb-0">Average (Past 5 years)</h5>
+                <span class="h2 font-weight-bold mb-0">81.19</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-6">
+        <div class="card card-stats mb-4 mb-xl-0">
+          <div class="card-body">
+            <div class="row">
+              <div class="col">
+                <h5 class="card-title text-uppercase text-muted mb-0">Maximum Grade</h5>
+                <span class="h2 font-weight-bold mb-0">81.19</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-6">
+        <div class="card card-stats mb-4 mb-xl-0">
+          <div class="card-body">
+            <div class="row">
+              <div class="col">
+                <h5 class="card-title text-uppercase text-muted mb-0">Minimum Grade</h5>
+                <span class="h2 font-weight-bold mb-0">81.19</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row mb-4">
+      <div class="col">
+        <div class="card bg-gradient-default shadow">
+          <div class="card-header bg-transparent">
+            <div class="row align-items-center">
+              <div class="col">
+                <h2 class="text-white mb-0">Historical Course Averages</h2>
+              </div>
+              <div class="col">
+                <ul class="nav nav-pills justify-content-end">
+                  <li class="nav-item mr-2 mr-md-0" data-toggle="chart" data-target="#chart-sales"
+                      data-update='{"data":{"datasets":[{"data":[0, 20, 10, 30, 15, 40, 20, 60, 60]}]}}'
+                      data-prefix="$" data-suffix="k">
+                    <a href="#" class="nav-link py-2 px-3 active" data-toggle="tab">
+                      <span class="d-none d-md-block">Past 5 Years</span>
+                      <span class="d-md-none">M</span>
+                    </a>
+                  </li>
+                  <li class="nav-item" data-toggle="chart" data-target="#chart-sales"
+                      data-update='{"data":{"datasets":[{"data":[0, 20, 5, 25, 10, 30, 15, 40, 40]}]}}'
+                      data-prefix="$" data-suffix="k">
+                    <a href="#" class="nav-link py-2 px-3" data-toggle="tab">
+                      <span class="d-none d-md-block">All Years</span>
+                      <span class="d-md-none">W</span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <!-- Chart -->
+            <div class="chart">
+              <!-- Chart wrapper -->
+              <canvas id="chart-sales" class="chart-canvas"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {% include "site_template/footer.html" %}
+
+  </div>
+
+{% endblock content %}
+
+{% block javascripts %}
+  <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>
+  {{ super() }}
+
+{% endblock javascripts %}
