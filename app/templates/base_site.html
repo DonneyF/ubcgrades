@@ -25,7 +25,7 @@
     {% endblock meta %}
 
     <title>
-      Flask Dashboard Argon - {% block title %}{% endblock %} | AppSeed
+      {% block title %}{% endblock %} | UBC Grades
     </title>
 
     {% block stylesheets %}
@@ -38,7 +38,9 @@
       <link href="{{ url_for('static', filename='assets/js/plugins/@fortawesome/fontawesome-free/css/all.min.css') }}"
             rel="stylesheet">
       <!-- CSS Files -->
+      <link href="{{ url_for('static', filename='assets/vendor/select2/dist/css/select2.min.css') }}" rel="stylesheet" >
       <link href="{{ url_for('static', filename='assets/css/argon-dashboard.css') }}" rel="stylesheet">
+      <link href="{{ url_for('static', filename='assets/css/app.css') }}" rel="stylesheet">
     {% endblock stylesheets %}
 
   {% endblock head %}
@@ -72,12 +74,18 @@
   <script src="{{ url_for('static', filename='assets/js/plugins/jquery/dist/jquery.min.js') }}"></script>
   <script src="{{ url_for('static', filename='assets/js/plugins/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
 
+  <script>
+        $(".list-group-item").css('padding', '0.5em 1em 0.5em 1em');
+  </script>
+
   <!-- Optional JS -->
   <script src="{{ url_for('static', filename='assets/js/plugins/chart.js/dist/Chart.min.js') }}"></script>
   <script src="{{ url_for('static', filename='assets/js/plugins/chart.js/dist/Chart.extension.js') }}"></script>
+  <script src="{{ url_for('static', filename='assets/vendor/select2/dist/js/select2.min.js') }}"></script>
 
   <!-- Argon JS -->
   <script src="{{ url_for('static', filename='assets/js/argon-dashboard.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='assets/js/app.js') }}"></script>
 {% endblock javascripts %}
 
 </body>

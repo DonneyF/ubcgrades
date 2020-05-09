@@ -1,5 +1,5 @@
 {% extends "base_site.html" %}
-
+{% set active_page = "statistics_by_course" %}
 {% block title %} Maps {% endblock title %}
 
 {% block stylesheets %}
@@ -21,11 +21,6 @@
     <div class="card-body">
       <!-- Form groups used in grid -->
       <form id="sv-form" class="row">
-        <div class="col-lg col-6">
-          <select id="sv-dropdown-year" class="mb-sm-2 form-control col" required>
-            <option value="" disabled selected>YearSession</option>
-          </select>
-        </div>
         <div class="col-lg col-6">
           <select id="sv-dropdown-subject" class="mb-sm-2 form-control col" required>
             <option value="" disabled selected>Subject</option>
@@ -53,49 +48,33 @@
 
   <div class="container mt--7">
     <div class="row mb-4">
-      <div class="col-md-3 col-6">
-        <div class="card card-stats mb-4 mb-xl-0">
-          <div class="card-body">
-            <div class="row">
+      <div class="col">
+        <div class="card shadow">
+          <div class="card-header bg-gradient-lighter">
+            <div class="row text-center">
               <div class="col">
-                <h5 class="card-title text-uppercase text-muted mb-0">Average (All Years)</h5>
-                <span class="h2 font-weight-bold mb-0">81.19</span>
+                <h3 class="mb-0 text-muted">UBCV MATH 101</h3>
+                <h2 class="mb-0">INT CALC AP PH S</h2>
               </div>
             </div>
           </div>
-        </div>
-      </div>
-      <div class="col-md-3 col-6">
-        <div class="card card-stats mb-4 mb-xl-0">
           <div class="card-body">
             <div class="row">
               <div class="col">
-                <h5 class="card-title text-uppercase text-muted mb-0">Average (Past 5 years)</h5>
-                <span class="h2 font-weight-bold mb-0">81.19</span>
+                <h5 class="text-uppercase text-muted ls-1 mb-1">Average (All Years)</h5>
+                <h2 class="mb-0">60.12</h2>
               </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-3 col-6">
-        <div class="card card-stats mb-4 mb-xl-0">
-          <div class="card-body">
-            <div class="row">
               <div class="col">
-                <h5 class="card-title text-uppercase text-muted mb-0">Maximum Grade</h5>
-                <span class="h2 font-weight-bold mb-0">81.19</span>
+                <h5 class="text-uppercase text-muted ls-1 mb-1">Average (Past 5 years)</h5>
+                <h2 class="mb-0">60.12</h2>
               </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-3 col-6">
-        <div class="card card-stats mb-4 mb-xl-0">
-          <div class="card-body">
-            <div class="row">
               <div class="col">
-                <h5 class="card-title text-uppercase text-muted mb-0">Minimum Grade</h5>
-                <span class="h2 font-weight-bold mb-0">81.19</span>
+                <h5 class="text-uppercase text-muted ls-1 mb-1">Maximum Grade</h5>
+                <h2 class="mb-0">60.12</h2>
+              </div>
+              <div class="col">
+                <h5 class="text-uppercase text-muted ls-1 mb-1">Minimum Grade</h5>
+                <h2 class="mb-0">60.12</h2>
               </div>
             </div>
           </div>
@@ -108,7 +87,7 @@
           <div class="card-header bg-transparent">
             <div class="row align-items-center">
               <div class="col">
-                <h2 class="text-white mb-0">Historical Course Averages</h2>
+                <h2 class="text-white mb-0">Historical Averages</h2>
               </div>
               <div class="col">
                 <ul class="nav nav-pills justify-content-end">
@@ -143,7 +122,87 @@
       </div>
     </div>
 
-    {% include "site_template/footer.html" %}
+    <div class="row">
+      <div class="col">
+        <div class="card shadow">
+          <div class="card-header border-0">
+            <h3 class="mb-0">MATH 101 Teaching Team</h3>
+          </div>
+          <div class="table-responsive">
+            <table class="table align-items-center table-flush">
+              <thead class="thead-light">
+              <tr>
+                <th scope="col">Instructor or TA</th>
+                <th scope="col">YearSessions Active</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr>
+                <th scope="row">
+                  Feldman, Joel
+                </th>
+                <td>
+                  2002W, 2013W, 2015W, 2016W
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">
+                  Nagata, K Wayne
+                </th>
+                <td>
+                  2002W, 2003W, 2005W, 2010W, 2017W
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">
+                  Sjerve, Denis K
+                </th>
+                <td>
+                  2002W
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">
+                  Wetton, Brian
+                </th>
+                <td>
+                  2002W, 2003W, 2005W
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="card-footer py-4">
+            <nav aria-label="...">
+              <ul class="pagination justify-content-end mb-0">
+                <li class="page-item disabled">
+                  <a class="page-link" href="#" tabindex="-1">
+                    <i class="fas fa-angle-left"></i>
+                    <span class="sr-only">Previous</span>
+                  </a>
+                </li>
+                <li class="page-item active">
+                  <a class="page-link" href="#">1</a>
+                </li>
+                <li class="page-item">
+                  <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item">
+                  <a class="page-link" href="#">
+                    <i class="fas fa-angle-right"></i>
+                    <span class="sr-only">Next</span>
+                  </a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% include "site_template/footer.html" %}
 
   </div>
 

@@ -1,0 +1,13 @@
+.select2-results__options {
+   max-height: 400px !important;
+}
+
+.select2-selection--single:before {
+    content: "";
+    position: absolute;
+    right: 7px;
+    top: 42%;
+    border-top: 5px solid #888;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+}

@@ -1,0 +1,191 @@
+{% extends "base_site.html" %}
+{% set active_page = "statistics_by_faculty" %}
+{% block title %} Statistics by Faculty {% endblock title %}
+
+{% block stylesheets %}
+  {{ super() }}
+{% endblock stylesheets %}
+
+{% block header_card %}
+  <div class="card mb-2 mt-4">
+    <!-- Card header -->
+    <div class="card-header">
+      <div class="row">
+        <h1 class="mb-0 col">Statistics by Faculty</h1>
+      </div>
+    </div>
+    <!-- Card body -->
+    <div class="card-body">
+      <!-- Form groups used in grid -->
+      <form id="sv-form" class="row">
+        <div class="col-lg col-6">
+          <select id="sv-dropdown-subject" class="mb-sm-2 form-control col" required>
+            <option value="" disabled selected>Faculty</option>
+          </select>
+        </div>
+        <div class="col-lg-2 col-6 text-center">
+          <button id="form-submit-button" class="submit-margin btn btn-xl btn-primary" type="submit">
+            Submit
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}
+
+
+{% block content %}
+
+  {#  {% include "site_template/navigation.html" %}#}
+
+  <div class="container mt--7">
+    <div class="row mb-4">
+      <div class="col">
+        <div class="card shadow">
+          <div class="card-header bg-gradient-lighter">
+            <div class="row text-center">
+              <div class="col">
+                <h3 class="mb-0 text-muted">UBCV APSC</h3>
+                <h2 class="mb-0">Faculty of Applied Science</h2>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col">
+                <h5 class="text-uppercase text-muted ls-1 mb-1">Average (All Years)</h5>
+                <h2 class="mb-0">60.12</h2>
+              </div>
+              <div class="col">
+                <h5 class="text-uppercase text-muted ls-1 mb-1">Average (Past 5 years)</h5>
+                <h2 class="mb-0">60.12</h2>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row mb-4">
+      <div class="col">
+        <div class="card bg-gradient-default shadow">
+          <div class="card-header bg-transparent">
+            <div class="row align-items-center">
+              <div class="col">
+                <h2 class="text-white mb-0">Historical Averages</h2>
+              </div>
+              <div class="col">
+                <ul class="nav nav-pills justify-content-end">
+                  <li class="nav-item mr-2 mr-md-0" data-toggle="chart" data-target="#chart-sales"
+                      data-update='{"data":{"datasets":[{"data":[0, 20, 10, 30, 15, 40, 20, 60, 60]}]}}'
+                      data-prefix="$" data-suffix="k">
+                    <a href="#" class="nav-link py-2 px-3 active" data-toggle="tab">
+                      <span class="d-none d-md-block">Past 5 Years</span>
+                      <span class="d-md-none">M</span>
+                    </a>
+                  </li>
+                  <li class="nav-item" data-toggle="chart" data-target="#chart-sales"
+                      data-update='{"data":{"datasets":[{"data":[0, 20, 5, 25, 10, 30, 15, 40, 40]}]}}'
+                      data-prefix="$" data-suffix="k">
+                    <a href="#" class="nav-link py-2 px-3" data-toggle="tab">
+                      <span class="d-none d-md-block">All Years</span>
+                      <span class="d-md-none">W</span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <!-- Chart -->
+            <div class="chart">
+              <!-- Chart wrapper -->
+              <canvas id="chart-sales" class="chart-canvas"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Subjects -->
+    <div class="row mb-4">
+      <div class="col">
+        <div class="card shadow">
+          <div class="card-header border-0">
+            <h3 class="mb-0">Subjects</h3>
+          </div>
+          <div class="table-responsive">
+            <table class="table align-items-center table-flush">
+              <thead class="thead-light">
+              <tr>
+                <th scope="col">Subject</th>
+                <th scope="col">Title</th>
+                <th scope="col">Average (All Years)</th>
+                <th scope="col">Average (Past 5 Years)</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr>
+                <th scope="row">APPP</th>
+                <td>Applied Science Professional Program Platform</td>
+                <td>65.55</td>
+                <td>75.55</td>
+              </tr>
+              <tr>
+                <th scope="row">APSC</th>
+                <td>Applied Science</td>
+                <td>65.55</td>
+                <td>75.55</td>
+              </tr>
+              <tr>
+                <th scope="row">CEEN</th>
+                <td>Clean Energy Engineering</td>
+                <td>65.55</td>
+                <td>75.55</td>
+              </tr>
+              <tr>
+                <th scope="row">CHBE</th>
+                <td>Chemical and Biological Engineering</td>
+                <td>65.55</td>
+                <td>75.55</td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="card-footer py-4">
+            <nav aria-label="...">
+              <ul class="pagination justify-content-end mb-0">
+                <li class="page-item disabled">
+                  <a class="page-link" href="#" tabindex="-1">
+                    <i class="fas fa-angle-left"></i>
+                    <span class="sr-only">Previous</span>
+                  </a>
+                </li>
+                <li class="page-item active">
+                  <a class="page-link" href="#">1</a>
+                </li>
+                <li class="page-item">
+                  <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item">
+                  <a class="page-link" href="#">
+                    <i class="fas fa-angle-right"></i>
+                    <span class="sr-only">Next</span>
+                  </a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {% include "site_template/footer.html" %}
+
+  </div>
+
+{% endblock content %}
+
+{% block javascripts %}
+  {{ super() }}
+{% endblock javascripts %}

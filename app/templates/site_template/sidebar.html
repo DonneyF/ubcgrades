@@ -36,25 +36,26 @@
           </div>
         </form>
         <!-- Navigation -->
+        {% set active_page = active_page|default('index') %}
         <ul class="navbar-nav">
           <li class="nav-item">
-            <a class="nav-link active" href="/">
+            <a class="nav-link {% if active_page == "index" %} active {% endif %}" href="{{ url_for('main.index') }}">
                 <!-- TODO: Update Routes -->
               <i class="far fa-chart-bar text-primary"></i>View Grades
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/statistics-by-course">
+            <a class="nav-link {% if active_page == "statistics_by_course" %} active {% endif %}" href="{{ url_for('main.statistics_by_course') }}">
               <i class="fas fa-user-graduate text-blue"></i>Statistics by Course
             </a>
           </li>
           <li class="nav-item">
-              <a class="nav-link" href="/maps">
+              <a class="nav-link {% if active_page == "statistics_by_subject" %} active {% endif %}" href="{{ url_for('main.statistics_by_subject') }}">
                 <i class="fas fa-chalkboard-teacher text-teal"></i>Statistics by Subject
               </a>
             </li>          
           <li class="nav-item">
-            <a class="nav-link" href="/profile">
+            <a class="nav-link {% if active_page == "statistics_by_faculty" %} active {% endif %}" href="{{ url_for('main.statistics_by_faculty') }}">
               <i class="fas fa-school text-green"></i>Statistics by Faculty
             </a>
           </li>
@@ -72,7 +73,7 @@
               </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="https://github.com/app-generator/flask-boilerplate-dashboard-argon">
+            <a class="nav-link" href="https://github.com/DonneyF/ubc-grades">
               <i class="fas fa-code"></i> Source Code
             </a>
           </li>
