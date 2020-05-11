@@ -23,10 +23,10 @@ class PAIRReportsGrade(db.Model):
     title = db.Column(db.String())
     professor = db.Column(db.String())
     enrolled = db.Column(db.Integer())
-    average = db.Column(db.Float())
-    stdev = db.Column(db.Float())
-    high = db.Column(db.Float())
-    low = db.Column(db.Float())
+    average = db.Column(db.Float(), nullable=True)
+    stdev = db.Column(db.Float(), nullable=True)
+    high = db.Column(db.Integer())
+    low = db.Column(db.Integer())
     num_pass = db.Column(db.Integer())
     num_fail = db.Column(db.Integer())
     withdrew = db.Column(db.Integer())
@@ -82,8 +82,8 @@ class PAIRReportsGrade(db.Model):
             "title": self.title,
             "professor": self.professor,
             "enrolled": self.enrolled,
-            "average": self.average,
-            "stdev": self.stdev,
+            "average": self.average if self.average is not None else '',
+            "stdev": self.stdev if self.stdev is not None else '',
             "high": self.high,
             "low": self.low,
         }
@@ -102,8 +102,8 @@ class TableauDashboardGrade(db.Model):
     enrolled = db.Column(db.Integer())
     average = db.Column(db.Float())
     stdev = db.Column(db.Float())
-    high = db.Column(db.Float())
-    low = db.Column(db.Float())
+    high = db.Column(db.Integer())
+    low = db.Column(db.Integer())
     # We note these fields are nullable
     grade_lt50 = db.Column(db.Integer())  # Num less than 50
     grade_50_54 = db.Column(db.Integer())
