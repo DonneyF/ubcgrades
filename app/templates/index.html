@@ -22,19 +22,23 @@
       <!-- Form groups used in grid -->
       <form id="vg-form" class="row">
         <div class="col-lg col-6">
-          <select id="vg-drop-year" data-toggle="select" data-placeholder="YearSession" class="mb-sm-2 form-control col" required>
+          <select id="vg-drop-year" data-toggle="select" data-placeholder="YearSession" class="mb-sm-2 form-control col"
+                  required>
           </select>
         </div>
         <div class="col-lg col-6">
-          <select id="vg-drop-subject" data-toggle="select" data-placeholder="Subject" class="mb-sm-2 form-control col" required>
+          <select id="vg-drop-subject" data-toggle="select" data-placeholder="Subject" class="mb-sm-2 form-control col"
+                  required>
           </select>
         </div>
         <div class="col-lg col-6">
-          <select id="vg-drop-course" data-toggle="select" data-placeholder="Course #" class="mb-sm-2 form-control col" required>
+          <select id="vg-drop-course" data-toggle="select" data-placeholder="Course #" class="mb-sm-2 form-control col"
+                  required>
           </select>
         </div>
         <div class="col-lg col-6">
-          <select id="vg-drop-section" data-toggle="select" data-placeholder="Section" class="mb-sm-2 form-control col" required>
+          <select id="vg-drop-section" data-toggle="select" data-placeholder="Section" class="mb-sm-2 form-control col"
+                  required>
             <option value="" disabled selected>Section</option>
           </select>
         </div>
@@ -49,10 +53,10 @@
 {% endblock %}
 
 {% block content %}
-  <div class="container mt--7">
+  <div class="container mt--7 collapse" id="grade-container">
 
     <!-- PAIR Reports Grade Information -->
-    <div class="row mb-4 d-none">
+    <div class="row mb-4 d-none" id="pair-reports-row">
       <div class="col">
         <div class="card shadow">
           <div class="card-header bg-transparent bg-gradient-lighter">
@@ -207,11 +211,11 @@
     </div>
 
     <!-- Tableau Dashboard Grade Information -->
-    <div class="row mb-4">
+    <div class="row mb-4 d-none" id="tableau-dashboard-row">
       <div class="col">
         <div class="card shadow">
           <!-- Card Header -->
-          <div class="card-header bg-transparent bg-gradient-lighter">
+          <div class="card-header bg-transparent bg-gradient-lighter" id="card-header">
             <div class="row text-center">
               <div class="col">
                 <h3 class="mb-0 text-muted">UBCV 2017W MATH 101 201</h3>
@@ -330,22 +334,19 @@
           <div class="card-header bg-transparent">
             <div class="row align-items-center">
               <div class="col">
-                {#                <h6 class="text-uppercase text-light ls-1 mb-1">Overview</h6>#}
                 <h2 class="text-white mb-0">Grade Distribution</h2>
               </div>
               <div class="col">
                 <ul class="nav nav-pills justify-content-end">
-                  <li class="nav-item mr-2 mr-md-0" data-toggle="chart" data-target="#chart-sales"
-                      data-update='{"data":{"datasets":[{"data":[0, 20, 10, 30, 15, 40, 20, 60, 60]}]}}'
-                      data-prefix="$" data-suffix="k">
+                  <li class="nav-item mr-2 mr-md-0" data-toggle="chart" data-target="#chart-grades"
+                      data-update='{"data":{"labels":["<50%", "50-54%", "55-59%", "60-63%", "64-67%", "68-71%", "72-75%", "76-79%", "80-84%", "85-89%", "90-100%"]}}'>
                     <a href="#" class="nav-link py-2 px-3 active" data-toggle="tab">
                       <span class="d-none d-md-block">%</span>
                       <span class="d-md-none">M</span>
                     </a>
                   </li>
-                  <li class="nav-item" data-toggle="chart" data-target="#chart-sales"
-                      data-update='{"data":{"datasets":[{"data":[0, 20, 5, 25, 10, 30, 15, 40, 40]}]}}'
-                      data-prefix="$" data-suffix="k">
+                  <li class="nav-item" data-toggle="chart" data-target="#chart-grades"
+                      data-update='{"data":{"labels":["F", "D", "C-", "C", "C+", "B-", "B", "B+", "A-", "A", "A+"]}}'>
                     <a href="#" class="nav-link py-2 px-3" data-toggle="tab">
                       <span class="d-none d-md-block">Letter</span>
                       <span class="d-md-none">W</span>
@@ -359,7 +360,7 @@
             <!-- Chart -->
             <div class="chart">
               <!-- Chart wrapper -->
-              <canvas id="chart-sales" class="chart-canvas"></canvas>
+              <canvas id="chart-grades" class="chart-canvas"></canvas>
             </div>
           </div>
         </div>
@@ -402,9 +403,9 @@
         </div>
       </div>
     </div>
-    {% include "site_template/footer.html" %}
-
   </div>
+
+  {% include "site_template/footer.html" %}
 
 {% endblock content %}
 

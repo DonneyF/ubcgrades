@@ -73,12 +73,6 @@ class PAIRReportsGrade(db.Model):
                 "85-89%": self.grade_85_89,
                 "90-100%": self.grade_90_100
             },
-            "stats": {
-                "average": self.average,
-                "stdev": self.stdev,
-                "high": self.high,
-                "low": self.low,
-            },
             "campus": self.campus.name,
             "year": self.year,
             "session": self.session.name,
@@ -87,7 +81,11 @@ class PAIRReportsGrade(db.Model):
             "section": self.section,
             "title": self.title,
             "professor": self.professor,
-            "enrolled": self.enrolled
+            "enrolled": self.enrolled,
+            "average": self.average,
+            "stdev": self.stdev,
+            "high": self.high,
+            "low": self.low,
         }
 
 
@@ -138,12 +136,6 @@ class TableauDashboardGrade(db.Model):
                 "85-89%": self.grade_85_89,
                 "90-100%": self.grade_90_100
             },
-            "stats": {
-                "average": self.average,
-                "stdev": self.stdev,
-                "high": self.high,
-                "low": self.low,
-            },
             "campus": self.campus.name,
             "year": self.year,
             "session": self.session.name,
@@ -152,5 +144,9 @@ class TableauDashboardGrade(db.Model):
             "section": self.section,
             "title": self.title,
             "professor": self.professor,
-            "enrolled": self.enrolled
+            "enrolled": self.enrolled,
+            "average": self.average,
+            "stdev": self.stdev,
+            "high": self.high,
+            "low": self.low,
         }
