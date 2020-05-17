@@ -1,6 +1,7 @@
 'use strict';
 
-const YEARSESSIONS = ['2019S', '2018W', '2018S', '2017W', '2017S', '2016W', '2016S', '2015W', '2015S', '2014W', '2014S', '2013W', '2013S', '2012W', '2012S', '2011W', '2011S', '2010W', '2010S', '2009W', '2009S', '2008W', '2008S', '2007W', '2007S', '2006W', '2006S', '2005W', '2005S', '2004W', '2004S', '2003W', '2003S', '2002W', '2002S', '2001W', '2001S', '2000W', '2000S', '1999W', '1999S', '1998W', '1998S', '1997W', '1997S', '1996W', '1996S'];
+const YEARSESSIONS_UBCV = ['2019S', '2018W', '2018S', '2017W', '2017S', '2016W', '2016S', '2015W', '2015S', '2014W', '2014S', '2013W', '2013S', '2012W', '2012S', '2011W', '2011S', '2010W', '2010S', '2009W', '2009S', '2008W', '2008S', '2007W', '2007S', '2006W', '2006S', '2005W', '2005S', '2004W', '2004S', '2003W', '2003S', '2002W', '2002S', '2001W', '2001S', '2000W', '2000S', '1999W', '1999S', '1998W', '1998S', '1997W', '1997S', '1996W', '1996S'];
+const YEARSESSIONS_UBCO = YEARSESSIONS_UBCV.slice(0, 11);
 const HEADMATTER_V1_KEYS = ["average", "stdev", "high", "low", "pass", "fail", "enrolled", "withdrew", "audit", "other"];
 const HEADMATTER_V2_KEYS = ["average", "stdev", "high", "low", "enrolled"];
 const GRADES_V1 = ["0-9%", "10-19%", "20-29%", "30-39%", "40-49%", "<50%", "50-54%", "55-59%", "60-63%", "64-67%", "68-71%", "72-75%", "76-79%", "80-84%", "85-89%", "90-100%"];
@@ -8,6 +9,13 @@ const GRADES_V2 = GRADES_V1.slice(5);
 const API_HOST_URL = "http://localhost:5000";
 
 $(function () {
+    /*-----------------------------------
+    * Global Variables
+    *-----------------------------------*/
+
+    let yearsession;
+    let apiVersion;
+    let campus = localStorage.getItem("campus");
 
     class YearSession {
         constructor(yearsession) {
@@ -20,15 +28,34 @@ $(function () {
         }
     }
 
-    let yearsession;
-    let apiVersion;
 
     /*-----------------------------------
-    * Dropdowns
+    * Campus Selector and Dropdowns
     *-----------------------------------*/
-    // Initialize dropdowns. A prepend is needed since the browser automatically selects the first value
+    // Populate local storage with the desired campus if not already existing
+    if (localStorage.getItem("campus") == null) $('#exampleModal').modal('show');
+
+    // Find the button that caused the modal to close and update the campus
+    $('#exampleModal .modal-body button').on('click', function (event) {
+        let $button = $(event.target);
+        $(this).closest('.modal').one('hidden.bs.modal', function () {
+            localStorage.setItem("campus", $button.data('campus'));
+            campus = localStorage.getItem("campus");
+
+            // Update campus dropdown for the first time. A prepend is needed since the browser automatically selects the first value
+            $('#vg-drop-year').prepend('<option></option>').select2({
+                data: campus === "UBCV" ? YEARSESSIONS_UBCV.map(item => ({'id': item, 'text': item})) : YEARSESSIONS_UBCO.map(item => ({'id': item, 'text': item})),
+            }).on("select2:select", function (e) {
+                yearsession = new YearSession($(this).select2('data')[0]['id']);
+                apiVersion = yearsession.year < 2014 ? "v1" : "v2";
+                updateVGSubjectDrop();
+            });
+        });
+    });
+
+    // Update the dropdown on all subsequent page loads. TODO: Maybe a better solution?
     $('#vg-drop-year').prepend('<option></option>').select2({
-        data: YEARSESSIONS.map(item => ({'id': item, 'text': item})),
+        data: campus === "UBCV" ? YEARSESSIONS_UBCV.map(item => ({'id': item, 'text': item})) : YEARSESSIONS_UBCO.map(item => ({'id': item, 'text': item})),
     }).on("select2:select", function (e) {
         yearsession = new YearSession($(this).select2('data')[0]['id']);
         apiVersion = yearsession.year < 2014 ? "v1" : "v2";
@@ -52,7 +79,7 @@ $(function () {
      */
     function updateVGSubjectDrop() {
         $.ajax({
-            url: `${API_HOST_URL}/api/${apiVersion}/subjects/UBCV/${yearsession}`,
+            url: `${API_HOST_URL}/api/${apiVersion}/subjects/${campus}/${yearsession}`,
             type: "GET",
             success: function (response) {
                 updateVGDropdown('#vg-drop-subject', response);
@@ -69,7 +96,7 @@ $(function () {
      */
     function updateVGCourseDrop(subject) {
         $.ajax({
-            url: `${API_HOST_URL}/api/${apiVersion}/courses/UBCV/${yearsession}/${subject}`,
+            url: `${API_HOST_URL}/api/${apiVersion}/courses/${campus}/${yearsession}/${subject}`,
             type: "GET",
             success: function (response) {
                 updateVGDropdown('#vg-drop-course', response);
@@ -87,7 +114,7 @@ $(function () {
     function updateVGSectionDrop(course) {
         let subject = $("#vg-drop-subject").select2('data')[0]['id'];
         $.ajax({
-            url: `${API_HOST_URL}/api/${apiVersion}/sections/UBCV/${yearsession}/${subject}/${course}`,
+            url: `${API_HOST_URL}/api/${apiVersion}/sections/${campus}/${yearsession}/${subject}/${course}`,
             type: "GET",
             success: function (response) {
                 updateVGDropdown('#vg-drop-section', response);
@@ -176,7 +203,7 @@ $(function () {
         }
         // Send API request synchronously
         $.ajax({
-            url: `${API_HOST_URL}/api/${apiVersion}/grades/UBCV/${yearsession}/${subject}/${course}/${section}`,
+            url: `${API_HOST_URL}/api/${apiVersion}/grades/${campus}/${yearsession}/${subject}/${course}/${section}`,
             type: "GET",
             success: function (response) {
                 if (apiVersion === "v1") {
@@ -198,7 +225,6 @@ $(function () {
     *-----------------------------------*/
 
     function updateGradeDatav1(data) {
-        console.log("updatev1");
         // Update the card header
         $('#pair-reports-row .card-header h3').text(`${data['campus']} ${data['year']}${data['session']} ${data['subject']} ${data['course']} ${data['section']}`);
         $('#pair-reports-row .card-header h2').text(data['title']);
