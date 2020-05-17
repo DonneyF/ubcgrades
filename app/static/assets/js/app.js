@@ -1,12 +1,27 @@
-const YEARSESSIONS = ['2019S', '2018W', '2018S', '2017W', '2017S', '2016W', '2016S', '2015W', '2015S', '2014W', '2014S', '2013W', '2013S', '2012W', '2012S', '2011W', '2011S', '2010W', '2010S', '2009W', '2009S', '2008W', '2008S', '2007W', '2007S', '2006W', '2006S', '2005W', '2005S', '2004W', '2004S', '2003W', '2003S', '2002W', '2002S', '2001W', '2001S', '2000W', '2000S', '1999W', '1999S', '1998W', '1998S', '1997W', '1997S', '1996W', '1996S']
-const HEADMATTER_V1 = ["Average", "Stdev", "High", "Low", "Pass", "Fail", "Enrolled", "Withdrew", "Audit", "Other"]
-const HEADMATTER_V2_KEYS = ["average", "stdev", "high", "low", "enrolled"]
-const GRADES_V2 = ["<50%", "50-54%", "55-59%", "60-63%", "64-67%", "68-71%", "72-75%", "76-79%", "80-84%", "85-89%", "90-100%"]
-const API_HOST_URL = "http://localhost:5000"
-
 'use strict';
 
+const YEARSESSIONS = ['2019S', '2018W', '2018S', '2017W', '2017S', '2016W', '2016S', '2015W', '2015S', '2014W', '2014S', '2013W', '2013S', '2012W', '2012S', '2011W', '2011S', '2010W', '2010S', '2009W', '2009S', '2008W', '2008S', '2007W', '2007S', '2006W', '2006S', '2005W', '2005S', '2004W', '2004S', '2003W', '2003S', '2002W', '2002S', '2001W', '2001S', '2000W', '2000S', '1999W', '1999S', '1998W', '1998S', '1997W', '1997S', '1996W', '1996S'];
+const HEADMATTER_V1_KEYS = ["average", "stdev", "high", "low", "pass", "fail", "enrolled", "withdrew", "audit", "other"];
+const HEADMATTER_V2_KEYS = ["average", "stdev", "high", "low", "enrolled"];
+const GRADES_V1 = ["0-9%", "10-19%", "20-29%", "30-39%", "40-49%", "<50%", "50-54%", "55-59%", "60-63%", "64-67%", "68-71%", "72-75%", "76-79%", "80-84%", "85-89%", "90-100%"];
+const GRADES_V2 = GRADES_V1.slice(5);
+const API_HOST_URL = "http://localhost:5000";
+
 $(function () {
+
+    class YearSession {
+        constructor(yearsession) {
+            this.year = parseInt(yearsession.substring(0, 4));
+            this.session = yearsession.substring(4);
+        }
+
+        toString() {
+            return this.year + this.session;
+        }
+    }
+
+    let yearsession;
+    let apiVersion;
 
     /*-----------------------------------
     * Dropdowns
@@ -15,7 +30,9 @@ $(function () {
     $('#vg-drop-year').prepend('<option></option>').select2({
         data: YEARSESSIONS.map(item => ({'id': item, 'text': item})),
     }).on("select2:select", function (e) {
-        updateVGSubjectDrop($(this).select2('data')[0]['id']);
+        yearsession = new YearSession($(this).select2('data')[0]['id']);
+        apiVersion = yearsession.year < 2014 ? "v1" : "v2";
+        updateVGSubjectDrop();
     });
 
     $('#vg-drop-subject').select2().on("select2:select", function (e) {
@@ -33,12 +50,12 @@ $(function () {
      * Retrieves the subjects and updates the View Grades Subject dropdown
      * @param yearsession a 5 character yearsession code.
      */
-    function updateVGSubjectDrop(yearsession) {
+    function updateVGSubjectDrop() {
         $.ajax({
-            url: `${API_HOST_URL}/api/v2/subjects/UBCV/${yearsession}`,
+            url: `${API_HOST_URL}/api/${apiVersion}/subjects/UBCV/${yearsession}`,
             type: "GET",
             success: function (response) {
-                updateSVDropdown('#vg-drop-subject', response);
+                updateVGDropdown('#vg-drop-subject', response);
             },
             error: function () {
                 // TODO
@@ -51,12 +68,11 @@ $(function () {
      * @param subject is the 2 to 4 character subject code
      */
     function updateVGCourseDrop(subject) {
-        let yearsession = $("#vg-drop-year").select2('data')[0]['id'];
         $.ajax({
-            url: `${API_HOST_URL}/api/v2/courses/UBCV/${yearsession}/${subject}`,
+            url: `${API_HOST_URL}/api/${apiVersion}/courses/UBCV/${yearsession}/${subject}`,
             type: "GET",
             success: function (response) {
-                updateSVDropdown('#vg-drop-course', response);
+                updateVGDropdown('#vg-drop-course', response);
             },
             error: function () {
                 // TODO
@@ -69,13 +85,12 @@ $(function () {
      * @param course is the 3 to 4 character course code
      */
     function updateVGSectionDrop(course) {
-        let yearsession = $("#vg-drop-year").select2('data')[0]['id'];
         let subject = $("#vg-drop-subject").select2('data')[0]['id'];
         $.ajax({
-            url: `${API_HOST_URL}/api/v2/sections/UBCV/${yearsession}/${subject}/${course}`,
+            url: `${API_HOST_URL}/api/${apiVersion}/sections/UBCV/${yearsession}/${subject}/${course}`,
             type: "GET",
             success: function (response) {
-                updateSVDropdown('#vg-drop-section', response);
+                updateVGDropdown('#vg-drop-section', response);
             },
             error: function () {
                 // TODO
@@ -88,7 +103,7 @@ $(function () {
      * @param id is the CSS id of the dropdown
      * @param response is the API response data
      */
-    function updateSVDropdown(id, response) {
+    function updateVGDropdown(id, response) {
         let dropdown = $(id);
 
         // Populate the dropdown with the new data
@@ -124,11 +139,11 @@ $(function () {
     }
 
     $("#vg-form").submit(function () {
-        let yearsession = $('#vg-drop-year').val();
-        getSectionGrades('#vg-btn-submit', yearsession, $('#vg-drop-subject').val(), $('#vg-drop-course').val(), $('#vg-drop-section').val());
-
         // Selectively show row based on desired year
-        if (parseInt(yearsession.substring(0, 4)) < 2014) {
+        getSectionGrades('#vg-btn-submit', $('#vg-drop-subject').val(),
+            $('#vg-drop-course').val(), $('#vg-drop-section').val());
+
+        if (yearsession.year < 2014) {
             $('#tableau-dashboard-row').addClass('d-none');
             $('#pair-reports-row').removeClass('d-none');
         } else {
@@ -148,7 +163,7 @@ $(function () {
     /*-----------------------------------
     * API submission
     *-----------------------------------*/
-    function getSectionGrades(button, yearsession, subject, course, section) {
+    function getSectionGrades(button, subject, course, section) {
         let $button = $(button);
         let loadingText = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
         if ($button.html() !== loadingText) {
@@ -161,10 +176,14 @@ $(function () {
         }
         // Send API request synchronously
         $.ajax({
-            url: `${API_HOST_URL}/api/v2/grades/UBCV/${yearsession}/${subject}/${course}/${section}`,
+            url: `${API_HOST_URL}/api/${apiVersion}/grades/UBCV/${yearsession}/${subject}/${course}/${section}`,
             type: "GET",
             success: function (response) {
-                updateGradeData(response);
+                if (apiVersion === "v1") {
+                    updateGradeDatav1(response);
+                } else {
+                    updateGradeDatav2(response);
+                }
                 $button.html($button.data('original-text'));
                 $button.removeClass('disabled');
             },
@@ -178,12 +197,45 @@ $(function () {
     * Data Callbacks
     *-----------------------------------*/
 
-    function updateGradeData(data) {
+    function updateGradeDatav1(data) {
+        console.log("updatev1");
         // Update the card header
-        $('#card-header h3').text(`${data['campus']} ${data['year']}${data['session']} ${data['subject']} ${data['course']} ${data['section']}`);
-        $('#card-header h2').text(data['title']);
+        $('#pair-reports-row .card-header h3').text(`${data['campus']} ${data['year']}${data['session']} ${data['subject']} ${data['course']} ${data['section']}`);
+        $('#pair-reports-row .card-header h2').text(data['title']);
         // Update the headmatter
         $('#vg-headmatter-v1 h2').each(function (index) {
+            // Find each h2 and update
+            let headmatter_entry = $(this);
+            if (headmatter_entry != null) {
+                let number = data[HEADMATTER_V1_KEYS[index]];
+                if (number % 1 === 0) {
+                    // number_string is a int
+                    headmatter_entry.text(number);
+                } else {
+                    headmatter_entry.text(parseFloat(number).toFixed(2));
+                }
+            }
+        });
+
+        // Update the grades table
+        $('#grades-v1 span').each(function (index) {
+            $(this).text(data['grades'][GRADES_V1[index]]);
+        });
+
+        // Update the teaching team
+        $("#teaching-team-v1").text(data['professor'].replace(/;/gi, ", "));
+
+        // Update the chart
+        $('#chart-grades-toggles').hide();
+        updateGradesChart(data);
+    }
+
+    function updateGradeDatav2(data) {
+        // Update the card header
+        $('#tableau-dashboard-row .card-header h3').text(`${data['campus']} ${data['year']}${data['session']} ${data['subject']} ${data['course']} ${data['section']}`);
+        $('#tableau-dashboard-row .card-header h2').text(data['title']);
+        // Update the headmatter
+        $('#vg-headmatter-v2 h2').each(function (index) {
             // Find each h2 and update
             let headmatter_entry = $(this);
             if (headmatter_entry != null) {
@@ -206,12 +258,14 @@ $(function () {
         $("#teaching-team-v2").text(data['professor'].replace(/;/gi, ", "));
 
         // Update the chart
+        $('#chart-grades-toggles').show();
         updateGradesChart(data);
     }
 
     let sectionGradesChart;
+
     function updateGradesChart(apiResponseData) {
-        let gradeData = GRADES_V2.map(x => apiResponseData['grades'][x]);
+        let gradeData = apiVersion === "v1" ? GRADES_V1.map(x => apiResponseData['grades'][x]) : GRADES_V2.map(x => apiResponseData['grades'][x]);
         let $chart = $('#chart-grades');
 
         if (sectionGradesChart == null) {
@@ -248,7 +302,7 @@ $(function () {
                     }
                 },
                 data: {
-                    labels: GRADES_V2,
+                    labels: apiVersion === "v1" ? GRADES_V1 : GRADES_V2,
                     datasets: [{
                         data: gradeData
                     }]
@@ -257,6 +311,11 @@ $(function () {
         } else {
             // Replace the data and update
             sectionGradesChart.data.datasets[0].data = gradeData;
+            if (apiVersion === "v1") {
+                sectionGradesChart.data.labels = GRADES_V1;
+            } else {
+                sectionGradesChart.data.labels = GRADES_V2;
+            }
             sectionGradesChart.update();
         }
 
@@ -266,7 +325,8 @@ $(function () {
 
     }
 
-});
+})
+;
 
 
 //

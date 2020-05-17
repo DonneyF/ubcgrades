@@ -86,6 +86,11 @@ class PAIRReportsGrade(db.Model):
             "stdev": self.stdev if self.stdev is not None else '',
             "high": self.high,
             "low": self.low,
+            "pass": self.num_pass,
+            "fail": self.num_fail,
+            "withdrew": self.withdrew,
+            "audit": self.audit,
+            "other": self.other
         }
 
 
