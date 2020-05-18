@@ -44,7 +44,10 @@ $(function () {
 
             // Update campus dropdown for the first time. A prepend is needed since the browser automatically selects the first value
             $('#vg-drop-year').prepend('<option></option>').select2({
-                data: campus === "UBCV" ? YEARSESSIONS_UBCV.map(item => ({'id': item, 'text': item})) : YEARSESSIONS_UBCO.map(item => ({'id': item, 'text': item})),
+                data: campus === "UBCV" ? YEARSESSIONS_UBCV.map(item => ({
+                    'id': item,
+                    'text': item
+                })) : YEARSESSIONS_UBCO.map(item => ({'id': item, 'text': item})),
             }).on("select2:select", function (e) {
                 yearsession = new YearSession($(this).select2('data')[0]['id']);
                 apiVersion = yearsession.year < 2014 ? "v1" : "v2";
@@ -55,7 +58,10 @@ $(function () {
 
     // Update the dropdown on all subsequent page loads. TODO: Maybe a better solution?
     $('#vg-drop-year').prepend('<option></option>').select2({
-        data: campus === "UBCV" ? YEARSESSIONS_UBCV.map(item => ({'id': item, 'text': item})) : YEARSESSIONS_UBCO.map(item => ({'id': item, 'text': item})),
+        data: campus === "UBCV" ? YEARSESSIONS_UBCV.map(item => ({
+            'id': item,
+            'text': item
+        })) : YEARSESSIONS_UBCO.map(item => ({'id': item, 'text': item})),
     }).on("select2:select", function (e) {
         yearsession = new YearSession($(this).select2('data')[0]['id']);
         apiVersion = yearsession.year < 2014 ? "v1" : "v2";
@@ -158,18 +164,42 @@ $(function () {
         // Remove all non-character/numbers
         let stripped = inputStr.replace(/(?![A-Za-z0-9]+)./gi, "");
         // Split the result into four groups by regex. Index 0 contains the full match
-        let results = stripped.match(/([0-9]{4}[A-Z])([A-Z]+?(?=[0-9]))([0-9]{3}[A-Z]?)([0-9]{1,3})/i)
+        let results = stripped.match(/([0-9]{4}[A-Z])([A-Z]+?(?=[0-9]))([0-9]{3}[A-Z]?)([0-9]{1,3})/i);
 
         if (results.length !== 5) return false;
 
         return results.slice(1, 5).map(str => str.toUpperCase());
     }
 
-    $("#vg-form").submit(function () {
+    // Entry via ID
+    $("#vg-id-form").submit(function () {
+        let idSplit = parseSVID($('#vg-id-form input').val());
+        if (idSplit.length !== 4 || idSplit === false) {
+            // TODO: Display error
+        } else {
+            yearsession = new YearSession(idSplit[0]);
+            apiVersion = yearsession.year < 2014 ? "v1" : "v2";
+            getSectionGrades('#vg-id-submit', idSplit[0], idSplit[1], idSplit[2], idSplit[3]);
+
+            displayGradeContainer();
+            return false;
+        }
+    });
+
+    // Entry via dropdowns
+    $("#vg-dropdown-form").submit(function () {
         // Selectively show row based on desired year
-        getSectionGrades('#vg-btn-submit', $('#vg-drop-subject').val(),
+        getSectionGrades('#vg-dropdown-submit', yearsession, $('#vg-drop-subject').val(),
             $('#vg-drop-course').val(), $('#vg-drop-section').val());
 
+        displayGradeContainer();
+        return false; // Don't refresh the page.
+    });
+
+    /**
+     * Displays the grade card depending on api version and show the container if first submission
+     */
+    function displayGradeContainer() {
         if (yearsession.year < 2014) {
             $('#tableau-dashboard-row').addClass('d-none');
             $('#pair-reports-row').removeClass('d-none');
@@ -178,19 +208,17 @@ $(function () {
             $('#pair-reports-row').addClass('d-none');
         }
 
-        // If first submission show the data
         if ($('#grade-container').hasClass("collapse")) {
             setTimeout(function () {
                 $('#grade-container').collapse();
             }, 250);
         }
-        return false; // Don't refresh the page.
-    });
+    }
 
     /*-----------------------------------
     * API submission
     *-----------------------------------*/
-    function getSectionGrades(button, subject, course, section) {
+    function getSectionGrades(button, yearsession, subject, course, section) {
         let $button = $(button);
         let loadingText = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
         if ($button.html() !== loadingText) {
@@ -294,56 +322,58 @@ $(function () {
         let gradeData = apiVersion === "v1" ? GRADES_V1.map(x => apiResponseData['grades'][x]) : GRADES_V2.map(x => apiResponseData['grades'][x]);
         let $chart = $('#chart-grades');
 
-        if (sectionGradesChart == null) {
-            sectionGradesChart = new Chart($chart, {
-                type: 'bar',
-                options: {
-                    scales: {
-                        yAxes: [{
-                            gridLines: {
-                                lineWidth: 1,
-                                color: Charts.colors.gray[900],
-                                zeroLineColor: Charts.colors.gray[900]
+        //if (sectionGradesChart == null) {
+        if (sectionGradesChart) sectionGradesChart.destroy();
+        sectionGradesChart = new Chart($chart, {
+            type: 'bar',
+            options: {
+                scales: {
+                    yAxes: [{
+                        gridLines: {
+                            lineWidth: 1,
+                            color: Charts.colors.gray[900],
+                            zeroLineColor: Charts.colors.gray[900]
+                        }
+                    }]
+                },
+                tooltips: {
+                    callbacks: {
+                        label: function (item, data) {
+                            let label = data.datasets[item.datasetIndex].label || '';
+                            let content = '';
+                            if (data.datasets.length > 1) {
+                                content += `<span class="popover-body-label mr-auto">${label}</span>`;
                             }
-                        }]
-                    },
-                    tooltips: {
-                        callbacks: {
-                            label: function (item, data) {
-                                let label = data.datasets[item.datasetIndex].label || '';
-                                let content = '';
-                                if (data.datasets.length > 1) {
-                                    content += `<span class="popover-body-label mr-auto">${label}</span>`;
-                                }
 
-                                // Distinguish between entries with 0 values and no data
-                                if (gradeData[item.index] !== "") {
-                                    content += `<span class="popover-body-value">${item.yLabel}</span>`;
-                                } else {
-                                    content += `<span class="popover-body-value">No Data</span>`;
-                                }
-                                return content;
+                            // Distinguish between entries with 0 values and no data
+                            if (gradeData[item.index] !== "") {
+                                content += `<span class="popover-body-value">${item.yLabel}</span>`;
+                            } else {
+                                content += `<span class="popover-body-value">No Data</span>`;
                             }
+                            return content;
                         }
                     }
-                },
-                data: {
-                    labels: apiVersion === "v1" ? GRADES_V1 : GRADES_V2,
-                    datasets: [{
-                        data: gradeData
-                    }]
                 }
-            });
-        } else {
-            // Replace the data and update
-            sectionGradesChart.data.datasets[0].data = gradeData;
-            if (apiVersion === "v1") {
-                sectionGradesChart.data.labels = GRADES_V1;
-            } else {
-                sectionGradesChart.data.labels = GRADES_V2;
+            },
+            data: {
+                labels: apiVersion === "v1" ? GRADES_V1.slice(0) : GRADES_V2.slice(0),
+                datasets: [{
+                    data: gradeData
+                }]
             }
-            sectionGradesChart.update();
-        }
+        });
+        // } else {
+        //     // Replace the data and update
+        //     sectionGradesChart.data.datasets[0].data = gradeData;
+        //     if (apiVersion === "v1") {
+        //         sectionGradesChart.data.labels = GRADES_V1.slice(0);
+        //     } else if (sectionGradesChart.data.labels[0] !== "F") {
+        //         // Update to v2 numeric labels only when the existing labels are not letters
+        //         sectionGradesChart.data.labels = GRADES_V2.slice(0);
+        //     }
+        //     sectionGradesChart.update();
+        // }
 
         // Save to jQuery object
 

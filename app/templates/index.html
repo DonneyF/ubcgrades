@@ -12,42 +12,76 @@
     <div class="card-header">
       <div class="row">
         <h1 class="mb-0 col">View Grades by Section</h1>
-        <div class="col-4 text-right align-self-center">
-          <a href="#" class="btn btn-sm btn-neutral">Submit by ID</a>
+        {#        <div class="col-4 text-right align-self-center" id="myTab" role="tablist">#}
+        {#          <a class="btn btn-sm btn-neutral active" id="dropdown-tab" data-toggle="tab" href="#vg-form" role="tab"#}
+        {#             aria-controls="dropdown" aria-selected="true">Dropdowns</a>#}
+        {#          <a class="btn btn-sm btn-neutral" id="id-tab" data-toggle="tab" href="#vg-id" role="tab" aria-controls="id"#}
+        {#             aria-selected="false">ID Submission</a>#}
+        {#        </div>#}
+        <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+          <li class="nav-item mr-2 mr-md-0">
+            <a class="nav-link py-2 px-3 active" data-toggle="pill" href="#vg-dropdown-form" role="tab"
+               aria-controls="pills-form" aria-selected="true">Dropdowns</a>
+          </li>
+          <li class="nav-item mr-2 mr-md-0">
+            <a class="nav-link py-2 px-3" data-toggle="pill" href="#vg-id-form" role="tab"
+               aria-controls="pills-id" aria-selected="false">Submit by ID</a>
+          </li>
+        </ul>
+      </div>
+      <!-- Card body -->
+      <div class="card-body">
+        <!-- Form groups used in grid -->
+        <div class="tab-content">
+          <div class="tab-pane fade show active" id="vg-dropdown-form" role="tabpanel" aria-labelledby="vg-form-tab">
+            <form class="row">
+              <div class="col-lg col-6">
+                <select id="vg-drop-year" data-toggle="select" data-placeholder="YearSession"
+                        class="mb-sm-2 form-control col"
+                        required>
+                </select>
+              </div>
+              <div class="col-lg col-6">
+                <select id="vg-drop-subject" data-toggle="select" data-placeholder="Subject"
+                        class="mb-sm-2 form-control col"
+                        required>
+                </select>
+              </div>
+              <div class="col-lg col-6">
+                <select id="vg-drop-course" data-toggle="select" data-placeholder="Course #"
+                        class="mb-sm-2 form-control col"
+                        required>
+                </select>
+              </div>
+              <div class="col-lg col-6">
+                <select id="vg-drop-section" data-toggle="select" data-placeholder="Section"
+                        class="mb-sm-2 form-control col"
+                        required>
+                  <option value="" disabled selected>Section</option>
+                </select>
+              </div>
+              <div class="col-lg-2 col-6 text-center">
+                <button id="vg-dropdown-submit" class="submit-margin btn btn-xl btn-primary" type="submit">
+                  Submit
+                </button>
+              </div>
+            </form>
+          </div>
+          <div class="tab-pane fade" id="vg-id-form" role="tabpanel" aria-labelledby="vg-id-tab">
+            <form class="row">
+              <div class="col-lg col-6">
+                <input type="text" class="form-control" placeholder="Ex: 2017W MATH 101 201" aria-label="Username"
+                       aria-describedby="basic-addon1">
+              </div>
+              <div class="col-lg-2 col-6 text-center">
+                <button id="vg-id-submit" class="submit-margin btn btn-xl btn-primary" type="submit">
+                  Submit
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
-    </div>
-    <!-- Card body -->
-    <div class="card-body">
-      <!-- Form groups used in grid -->
-      <form id="vg-form" class="row">
-        <div class="col-lg col-6">
-          <select id="vg-drop-year" data-toggle="select" data-placeholder="YearSession" class="mb-sm-2 form-control col"
-                  required>
-          </select>
-        </div>
-        <div class="col-lg col-6">
-          <select id="vg-drop-subject" data-toggle="select" data-placeholder="Subject" class="mb-sm-2 form-control col"
-                  required>
-          </select>
-        </div>
-        <div class="col-lg col-6">
-          <select id="vg-drop-course" data-toggle="select" data-placeholder="Course #" class="mb-sm-2 form-control col"
-                  required>
-          </select>
-        </div>
-        <div class="col-lg col-6">
-          <select id="vg-drop-section" data-toggle="select" data-placeholder="Section" class="mb-sm-2 form-control col"
-                  required>
-            <option value="" disabled selected>Section</option>
-          </select>
-        </div>
-        <div class="col-lg-2 col-6 text-center">
-          <button id="vg-btn-submit" class="submit-margin btn btn-xl btn-primary" type="submit">
-            Submit
-          </button>
-        </div>
-      </form>
     </div>
   </div>
 {% endblock %}
@@ -342,14 +376,12 @@
                       data-update='{"data":{"labels":["<50%", "50-54%", "55-59%", "60-63%", "64-67%", "68-71%", "72-75%", "76-79%", "80-84%", "85-89%", "90-100%"]}}'>
                     <a href="#" class="nav-link py-2 px-3 active" data-toggle="tab">
                       <span class="d-none d-md-block">%</span>
-                      <span class="d-md-none">M</span>
                     </a>
                   </li>
                   <li class="nav-item" data-toggle="chart" data-target="#chart-grades"
                       data-update='{"data":{"labels":["F", "D", "C-", "C", "C+", "B-", "B", "B+", "A-", "A", "A+"]}}'>
                     <a href="#" class="nav-link py-2 px-3" data-toggle="tab">
                       <span class="d-none d-md-block">Letter</span>
-                      <span class="d-md-none">W</span>
                     </a>
                   </li>
                 </ul>
