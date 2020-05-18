@@ -91,7 +91,7 @@ $(function () {
                 updateVGDropdown('#vg-drop-subject', response);
             },
             error: function () {
-                // TODO
+                displayError("Unable to connect to API");
             }
         });
     }
@@ -108,7 +108,7 @@ $(function () {
                 updateVGDropdown('#vg-drop-course', response);
             },
             error: function () {
-                // TODO
+                displayError("Unable to connect to API");
             }
         });
     }
@@ -126,7 +126,7 @@ $(function () {
                 updateVGDropdown('#vg-drop-section', response);
             },
             error: function () {
-                // TODO
+                displayError("Unable to connect to API");
             }
         });
     }
@@ -175,15 +175,13 @@ $(function () {
     $("#vg-id-form").submit(function () {
         let idSplit = parseSVID($('#vg-id-form input').val());
         if (idSplit.length !== 4 || idSplit === false) {
-            displayError("Invalid ID. Check again.")
+            displayError("Invalid ID. Check again.");
         } else {
             yearsession = new YearSession(idSplit[0]);
             apiVersion = yearsession.year < 2014 ? "v1" : "v2";
             getSectionGrades('#vg-id-submit', idSplit[0], idSplit[1], idSplit[2], idSplit[3]);
-
-            displayGradeContainer();
-            return false;
         }
+        return false;
     });
 
     // Entry via dropdowns
@@ -192,7 +190,6 @@ $(function () {
         getSectionGrades('#vg-dropdown-submit', yearsession, $('#vg-drop-subject').val(),
             $('#vg-drop-course').val(), $('#vg-drop-section').val());
 
-        displayGradeContainer();
         return false; // Don't refresh the page.
     });
 
@@ -234,16 +231,17 @@ $(function () {
             url: `${API_HOST_URL}/api/${apiVersion}/grades/${campus}/${yearsession}/${subject}/${course}/${section}`,
             type: "GET",
             success: function (response) {
-                if (apiVersion === "v1") {
-                    updateGradeDatav1(response);
-                } else {
-                    updateGradeDatav2(response);
-                }
-                $button.html($button.data('original-text'));
-                $button.removeClass('disabled');
+                if (apiVersion === "v1") updateGradeDatav1(response);
+                else updateGradeDatav2(response);
+                displayGradeContainer();
             },
             error: function (response) {
-                // TODO
+                if (response.status === 404) displayError('Invalid ID, or ID does not exist.');
+                else displayError("Unable to connect to API");
+            },
+            complete: function () {
+                $button.html($button.data('original-text'));
+                $button.removeClass('disabled');
             }
         });
     }
@@ -383,12 +381,13 @@ $(function () {
 
     // Use a counter to generate and collapse multiple alerts
     let errorCounter = 0;
+
     function displayError(message) {
         // Show error
         let errorId = `error-${errorCounter}`;
         $("#notification").append(`<div class="alert alert-danger mt-3" id="${errorId}"><strong>Error.</strong> ${message}</div>`);
         // Fade the error after a second
-        $(`#${errorId}`).fadeTo(1000, 500).slideUp(500, function () {
+        $(`#${errorId}`).fadeTo(1500, 500).slideUp(500, function () {
             $(`#${errorId}`).slideUp(1000);
             // Delete the HTML element after its hidden.
             $(`#${errorId}`).remove();
