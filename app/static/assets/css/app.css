@@ -15,3 +15,10 @@
 .badge {
     font-size: 100%;
 }
+
+#notification {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 1rem;
+}

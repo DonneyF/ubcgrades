@@ -166,7 +166,7 @@ $(function () {
         // Split the result into four groups by regex. Index 0 contains the full match
         let results = stripped.match(/([0-9]{4}[A-Z])([A-Z]+?(?=[0-9]))([0-9]{3}[A-Z]?)([0-9]{1,3})/i);
 
-        if (results.length !== 5) return false;
+        if (results == null || results.length !== 5) return false;
 
         return results.slice(1, 5).map(str => str.toUpperCase());
     }
@@ -175,7 +175,7 @@ $(function () {
     $("#vg-id-form").submit(function () {
         let idSplit = parseSVID($('#vg-id-form input').val());
         if (idSplit.length !== 4 || idSplit === false) {
-            // TODO: Display error
+            displayError("Invalid ID. Check again.")
         } else {
             yearsession = new YearSession(idSplit[0]);
             apiVersion = yearsession.year < 2014 ? "v1" : "v2";
@@ -379,6 +379,21 @@ $(function () {
 
         $chart.data('chart', sectionGradesChart);
 
+    }
+
+    // Use a counter to generate and collapse multiple alerts
+    let errorCounter = 0;
+    function displayError(message) {
+        // Show error
+        let errorId = `error-${errorCounter}`;
+        $("#notification").append(`<div class="alert alert-danger mt-3" id="${errorId}"><strong>Error.</strong> ${message}</div>`);
+        // Fade the error after a second
+        $(`#${errorId}`).fadeTo(1000, 500).slideUp(500, function () {
+            $(`#${errorId}`).slideUp(1000);
+            // Delete the HTML element after its hidden.
+            $(`#${errorId}`).remove();
+        });
+        errorCounter++;
     }
 
 })
