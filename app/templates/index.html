@@ -443,4 +443,5 @@
 
 {% block javascripts %}
   {{ super() }}
+  <script src="{{ url_for('static', filename='assets/js/view-grades.js') }}"></script>
 {% endblock javascripts %}
