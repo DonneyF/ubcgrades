@@ -13,7 +13,7 @@ def get_yearsession(yearsession):
 
 
 # Routes for Tableau Dashboard
-@bp.route('/api/v2/grades/<string:campus>/<string:yearsession>', methods=['GET'])
+@bp.route('/v2/grades/<string:campus>/<string:yearsession>', methods=['GET'])
 def get_grades_v2_l1(campus, yearsession):
     year, session = get_yearsession(yearsession)
     result = [row.to_dict() for row in TableauDashboardGrade.query.filter_by(
@@ -21,7 +21,7 @@ def get_grades_v2_l1(campus, yearsession):
     return jsonify(result) if result != [] else error_response(404, "Not Found")
 
 
-@bp.route('/api/v2/grades/<string:campus>/<string:yearsession>/<string:subject>', methods=['GET'])
+@bp.route('/v2/grades/<string:campus>/<string:yearsession>/<string:subject>', methods=['GET'])
 def get_grades_v2_l2(campus, yearsession, subject):
     year, session = get_yearsession(yearsession)
     result = [row.to_dict() for row in TableauDashboardGrade.query.filter_by(
@@ -29,7 +29,7 @@ def get_grades_v2_l2(campus, yearsession, subject):
     return jsonify(result) if result != [] else error_response(404, "Not Found")
 
 
-@bp.route('/api/v2/grades/<string:campus>/<string:yearsession>/<string:subject>/<string:course>', methods=['GET'])
+@bp.route('/v2/grades/<string:campus>/<string:yearsession>/<string:subject>/<string:course>', methods=['GET'])
 def get_grades_v2_l3(campus, yearsession, subject, course):
     year, session = get_yearsession(yearsession)
     result = [row.to_dict() for row in TableauDashboardGrade.query.filter_by(
@@ -37,7 +37,7 @@ def get_grades_v2_l3(campus, yearsession, subject, course):
     return jsonify(result) if result != [] else error_response(404, "Not Found")
 
 
-@bp.route('/api/v2/grades/<string:campus>/<string:yearsession>/<string:subject>/<string:course>/<string:section>', methods=['GET'])
+@bp.route('/v2/grades/<string:campus>/<string:yearsession>/<string:subject>/<string:course>/<string:section>', methods=['GET'])
 def get_grades_v2_yearsession_subject_course_section(campus, yearsession, subject, course, section):
     year, session = get_yearsession(yearsession)
     try:
@@ -49,7 +49,7 @@ def get_grades_v2_yearsession_subject_course_section(campus, yearsession, subjec
 
 
 # Route for PAIR Reports
-@bp.route('/api/v1/grades/<string:campus>/<string:yearsession>', methods=['GET'])
+@bp.route('/v1/grades/<string:campus>/<string:yearsession>', methods=['GET'])
 def get_grades_v1_l1(campus, yearsession):
     year, session = get_yearsession(yearsession)
     result = [row.to_dict() for row in PAIRReportsGrade.query.filter_by(
@@ -57,7 +57,7 @@ def get_grades_v1_l1(campus, yearsession):
     return jsonify(result) if result != [] else error_response(404, "Not Found")
 
 
-@bp.route('/api/v1/grades/<string:campus>/<string:yearsession>/<string:subject>', methods=['GET'])
+@bp.route('/v1/grades/<string:campus>/<string:yearsession>/<string:subject>', methods=['GET'])
 def get_grades_v1_l2(campus, yearsession, subject):
     year, session = get_yearsession(yearsession)
     result = [row.to_dict() for row in PAIRReportsGrade.query.filter_by(
@@ -65,7 +65,7 @@ def get_grades_v1_l2(campus, yearsession, subject):
     return jsonify(result) if result != [] else error_response(404, "Not Found")
 
 
-@bp.route('/api/v1/grades/<string:campus>/<string:yearsession>/<string:subject>/<string:course>', methods=['GET'])
+@bp.route('/v1/grades/<string:campus>/<string:yearsession>/<string:subject>/<string:course>', methods=['GET'])
 def get_grades_v1_l3(campus, yearsession, subject, course):
     year, session = get_yearsession(yearsession)
     result = [row.to_dict() for row in PAIRReportsGrade.query.filter_by(
@@ -73,7 +73,7 @@ def get_grades_v1_l3(campus, yearsession, subject, course):
     return jsonify(result) if result != [] else error_response(404, "Not Found")
 
 
-@bp.route('/api/v1/grades/<string:campus>/<string:yearsession>/<string:subject>/<string:course>/<string:section>', methods=['GET'])
+@bp.route('/v1/grades/<string:campus>/<string:yearsession>/<string:subject>/<string:course>/<string:section>', methods=['GET'])
 def get_grades_v1_yearsession_subject_course_section(campus, yearsession, subject, course, section):
     year, session = get_yearsession(yearsession)
     try:
