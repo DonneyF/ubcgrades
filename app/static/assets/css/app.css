@@ -22,3 +22,7 @@
     right: 0;
     padding: 1rem;
 }
+
+.main-content {
+    min-height: 100vh;
+}
