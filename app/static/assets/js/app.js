@@ -226,13 +226,23 @@ $(function () {
             // Set loading text
             $button.html(loadingText);
         }
-        // Send API request synchronously
+
+        // Retrieve the data
         $.ajax({
             url: `${API_HOST_URL}/api/${apiVersion}/grades/${campus}/${yearsession}/${subject}/${course}/${section}`,
             type: "GET",
             success: function (response) {
                 if (apiVersion === "v1") updateGradeDatav1(response);
                 else updateGradeDatav2(response);
+
+                // Get the most recent sessions and update
+                $.ajax({
+                    url: `${API_HOST_URL}/api/recent-section-averages/${campus}/${subject}/${course}`,
+                    type: "GET",
+                    success: function (response) {
+                        updateRecentSectionGrades(response);
+                    }
+                });
                 displayGradeContainer();
             },
             error: function (response) {
@@ -312,6 +322,17 @@ $(function () {
         // Update the chart
         $('#chart-grades-toggles').show();
         updateGradesChart(data);
+    }
+
+    // Update the card showing the most recent grades
+    function updateRecentSectionGrades(data) {
+        $('#recent-section-averages .card-body .row').empty();
+        data.reverse();
+        data.forEach(function(entry) {
+            $('#recent-section-averages .card-body .row').append('<div class="col">' +
+                `<h5 class="text-uppercase text-muted ls-1 mb-1">${entry['year']}${entry['session']} - ${entry['section']}</h5>` +
+                `<h2 class="mb-0">${parseFloat(entry['average']).toFixed(2)}</h2></div>`)
+        });
     }
 
     let sectionGradesChart;
