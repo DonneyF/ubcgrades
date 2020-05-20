@@ -2,27 +2,6 @@
 
 $(function () {
 
-    // Find the button that caused the modal to close and update the campus
-    $('#exampleModal .modal-body button').on('click', function (event) {
-        let $button = $(event.target);
-        $(this).closest('.modal').one('hidden.bs.modal', function () {
-            localStorage.setItem("campus", $button.data('campus'));
-            campus = localStorage.getItem("campus");
-
-            // Update campus dropdown for the first time. A prepend is needed since the browser automatically selects the first value
-            $('#vg-drop-year').prepend('<option></option>').select2({
-                data: campus === "UBCV" ? YEARSESSIONS_UBCV.map(item => ({
-                    'id': item,
-                    'text': item
-                })) : YEARSESSIONS_UBCO.map(item => ({'id': item, 'text': item})),
-            }).on("select2:select", function (e) {
-                yearsession = new YearSession($(this).select2('data')[0]['id']);
-                apiVersion = yearsession.year < 2014 ? "v1" : "v2";
-                updateVGSubjectDrop();
-            });
-        });
-    });
-
     // Update the dropdown on all subsequent page loads. TODO: Maybe a better solution?
     $('#vg-drop-year').prepend('<option></option>').select2({
         data: campus === "UBCV" ? YEARSESSIONS_UBCV.map(item => ({
@@ -55,7 +34,7 @@ $(function () {
             url: `${API_HOST_URL}/api/${apiVersion}/subjects/${campus}/${yearsession}`,
             type: "GET",
             success: function (response) {
-                updateVGDropdown('#vg-drop-subject', response);
+                updateVGDropdown('subject', response);
             },
             error: function () {
                 displayError("Unable to connect to API");
@@ -72,7 +51,7 @@ $(function () {
             url: `${API_HOST_URL}/api/${apiVersion}/courses/${campus}/${yearsession}/${subject}`,
             type: "GET",
             success: function (response) {
-                updateVGDropdown('#vg-drop-course', response);
+                updateVGDropdown('course', response);
             },
             error: function () {
                 displayError("Unable to connect to API");
@@ -90,7 +69,7 @@ $(function () {
             url: `${API_HOST_URL}/api/${apiVersion}/sections/${campus}/${yearsession}/${subject}/${course}`,
             type: "GET",
             success: function (response) {
-                updateVGDropdown('#vg-drop-section', response);
+                updateVGDropdown('section', response);
             },
             error: function () {
                 displayError("Unable to connect to API");
@@ -98,18 +77,34 @@ $(function () {
         });
     }
 
+
     /**
      * Updates the dropdowns with the values
      * @param id is the CSS id of the dropdown
      * @param response is the API response data
      */
     function updateVGDropdown(id, response) {
-        let dropdown = $(id);
+        let dropdown = $(`#vg-drop-${id}`);
 
         // Populate the dropdown with the new data
-        dropdown.empty().prepend('<option></option>').select2({
-            data: response.map(item => ({'id': item, 'text': item})),
-        });
+        if (["subject", "course"].indexOf(id) >= 0) {
+            dropdown.empty().prepend('<option></option>').select2({
+                data: response.map(item => ({
+                    'id': item[id],
+                    'text': `${item[id]} - ${item[`${id}_title`]}`
+                })),
+                // Auto adjust the dropdown
+                dropdownAutoWidth: true,
+                // Display the ID instead of the value
+                templateSelection: function (val) {
+                    return val.id;
+                }
+            });
+        } else {
+            dropdown.empty().prepend('<option></option>').select2({
+                data: response.map(item => ({'id': item, 'text': item})),
+            });
+        }
         // If the response contains only one element or the section is length 2 with OVERALL, automatically select it
         if (id === "#vg-drop-section" && response.length === 2 && response.includes("OVERALL")) {
             // Find the entry that is not OVERALL
@@ -230,7 +225,7 @@ $(function () {
     function updateGradeDatav1(data) {
         // Update the card header
         $('#pair-reports-row .card-header h3').text(`${data['campus']} ${data['year']}${data['session']} ${data['subject']} ${data['course']} ${data['section']}`);
-        $('#pair-reports-row .card-header h2').text(data['title']);
+        $('#pair-reports-row .card-header h2').text(data['course_title']);
         // Update the headmatter
         $('#vg-headmatter-v1 h2').each(function (index) {
             // Find each h2 and update
@@ -262,7 +257,7 @@ $(function () {
     function updateGradeDatav2(data) {
         // Update the card header
         $('#tableau-dashboard-row .card-header h3').text(`${data['campus']} ${data['year']}${data['session']} ${data['subject']} ${data['course']} ${data['section']}`);
-        $('#tableau-dashboard-row .card-header h2').text(data['title']);
+        $('#tableau-dashboard-row .card-header h2').text(data['course_title']);
         // Update the headmatter
         $('#vg-headmatter-v2 h2').each(function (index) {
             // Find each h2 and update
@@ -295,7 +290,7 @@ $(function () {
     function updateRecentSectionGrades(data) {
         $('#recent-section-averages .card-body .row').empty();
         data.reverse();
-        data.forEach(function(entry) {
+        data.forEach(function (entry) {
             $('#recent-section-averages .card-body .row').append('<div class="col">' +
                 `<h5 class="text-uppercase text-muted ls-1 mb-1">${entry['year']}${entry['session']} - ${entry['section']}</h5>` +
                 `<h2 class="mb-0">${parseFloat(entry['average']).toFixed(2)}</h2></div>`)

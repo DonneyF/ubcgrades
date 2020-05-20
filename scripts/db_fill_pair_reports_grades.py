@@ -109,18 +109,31 @@ def main():
 
     app, db = create_app(Config)
 
+    missing = set()
+
     with app.app_context():
         db.create_all()
+
+        # Build subject dict
+        extra = os.path.join(os.path.abspath(os.path.dirname(__file__)), os.pardir, 'ubc-pair-grade-data', 'extra')
+        subjects = {}
+        for file in ['UBCV_subjects.json']:
+            for subject in json.load(open(os.path.join(extra, file), 'r')):
+                subjects.update({f'{file[0:3]}-{subject["code"]}': subject})
 
         for section in sections:
             campus = CampusEnum.UBCV
             session = SessionEnum.W if section['Session'] == "W" else SessionEnum.S
             average = None if section['Avg'] == '' else section['Avg']
             stdev = None if section['Std dev'] == '' else section['Std dev']
+            subject_key = f'{section["Campus"]}-{section["Subject"].strip()}'
             entry = PAIRReportsGrade(campus=campus, year=section['Year'], session=session,
-                                     subject=section['Subject'], course=section['Course'],
-                                     detail=section['Detail'].strip(),
-                                     section=section['Section'], title=section['Title'], professor=section['Professor'],
+                                                  faculty_title=subjects[subject_key]['faculty_school'],
+                                                  subject=section['Subject'].strip(),
+                                                  subject_title=subjects[subject_key]['title'],
+                                                  course=section['Course'], detail=section['Detail'],
+                                                  section=section['Section'],
+                                                  course_title=section['Title'], professor=section['Professor'],
                                      enrolled=section['Enrolled'], average=average,
                                      stdev=stdev, high=section['High'], low=section['Low'],
                                      num_pass=section['Pass'], num_fail=section['Fail'],
@@ -137,6 +150,7 @@ def main():
                                      grade_85_89=section['85-89'], grade_90_100=section['90-100'])
             db.session.add(entry)
         db.session.commit()
+
 
 
 if __name__ == "__main__":

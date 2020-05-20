@@ -200,16 +200,13 @@
         </div>
       </div>
     </div>
-  </div>
 
-  {% include "site_template/footer.html" %}
+    {% include "site_template/footer.html" %}
 
   </div>
 
 {% endblock content %}
 
 {% block javascripts %}
-  <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>
   {{ super() }}
-
 {% endblock javascripts %}

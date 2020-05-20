@@ -16,11 +16,13 @@ class PAIRReportsGrade(db.Model):
     campus = db.Column(db.Enum(CampusEnum), primary_key=True)  # UBCV or UBCO
     year = db.Column(db.String(4), primary_key=True)  # Ex: 2012
     session = db.Column(db.Enum(SessionEnum), primary_key=True)  # W or S
+    faculty_title = db.Column(db.String())
     subject = db.Column(db.String(4), primary_key=True)  # Ex: BA, KIN, MATH
+    subject_title = db.Column(db.String())
     course = db.Column(db.String(3), primary_key=True)  # Ex: 001, 200
     detail = db.Column(db.String(3), primary_key=True)  # Ex: A, B, C
     section = db.Column(db.String(7), primary_key=True)  # Ex: 001, 100, GIS, T1A, OVERALL
-    title = db.Column(db.String())
+    course_title = db.Column(db.String())
     professor = db.Column(db.String())
     enrolled = db.Column(db.Integer())
     average = db.Column(db.Float(), nullable=True)
@@ -76,10 +78,12 @@ class PAIRReportsGrade(db.Model):
             "campus": self.campus.name,
             "year": self.year,
             "session": self.session.name,
+            "faculty_title": self.faculty_title,
             "subject": self.subject,
+            "subject_title": self.subject_title,
             "course": self.course,
             "section": self.section,
-            "title": self.title,
+            "course_title": self.course_title,
             "professor": self.professor,
             "enrolled": self.enrolled,
             "average": self.average if self.average is not None else '',
@@ -98,11 +102,13 @@ class TableauDashboardGrade(db.Model):
     campus = db.Column(db.Enum(CampusEnum), primary_key=True)  # UBCV or UBCO
     year = db.Column(db.String(4), primary_key=True)  # Ex: 2012
     session = db.Column(db.Enum(SessionEnum), primary_key=True)  # W or S
+    faculty_title = db.Column(db.String())
     subject = db.Column(db.String(4), primary_key=True)  # Ex: BA, KIN, MATH
+    subject_title = db.Column(db.String())
     course = db.Column(db.String(3), primary_key=True)  # Ex: 001, 200
     detail = db.Column(db.String(3), primary_key=True)  # Ex: A, B, C
     section = db.Column(db.String(7), primary_key=True)  # Ex: 001, 100, GIS, T1A, OVERALL
-    title = db.Column(db.String())
+    course_title = db.Column(db.String())
     professor = db.Column(db.String())
     enrolled = db.Column(db.Integer())
     average = db.Column(db.Float())
@@ -144,10 +150,12 @@ class TableauDashboardGrade(db.Model):
             "campus": self.campus.name,
             "year": self.year,
             "session": self.session.name,
+            "faculty_title": self.faculty_title,
             "subject": self.subject,
+            "subject_title": self.subject_title,
             "course": self.course,
             "section": self.section,
-            "title": self.title,
+            "course_title": self.course_title,
             "professor": self.professor,
             "enrolled": self.enrolled,
             "average": self.average,
