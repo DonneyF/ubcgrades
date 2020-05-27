@@ -131,7 +131,7 @@ def main():
                                                   faculty_title=subjects[subject_key]['faculty_school'],
                                                   subject=section['Subject'].strip(),
                                                   subject_title=subjects[subject_key]['title'],
-                                                  course=section['Course'], detail=section['Detail'],
+                                                  course=section['Course'], detail=section['Detail'].strip(),
                                                   section=section['Section'],
                                                   course_title=section['Title'], professor=section['Professor'],
                                      enrolled=section['Enrolled'], average=average,

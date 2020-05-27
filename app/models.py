@@ -13,6 +13,7 @@ class SessionEnum(enum.Enum):
 
 
 class PAIRReportsGrade(db.Model):
+    __tablename__ = "PAIRReportsGrade"
     campus = db.Column(db.Enum(CampusEnum), primary_key=True)  # UBCV or UBCO
     year = db.Column(db.String(4), primary_key=True)  # Ex: 2012
     session = db.Column(db.Enum(SessionEnum), primary_key=True)  # W or S
@@ -99,6 +100,7 @@ class PAIRReportsGrade(db.Model):
 
 
 class TableauDashboardGrade(db.Model):
+    __tablename__ = "TableauDashboardGrade"
     campus = db.Column(db.Enum(CampusEnum), primary_key=True)  # UBCV or UBCO
     year = db.Column(db.String(4), primary_key=True)  # Ex: 2012
     session = db.Column(db.Enum(SessionEnum), primary_key=True)  # W or S
@@ -158,6 +160,38 @@ class TableauDashboardGrade(db.Model):
             "course_title": self.course_title,
             "professor": self.professor,
             "enrolled": self.enrolled,
+            "average": self.average,
+            "stdev": self.stdev,
+            "high": self.high,
+            "low": self.low,
+        }
+
+
+class Course(db.Model):
+    __tablename__ = "Course"
+    campus = db.Column(db.Enum(CampusEnum), primary_key=True)  # UBCV or UBCO
+    faculty_title = db.Column(db.String())
+    subject = db.Column(db.String(4), primary_key=True)  # Ex: BA, KIN, MATH
+    subject_title = db.Column(db.String())
+    course = db.Column(db.String(3), primary_key=True)  # Ex: 001, 200
+    detail = db.Column(db.String(3), primary_key=True)  # Ex: A, B, C
+    course_title = db.Column(db.String())
+    average = db.Column(db.Float())
+    stdev = db.Column(db.Float())
+    max_course_avg = db.Column(db.Integer())
+    min_course_avg = db.Column(db.Integer())
+
+    def __repr__(self):
+        return f"<Course {self.campus.name}--{self.subject}-{self.course}{self.detail if self.detail != '' else ''}>"
+
+    def to_dict(self):
+        return {
+            "campus": self.campus.name,
+            "faculty_title": self.faculty_title,
+            "subject": self.subject,
+            "subject_title": self.subject_title,
+            "course": self.course,
+            "course_title": self.course_title,
             "average": self.average,
             "stdev": self.stdev,
             "high": self.high,
