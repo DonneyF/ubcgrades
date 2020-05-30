@@ -10,7 +10,7 @@ def get_sections_v2(campus, yearsession, subject, course):
     if g.bad_yearsession:
         return bad_request("Bad yearsession")
     result = [row.section for row in TDG.query.filter_by(
-        campus=campus, year=g.year, session=g.session, subject=subject, course=course).distinct()]
+        campus=campus, year=g.year, session=g.session, subject=subject, course=g.course, detail=g.detail).distinct()]
     return jsonify(result) if result != [] else error_response(404, "Not Found")
 
 
@@ -18,10 +18,11 @@ def get_sections_v2(campus, yearsession, subject, course):
 def get_courses_v2(campus, yearsession, subject):
     if g.bad_yearsession:
         return bad_request("Bad yearsession")
-    query = TDG.query.with_entities(TDG.course, TDG.course_title).filter_by(
+    query = TDG.query.with_entities(TDG.course, TDG.detail, TDG.course_title).filter_by(
         campus=campus, year=g.year, session=g.session, subject=subject).distinct()
     result = [{
         'course': row.course,
+        'detail': row.detail,
         'course_title': row.course_title
     } for row in query]
     return jsonify(result) if result != [] else error_response(404, "Not Found")
@@ -29,9 +30,10 @@ def get_courses_v2(campus, yearsession, subject):
 
 @bp.route('/v2/courses/<string:campus>/<string:subject>', methods=['GET'])
 def get_courses_no_yearsession_v2(campus, subject):
-    query = TDG.query.with_entities(TDG.course, TDG.course_title).filter_by(campus=campus, subject=subject).distinct()
+    query = TDG.query.with_entities(TDG.course, TDG.detail, TDG.course_title).filter_by(campus=campus, subject=subject).distinct()
     result = [{
         'course': row.course,
+        'detail': row.detail,
         'course_title': row.course_title
     } for row in query]
     return jsonify(result) if result != [] else error_response(404, "Not Found")
@@ -71,7 +73,7 @@ def get_sections_v1(campus, yearsession, subject, course):
     if g.bad_yearsession:
         return bad_request("Bad yearsession")
     result = [row.section for row in PRG.query.filter_by(
-        campus=campus, year=g.year, session=g.session, subject=subject, course=course).distinct()]
+        campus=campus, year=g.year, session=g.session, subject=subject, course=g.course, detail=g.detail).distinct()]
     return jsonify(result) if result != [] else error_response(404, "Not Found")
 
 

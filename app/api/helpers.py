@@ -5,7 +5,7 @@
 from app.api import bp
 from app.models import TableauDashboardGrade, PAIRReportsGrade
 from app.api.errors import error_response, bad_request
-from flask import jsonify
+from flask import jsonify, g
 
 
 recent_section_averages_keys = ['campus', 'year', 'session', 'average']
@@ -15,7 +15,7 @@ recent_section_averages_keys = ['campus', 'year', 'session', 'average']
 @bp.route('/recent-section-averages/<string:campus>/<string:subject>/<string:course>', methods=['GET'])
 def get_recent_section_averages(campus, subject, course):
     result = [row for row in TableauDashboardGrade.query.filter_by(
-        campus=campus, subject=subject, course=course).filter(TableauDashboardGrade.section != "OVERALL")
+        campus=campus, subject=subject, course=g.course, detail=g.detail).filter(TableauDashboardGrade.section != "OVERALL")
         .order_by(TableauDashboardGrade.year.desc()).limit(5).all()]
 
     # Then convert to dictionaries

@@ -83,6 +83,7 @@ class PAIRReportsGrade(db.Model):
             "subject": self.subject,
             "subject_title": self.subject_title,
             "course": self.course,
+            "detail": self.detail,
             "section": self.section,
             "course_title": self.course_title,
             "professor": self.professor,
@@ -156,6 +157,7 @@ class TableauDashboardGrade(db.Model):
             "subject": self.subject,
             "subject_title": self.subject_title,
             "course": self.course,
+            "detail": self.detail,
             "section": self.section,
             "course_title": self.course_title,
             "professor": self.professor,
@@ -191,6 +193,7 @@ class Course(db.Model):
             "subject": self.subject,
             "subject_title": self.subject_title,
             "course": self.course,
+            "detail": self.detail,
             "course_title": self.course_title,
             "average": self.average,
             "stdev": self.stdev,
@@ -256,6 +259,7 @@ class CourseDistributions(db.Model):
             "session": self.session.name,
             "subject": self.subject,
             "course": self.course,
+            "detail": self.detail
         }
 
 
@@ -316,7 +320,81 @@ class Professor(db.Model):
     ys_2019W = db.Column(db.Integer())
 
     def __repr__(self):
-        return f"<Professor {self.campus}-{self.subject}-{self.course}>"
+        return f"<Professor {self.campus}-{self.subject}-{self.course}{self.course.detail}>"
+
+    def to_dict(self):
+        data = {}
+        for key, val in vars(self).items():
+            if "ys_" in key:
+                data[key[3:]] = val
+            else:
+                data[key] = val
+
+        data['campus'] = self.campus.name
+        data.pop('_sa_instance_state')
+
+        # TODO: Development. Reinstate after 2019W is populated
+        data.pop('2019W')
+        return data
+
+
+class CourseAverageHistory(db.Model):
+    __tablename__ = 'CourseAverageHistory'
+    campus = db.Column(db.Enum(CampusEnum), primary_key=True)  # UBCV or UBCO
+    subject = db.Column(db.String(4), primary_key=True)  # Ex: BA, KIN, MATH
+    course = db.Column(db.String(3), primary_key=True)  # Ex: 001, 200
+    detail = db.Column(db.String(3), primary_key=True)  # Ex: A, B, C
+    ys_1996S = db.Column(db.Integer())
+    ys_1996W = db.Column(db.Integer())
+    ys_1997S = db.Column(db.Integer())
+    ys_1997W = db.Column(db.Integer())
+    ys_1998S = db.Column(db.Integer())
+    ys_1998W = db.Column(db.Integer())
+    ys_1999S = db.Column(db.Integer())
+    ys_1999W = db.Column(db.Integer())
+    ys_2000S = db.Column(db.Integer())
+    ys_2000W = db.Column(db.Integer())
+    ys_2001S = db.Column(db.Integer())
+    ys_2001W = db.Column(db.Integer())
+    ys_2002S = db.Column(db.Integer())
+    ys_2002W = db.Column(db.Integer())
+    ys_2003S = db.Column(db.Integer())
+    ys_2003W = db.Column(db.Integer())
+    ys_2004S = db.Column(db.Integer())
+    ys_2004W = db.Column(db.Integer())
+    ys_2005S = db.Column(db.Integer())
+    ys_2005W = db.Column(db.Integer())
+    ys_2006S = db.Column(db.Integer())
+    ys_2006W = db.Column(db.Integer())
+    ys_2007S = db.Column(db.Integer())
+    ys_2007W = db.Column(db.Integer())
+    ys_2008S = db.Column(db.Integer())
+    ys_2008W = db.Column(db.Integer())
+    ys_2009S = db.Column(db.Integer())
+    ys_2009W = db.Column(db.Integer())
+    ys_2010S = db.Column(db.Integer())
+    ys_2010W = db.Column(db.Integer())
+    ys_2011S = db.Column(db.Integer())
+    ys_2011W = db.Column(db.Integer())
+    ys_2012S = db.Column(db.Integer())
+    ys_2012W = db.Column(db.Integer())
+    ys_2013S = db.Column(db.Integer())
+    ys_2013W = db.Column(db.Integer())
+    ys_2014S = db.Column(db.Integer())
+    ys_2014W = db.Column(db.Integer())
+    ys_2015S = db.Column(db.Integer())
+    ys_2015W = db.Column(db.Integer())
+    ys_2016S = db.Column(db.Integer())
+    ys_2016W = db.Column(db.Integer())
+    ys_2017S = db.Column(db.Integer())
+    ys_2017W = db.Column(db.Integer())
+    ys_2018S = db.Column(db.Integer())
+    ys_2018W = db.Column(db.Integer())
+    ys_2019S = db.Column(db.Integer())
+    ys_2019W = db.Column(db.Integer())
+
+    def __repr__(self):
+        return f"<CourseAverageHistory {self.campus}-{self.subject}-{self.course}{self.course.detail}>"
 
     def to_dict(self):
         data = {}

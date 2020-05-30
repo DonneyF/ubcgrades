@@ -88,11 +88,20 @@ $(function () {
 
         // Populate the dropdown with the new data
         if (["subject", "course"].indexOf(id) >= 0) {
-            dropdown.empty().prepend('<option></option>').select2({
-                data: response.map(item => ({
+            let data;
+            if (id === "course") {
+                data = response.map(item => ({
+                    'id': `${item['course']}${item['detail']}`,
+                    'text': `${item['course']}${item['detail']} - ${item['course_title']}`
+                }));
+            } else {
+                data = response.map(item => ({
                     'id': item[id],
                     'text': `${item[id]} - ${item[`${id}_title`]}`
-                })),
+                }))
+            }
+            dropdown.empty().prepend('<option></option>').select2({
+                data: data,
                 // Auto adjust the dropdown
                 dropdownAutoWidth: true,
                 // Display the ID instead of the value
@@ -224,7 +233,7 @@ $(function () {
 
     function updateGradeDatav1(data) {
         // Update the card header
-        $('#pair-reports-row .card-header h3').text(`${data['campus']} ${data['year']}${data['session']} ${data['subject']} ${data['course']} ${data['section']}`);
+        $('#pair-reports-row .card-header h3').text(`${data['campus']} ${data['year']}${data['session']} ${data['subject']} ${data['course']}${data['detail']} ${data['section']}`);
         $('#pair-reports-row .card-header h2').text(data['course_title']);
         // Update the headmatter
         $('#vg-headmatter-v1 h2').each(function (index) {
@@ -256,7 +265,7 @@ $(function () {
 
     function updateGradeDatav2(data) {
         // Update the card header
-        $('#tableau-dashboard-row .card-header h3').text(`${data['campus']} ${data['year']}${data['session']} ${data['subject']} ${data['course']} ${data['section']}`);
+        $('#tableau-dashboard-row .card-header h3').text(`${data['campus']} ${data['year']}${data['session']} ${data['subject']} ${data['course']}${data['detail']} ${data['section']}`);
         $('#tableau-dashboard-row .card-header h2').text(data['course_title']);
         // Update the headmatter
         $('#vg-headmatter-v2 h2').each(function (index) {

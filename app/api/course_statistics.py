@@ -6,7 +6,7 @@ from flask import jsonify, g
 
 @bp.route('/v2/course-statistics/<string:campus>/<string:subject>/<string:course>', methods=['GET'])
 def get_course_statistics(campus, subject, course):
-    result = Course.query.filter_by(campus=campus, subject=subject, course=course).one_or_none()
+    result = Course.query.filter_by(campus=campus, subject=subject, course=g.course, detail=g.detail).one_or_none()
     return jsonify(result.to_dict()) if result is not None else error_response(404, "Not Found")
 
 
@@ -18,7 +18,7 @@ def get_course_statistics_no_subject(campus, subject):
 
 @bp.route('/v2/course-statistics/distributions/<string:campus>/<string:subject>/<string:course>', methods=['GET'])
 def get_course_distributions(campus, subject, course):
-    result = [row.to_dict() for row in CDist.query.filter_by(campus=campus, subject=subject, course=course).all()]
+    result = [row.to_dict() for row in CDist.query.filter_by(campus=campus, subject=subject, course=g.course, detail=g.detail).all()]
     return jsonify(result) if result != [] else error_response(404, "Not Found")
 
 
@@ -30,7 +30,7 @@ def get_course_distributions_no_subject(campus, subject):
 
 @bp.route('/v2/course-statistics/professors/<string:campus>/<string:subject>/<string:course>', methods=['GET'])
 def get_professors(campus, subject, course):
-    result = [row.to_dict() for row in Professor.query.filter_by(campus=campus, subject=subject, course=course).all()]
+    result = [row.to_dict() for row in Professor.query.filter_by(campus=campus, subject=subject, course=g.course, detail=g.detail).all()]
     return jsonify(result) if result != [] else error_response(404, "Not Found")
 
 

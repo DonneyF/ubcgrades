@@ -1,7 +1,7 @@
 from app.api import bp
 from app.models import TableauDashboardGrade, PAIRReportsGrade
 from app.api.errors import error_response, bad_request
-from flask import jsonify
+from flask import jsonify, g
 from sqlalchemy.orm.exc import NoResultFound
 
 
@@ -33,7 +33,7 @@ def get_grades_v2_l2(campus, yearsession, subject):
 def get_grades_v2_l3(campus, yearsession, subject, course):
     year, session = get_yearsession(yearsession)
     result = [row.to_dict() for row in TableauDashboardGrade.query.filter_by(
-        campus=campus, year=year, session=session, subject=subject, course=course).all()]
+        campus=campus, year=year, session=session, subject=subject, course=g.course, detail=g.detail).all()]
     return jsonify(result) if result != [] else error_response(404, "Not Found")
 
 
@@ -42,7 +42,7 @@ def get_grades_v2_yearsession_subject_course_section(campus, yearsession, subjec
     year, session = get_yearsession(yearsession)
     try:
         result = TableauDashboardGrade.query.filter_by(campus=campus, year=year, session=session, subject=subject,
-                                                       course=course, section=section).one().to_dict()
+                                                       course=g.course, detail=g.detail, section=section).one().to_dict()
         return jsonify(result)
     except NoResultFound:
         return error_response(404, "Not Found")
@@ -69,7 +69,7 @@ def get_grades_v1_l2(campus, yearsession, subject):
 def get_grades_v1_l3(campus, yearsession, subject, course):
     year, session = get_yearsession(yearsession)
     result = [row.to_dict() for row in PAIRReportsGrade.query.filter_by(
-        campus=campus, year=year, session=session, subject=subject, course=course).all()]
+        campus=campus, year=year, session=session, subject=subject, course=g.course, detail=g.detail).all()]
     return jsonify(result) if result != [] else error_response(404, "Not Found")
 
 
@@ -78,7 +78,7 @@ def get_grades_v1_yearsession_subject_course_section(campus, yearsession, subjec
     year, session = get_yearsession(yearsession)
     try:
         result = PAIRReportsGrade.query.filter_by(campus=campus, year=year, session=session, subject=subject,
-                                                       course=course, section=section).one().to_dict()
+                                                       course=g.course, detail=g.detail, section=section).one().to_dict()
         return jsonify(result)
     except NoResultFound:
         return error_response(404, "Not Found")
