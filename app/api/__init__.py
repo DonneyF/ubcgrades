@@ -16,4 +16,4 @@ def check_yearsession(endpoint, values):
             g.session = yearsession[4]
 
 
-from app.api import grades, filters, helpers
+from app.api import grades, filters, helpers, course_statistics
