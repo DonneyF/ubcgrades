@@ -2,17 +2,39 @@
 
 $(function () {
 
-    // Update the dropdown on all subsequent page loads. TODO: Maybe a better solution?
-    $('#vg-drop-year').prepend('<option></option>').select2({
-        data: campus === "UBCV" ? YEARSESSIONS_UBCV.map(item => ({
-            'id': item,
-            'text': item
-        })) : YEARSESSIONS_UBCO.map(item => ({'id': item, 'text': item})),
-    }).on("select2:select", function (e) {
-        yearsession = new YearSession($(this).select2('data')[0]['id']);
-        apiVersion = yearsession.year < 2014 ? "v1" : "v2";
-        updateVGSubjectDrop();
+    /*-----------------------------------
+    * Campus Selector and Dropdowns
+    *-----------------------------------*/
+
+    // Campus modal handler
+    $('#campusModal .modal-body button').on('click', function (event) {
+        // Find the button that caused the modal to close and update the campus
+        let $button = $(event.target);
+        $(this).closest('.modal').one('hidden.bs.modal', function () {
+            localStorage.setItem("campus", $button.data('campus'));
+            campus = localStorage.getItem("campus");
+
+            populateYearSessionDrop();
+        });
     });
+
+    // Update the dropdown on all subsequent page loads. TODO: Maybe a better solution?
+    function populateYearSessionDrop() {
+        $('#vg-drop-year').prepend('<option></option>').select2({
+            data: campus === "UBCV" ? YEARSESSIONS_UBCV.map(item => ({
+                'id': item,
+                'text': item
+            })) : YEARSESSIONS_UBCO.map(item => ({'id': item, 'text': item})),
+        }).on("select2:select", function (e) {
+            yearsession = new YearSession($(this).select2('data')[0]['id']);
+            apiVersion = yearsession.year < 2014 ? "v1" : "v2";
+            updateVGSubjectDrop();
+        });
+    }
+
+    if (campus != null) {
+       populateYearSessionDrop();
+    }
 
     $('#vg-drop-subject').select2().on("select2:select", function (e) {
         updateVGCourseDrop($(this).select2('data')[0]['id']);
@@ -115,11 +137,12 @@ $(function () {
             });
         }
         // If the response contains only one element or the section is length 2 with OVERALL, automatically select it
-        if (id === "#vg-drop-section" && response.length === 2 && response.includes("OVERALL")) {
+        if (id === "section" && response.length === 2 && response.includes("OVERALL")) {
             // Find the entry that is not OVERALL
             dropdown.select2("trigger", "select", {
                 data: {id: response.filter(x => x !== "OVERALL")[0]}
             });
+            $('#vg-dropdown-form').submit();
         } else {
             // Open the dropdown
             dropdown.select2('open');
@@ -143,9 +166,9 @@ $(function () {
     }
 
     // Entry via ID
-    $("#vg-id-form").submit(function () {
+    $("#vg-id-form").on('submit',function () {
         let idSplit = parseViewGradesID($('#vg-id-form input').val());
-        if (idSplit.length !== 4 || idSplit === false) {
+        if (idSplit === false) {
             displayError("Invalid ID. Check again.");
         } else {
             yearsession = new YearSession(idSplit[0]);
@@ -156,7 +179,7 @@ $(function () {
     });
 
     // Entry via dropdowns
-    $("#vg-dropdown-form").submit(function () {
+    $("#vg-dropdown-form").on('submit',function () {
         // Selectively show row based on desired year
         getSectionGrades('#vg-dropdown-submit', yearsession, $('#vg-drop-subject').val(),
             $('#vg-drop-course').val(), $('#vg-drop-section').val());
@@ -167,7 +190,7 @@ $(function () {
     /**
      * Displays the grade card depending on api version and show the container if first submission
      */
-    function displayGradeContainer() {
+    function displayContentContainer() {
         if (yearsession.year < 2014) {
             $('#tableau-dashboard-row').addClass('d-none');
             $('#pair-reports-row').removeClass('d-none');
@@ -176,9 +199,9 @@ $(function () {
             $('#pair-reports-row').addClass('d-none');
         }
 
-        if ($('#grade-container').hasClass("collapse")) {
+        if ($('#content-container').hasClass("collapse")) {
             setTimeout(function () {
-                $('#grade-container').collapse();
+                $('#content-container').collapse();
             }, 250);
         }
     }
@@ -214,7 +237,7 @@ $(function () {
                         updateRecentSectionGrades(response);
                     }
                 });
-                displayGradeContainer();
+                displayContentContainer();
             },
             error: function (response) {
                 if (response.status === 404) displayError('Invalid ID, or ID does not exist.');

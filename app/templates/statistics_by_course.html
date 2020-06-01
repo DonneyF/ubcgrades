@@ -12,31 +12,56 @@
     <div class="card-header">
       <div class="row">
         <h1 class="mb-0 col">Statistics by Course</h1>
-        <div class="col-lg-6 col-5 text-right align-self-center">
-          <a href="#" class="btn btn-sm btn-neutral">Submit by ID</a>
-        </div>
+        <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+          <li class="nav-item mr-2 mr-md-0">
+            <a class="nav-link py-2 px-3 active" data-toggle="pill" href="#sc-dropdown-form" role="tab"
+               aria-controls="pills-form" aria-selected="true">Dropdowns</a>
+          </li>
+          <li class="nav-item mr-2 mr-md-0">
+            <a class="nav-link py-2 px-3" data-toggle="pill" href="#sc-id-form" role="tab"
+               aria-controls="pills-id" aria-selected="false">Submit by ID</a>
+          </li>
+        </ul>
       </div>
     </div>
     <!-- Card body -->
     <div class="card-body">
       <!-- Form groups used in grid -->
-      <form id="sv-form" class="row">
-        <div class="col-lg col-6">
-          <select id="sv-dropdown-subject" class="mb-sm-2 form-control col" required>
-            <option value="" disabled selected>Subject</option>
-          </select>
+      <div class="tab-content">
+          <div class="tab-pane fade show active" id="sc-dropdown-form" role="tabpanel" aria-labelledby="sc-form-tab">
+            <form class="row">
+              <div class="col-lg col-6">
+                <select id="sc-drop-subject" data-toggle="select" data-placeholder="Subject"
+                        class="mb-sm-2 form-control col"
+                        required>
+                </select>
+              </div>
+              <div class="col-lg col-6">
+                <select id="sc-drop-course" data-toggle="select" data-placeholder="Course"
+                        class="mb-sm-2 form-control col"
+                        required>
+                </select>
+              </div>
+              <div class="col-lg-2 col-6 text-center">
+                <button id="sc-drop-submit" class="submit-margin btn btn-xl btn-primary" type="submit">
+                  Submit
+                </button>
+              </div>
+            </form>
+          </div>
+          <div class="tab-pane fade" id="sc-id-form" role="tabpanel" aria-labelledby="sc-id-tab">
+            <form class="row">
+              <div class="col-lg col-6">
+                <input type="text" class="form-control" placeholder="Ex: BIOL 112">
+              </div>
+              <div class="col-lg-2 col-6 text-center">
+                <button id="sc-id-submit" class="submit-margin btn btn-xl btn-primary" type="submit">
+                  Submit
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
-        <div class="col-lg col-6">
-          <select id="sv-dropdown-course" class="mb-sm-2 form-control col" required>
-            <option value="" disabled selected>Course #</option>
-          </select>
-        </div>
-        <div class="col-lg-2 col-6 text-center">
-          <button id="form-submit-button" class="submit-margin btn btn-xl btn-primary" type="submit">
-            Submit
-          </button>
-        </div>
-      </form>
     </div>
   </div>
 {% endblock %}
@@ -44,10 +69,8 @@
 
 {% block content %}
 
-  {#  {% include "site_template/navigation.html" %}#}
-
-  <div class="container mt--7">
-    <div class="row mb-4">
+  <div class="container mt--7 pb-6" id="content-container">
+    <div class="row mb-4" id="sc-row">
       <div class="col">
         <div class="card shadow">
           <div class="card-header bg-gradient-lighter">
@@ -59,7 +82,8 @@
             </div>
           </div>
           <div class="card-body">
-            <div class="row">
+            <!-- Course Information -->
+            <div class="row" id="sc-headmatter">
               <div class="col">
                 <h5 class="text-uppercase text-muted ls-1 mb-1">Average (All Years)</h5>
                 <h2 class="mb-0">60.12</h2>
@@ -69,11 +93,11 @@
                 <h2 class="mb-0">60.12</h2>
               </div>
               <div class="col">
-                <h5 class="text-uppercase text-muted ls-1 mb-1">Maximum Grade</h5>
+                <h5 class="text-uppercase text-muted ls-1 mb-1">Max Section Average</h5>
                 <h2 class="mb-0">60.12</h2>
               </div>
               <div class="col">
-                <h5 class="text-uppercase text-muted ls-1 mb-1">Minimum Grade</h5>
+                <h5 class="text-uppercase text-muted ls-1 mb-1">Min Section Average</h5>
                 <h2 class="mb-0">60.12</h2>
               </div>
             </div>
@@ -209,4 +233,5 @@
 
 {% block javascripts %}
   {{ super() }}
+  <script src="{{ url_for('static', filename='assets/js/statistics-by-course.js') }}"></script>
 {% endblock javascripts %}

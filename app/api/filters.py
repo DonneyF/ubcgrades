@@ -30,7 +30,7 @@ def get_courses_v2(campus, yearsession, subject):
 
 @bp.route('/v2/courses/<string:campus>/<string:subject>', methods=['GET'])
 def get_courses_no_yearsession_v2(campus, subject):
-    query = TDG.query.with_entities(TDG.course, TDG.detail, TDG.course_title).filter_by(campus=campus, subject=subject).distinct()
+    query = TDG.query.with_entities(TDG.course, TDG.detail, TDG.course_title).filter_by(campus=campus, subject=subject).order_by(TDG.course.asc()).distinct()
     result = [{
         'course': row.course,
         'detail': row.detail,
@@ -54,8 +54,11 @@ def get_subjects_v2(campus, yearsession):
 
 @bp.route('/v2/subjects/<string:campus>', methods=['GET'])
 def get_subjects_no_yearsession_v2(campus):
-    result = [row.subject for row in TDG.query.with_entities(TDG.subject).filter_by(
-        campus=campus).distinct()]
+    query = TDG.query.with_entities(TDG.subject, TDG.subject_title).filter_by(campus=campus).order_by(TDG.subject.asc()).distinct()
+    result = [{
+        'subject': row.subject,
+        'subject_title': row.subject_title
+    } for row in query]
     return jsonify(result) if result != [] else error_response(404, "Not Found")
 
 

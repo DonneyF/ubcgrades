@@ -12,6 +12,7 @@ import json
 import csv
 from sqlalchemy.exc import StatementError
 
+PAST_5_YEARS = set(str(i) for i in range(2014, 2019))  # Update on each new Winter session release of grades
 
 def get_sections_combined(course):
     """
@@ -71,16 +72,15 @@ def composite_SD(means, SDs, ncounts):
     return result
 
 
-def compute_average_stdev(sections):
+def compute_average_stdev(sections, averages):
     """
     :param sections: Type: [sqlalchemy.util._collections.result]
     :return: Cumulative weighted average and standard deviation
     """
 
     # Construct a list of pairs with the average and the number of students
-    averages = [section.average for section in sections]
     num_students = []
-    stdevs = [section.stdev for section in sections]
+    stdevs = [section.stdev for section in sections if section.average is not None]
     for section in sections:
         if section.average is None:
             continue
@@ -103,41 +103,70 @@ def compute_average_stdev(sections):
         # Compute the standard deviation of combined samples.
         composite_stdev = composite_SD(averages, stdevs, num_students)
 
+        if N == 0:
+            print(None)
+            exit()
+
         return weighted_average, composite_stdev
+
+
+def compute_average_past_5_years(sections):
+    averages = [section.average for section in sections if section.year in PAST_5_YEARS if section.average is not None]
+    num_students = [section.enrolled for section in sections if section.year in PAST_5_YEARS if section.average is not None]
+
+    if sum(num_students) > 0:
+        weighted_average = sum(weight * value for weight, value in zip(num_students, averages)) / sum(num_students)
+    else:
+        weighted_average = None
+
+    return weighted_average
 
 
 def main():
     app, db = create_app(Config)
     with app.app_context():
+        bulk_objects = []
         db.create_all()
 
         # First get a set of all the courses
         courses = set()  # Set of sqlalchemy.util._collections.result
-        for row in TDG.query.with_entities(TDG.campus, TDG.faculty_title, TDG.subject, TDG.subject_title,
-                                           TDG.course, TDG.course_title, TDG.detail).distinct():
+        for row in TDG.query.with_entities(TDG.campus, TDG.subject, TDG.course, TDG.detail).distinct():
             courses.add(row)
 
-        for row in PRG.query.with_entities(PRG.campus, PRG.faculty_title, PRG.subject, PRG.subject_title,
-                                           PRG.course, PRG.course_title, PRG.detail).filter(PRG.year < '2014').distinct():
+        for row in PRG.query.with_entities(PRG.campus, PRG.subject, PRG.course, PRG.detail).filter(PRG.year < '2014').distinct():
             courses.add(row)
 
-        for course in courses:
+        N = len(courses)
+        for index, course in enumerate(courses):
+            if index % 100 == 0:
+                print(f'{index}/{N}')
             sections = get_sections_combined(course)
+            averages = [section.average for section in sections if section.average is not None]
 
             # Compute the average and standard deviation
-            avg, stdev = compute_average_stdev(sections)
+            avg, stdev = compute_average_stdev(sections, averages)
+            avg_past_5_yrs = compute_average_past_5_years(sections)
 
-            averages = [section.average for section in sections if section.average is not None]
             max_course_avg = max(averages) if averages else None
             min_course_avg = min(averages) if averages else None
 
-            new_entry = Course(campus=course.campus, faculty_title=course.faculty_title, subject=course.subject,
-                               subject_title=course.subject_title, course=course.course, course_title=course.course_title,
-                               detail=course.detail, average=avg, stdev=stdev, max_course_avg=max_course_avg,
-                               min_course_avg=min_course_avg)
+            # Get newest metadata
+            meta = TDG.query.with_entities(TDG.faculty_title, TDG.course_title, TDG.subject_title)\
+                .filter_by(campus=course.campus, subject=course.subject, course=course.course, detail=course.detail).first()
 
-            db.session.add(new_entry)
+            if meta is None:
+                meta = PRG.query.with_entities(PRG.faculty_title, PRG.course_title, PRG.subject_title) \
+                    .filter_by(campus=course.campus, subject=course.subject, course=course.course,
+                               detail=course.detail).first()
 
+            new_entry = Course(campus=course.campus, faculty_title=meta.faculty_title, subject=course.subject,
+                               subject_title=meta.subject_title, course=course.course, course_title=meta.course_title,
+                               detail=course.detail, average=avg, average_past_5_yrs=avg_past_5_yrs, stdev=stdev,
+                               max_course_avg=max_course_avg, min_course_avg=min_course_avg)
+
+            bulk_objects.append(new_entry)
+
+        db.session.bulk_save_objects(bulk_objects)
         db.session.commit()
 
 

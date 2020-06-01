@@ -1,6 +1,6 @@
 /*-----------------------------------
-    * Global Variables
-    *-----------------------------------*/
+* Global Variables
+*-----------------------------------*/
 
 let yearsession;
 let apiVersion;
@@ -27,31 +27,12 @@ class YearSession {
 
 
 /*-----------------------------------
-* Campus Selector and Dropdowns
+* Campus Selector
 *-----------------------------------*/
 // Populate local storage with the desired campus if not already existing
-if (localStorage.getItem("campus") == null) $('#exampleModal').modal('show');
+if (localStorage.getItem("campus") == null) $('#campusModal').modal('show');
 
-// Find the button that caused the modal to close and update the campus
-$('#exampleModal .modal-body button').on('click', function (event) {
-    let $button = $(event.target);
-    $(this).closest('.modal').one('hidden.bs.modal', function () {
-        localStorage.setItem("campus", $button.data('campus'));
-        campus = localStorage.getItem("campus");
 
-        // Update campus dropdown for the first time. A prepend is needed since the browser automatically selects the first value
-        $('#vg-drop-year').prepend('<option></option>').select2({
-            data: campus === "UBCV" ? YEARSESSIONS_UBCV.map(item => ({
-                'id': item,
-                'text': item
-            })) : YEARSESSIONS_UBCO.map(item => ({'id': item, 'text': item})),
-        }).on("select2:select", function (e) {
-            yearsession = new YearSession($(this).select2('data')[0]['id']);
-            apiVersion = yearsession.year < 2014 ? "v1" : "v2";
-            updateVGSubjectDrop();
-        });
-    });
-});
 
 /*-----------------------------------
 * Display Errors

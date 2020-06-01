@@ -24,6 +24,7 @@ def get_recent_section_averages(campus, subject, course):
         'year': entry.year,
         'session': entry.session.name,
         'course': entry.course,
+        'detail': entry.detail,
         'section': entry.section,
         'average': entry.average
     } for entry in result]

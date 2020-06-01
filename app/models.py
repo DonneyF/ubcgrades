@@ -179,6 +179,7 @@ class Course(db.Model):
     detail = db.Column(db.String(3), primary_key=True)  # Ex: A, B, C
     course_title = db.Column(db.String())
     average = db.Column(db.Float())
+    average_past_5_yrs = db.Column(db.Float())
     stdev = db.Column(db.Float())
     max_course_avg = db.Column(db.Integer())
     min_course_avg = db.Column(db.Integer())
@@ -196,6 +197,7 @@ class Course(db.Model):
             "detail": self.detail,
             "course_title": self.course_title,
             "average": self.average,
+            "average_past_5_yrs": self.average_past_5_yrs,
             "stdev": self.stdev,
             "max_course_avg": self.max_course_avg,
             "min_course_avg": self.min_course_avg,
