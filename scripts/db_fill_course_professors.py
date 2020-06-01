@@ -53,7 +53,7 @@ def main():
             if index % 100 == 0:
                 print(f'{index}/{N}')
             # Get all the sections
-            sections_PRG, sections_TDG = get_sections_separated(course)
+            sections_TDG, sections_PRG = get_sections_separated(course)
             # Dictionary that maps a professor to a dictionary that maps a yearsession to the number of sections the
             # professor was active in that yearsession
             prof_map = {}
