@@ -328,7 +328,8 @@ class Professor(db.Model):
         data = {}
         for key, val in vars(self).items():
             if "ys_" in key:
-                data[key[3:]] = val
+                if val != 0:
+                    data[key[3:]] = val
             else:
                 data[key] = val
 
@@ -402,7 +403,8 @@ class CourseAverageHistory(db.Model):
         data = {}
         for key, val in vars(self).items():
             if "ys_" in key:
-                data[key[3:]] = val
+                if key != '':
+                    data[key[3:]] = val
             else:
                 data[key] = val
 

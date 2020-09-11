@@ -85,7 +85,7 @@ def main():
                     year_session_map[yearsession] = weighted_average
 
             # Build our db object to add
-            hist_entry =  CourseAverageHistory(campus=course.campus, subject=course.subject, course=course.course, detail=course.detail)
+            hist_entry = CourseAverageHistory(campus=course.campus, subject=course.subject, course=course.course, detail=course.detail)
 
             for ys, avg in year_session_map.items():
                 setattr(hist_entry, f'ys_{ys}', avg)

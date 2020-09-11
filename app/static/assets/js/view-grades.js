@@ -370,7 +370,7 @@ $(function () {
                 }
             },
             data: {
-                labels: apiVersion === "v1" ? GRADES_V1.slice(0) : GRADES_V2.slice(0),
+                labels: apiVersion === "v1" ? GRADES_V1.slice(0) : GRADES_V2.slice(0), // slicing creates a level copy
                 datasets: [{
                     data: gradeData
                 }]

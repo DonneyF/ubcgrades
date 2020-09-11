@@ -23,7 +23,8 @@
           </li>
         </ul>
       </div>
-      <!-- Card body -->
+    </div>
+        <!-- Card body -->
       <div class="card-body">
         <!-- Form groups used in grid -->
         <div class="tab-content">
@@ -76,279 +77,350 @@
           </div>
         </div>
       </div>
-    </div>
   </div>
 {% endblock %}
 
 {% block content %}
-  <div class="container mt--7 collapse pb-6" id="content-container">
-
-    <!-- PAIR Reports Grade Information -->
-    <div class="row mb-4 d-none" id="pair-reports-row">
-      <div class="col">
-        <div class="card shadow">
-          <div class="card-header bg-transparent bg-gradient-lighter">
-            <div class="row text-center">
-              <div class="col">
-                <h3 class="mb-0 text-muted">UBCV 2017W MATH 101 201</h3>
-                <h2 class="mb-0">INT CALC AP PH S</h2>
-              </div>
-            </div>
-          </div>
-          <div class="card-body">
-            <!-- Course Information -->
-            <div class="row" id="vg-headmatter-v1">
-              <div class="col">
-                <h6 class="text-uppercase text-muted ls-1 mb-1">Average</h6>
-                <h2 class="mb-0">59.17</h2>
-              </div>
-              <br>
-              <div class="col">
-                <h6 class="text-uppercase text-muted ls-1 mb-1">Stdev</h6>
-                <h2 class="mb-0">15.57</h2>
-              </div>
-              <div class="col">
-                <h6 class="text-uppercase text-muted ls-1 mb-1">High</h6>
-                <h2 class="mb-0">93</h2>
-              </div>
-              <div class="col">
-                <h6 class="text-uppercase text-muted ls-1 mb-1">Low</h6>
-                <h2 class="mb-0">22</h2>
-              </div>
-              <div class="col">
-                <h6 class="text-uppercase text-muted ls-1 mb-1">Pass</h6>
-                <h2 class="mb-0">111</h2>
-              </div>
-              <div class="col">
-                <h6 class="text-uppercase text-muted ls-1 mb-1">Fail</h6>
-                <h2 class="mb-0">32</h2>
-              </div>
-              <div class="mw-100"></div>
-              <div class="col">
-                <h6 class="text-uppercase text-muted ls-1 mb-1">Enrolled</h6>
-                <h2 class="mb-0">32</h2>
-              </div>
-              <div class="col">
-                <h6 class="text-uppercase text-muted ls-1 mb-1">Withdrew</h6>
-                <h2 class="mb-0">5</h2>
-              </div>
-              <div class="col">
-                <h6 class="text-uppercase text-muted ls-1 mb-1">Audit</h6>
-                <h2 class="mb-0">0</h2>
-              </div>
-              <div class="col">
-                <h6 class="text-uppercase text-muted ls-1 mb-1">Other</h6>
-                <h2 class="mb-0">3</h2>
-              </div>
-            </div>
-            <!-- Grade Data -->
-            <hr style="margin-left: -1.5rem; margin-right: -1.5rem;">
-            <div class="row mt-4 align-items-center">
-              <div class="col-sm-3">
-                <h3>Grades</h3>
-              </div>
-              <div class="col-sm-9">
-                <div class="row" id="grades-v1">
-                  <div class="col">
-                    <ul class="list-group">
-                      <li class="list-group-item d-flex justify-content-between align-items-center">
-                        0-9%
-                        <span class="badge badge-primary badge-pill">14</span>
-                      </li>
-                      <li class="list-group-item d-flex justify-content-between align-items-center">
-                        10-19%
-                        <span class="badge badge-primary badge-pill">2</span>
-                      </li>
-                      <li class="list-group-item d-flex justify-content-between align-items-center">
-                        20-29%
-                        <span class="badge badge-primary badge-pill">1</span>
-                      </li>
-                      <li class="list-group-item d-flex justify-content-between align-items-center">
-                        30-39%
-                        <span class="badge badge-primary badge-pill">1</span>
-                      </li>
-                      <li class="list-group-item d-flex justify-content-between align-items-center">
-                        40-49%
-                        <span class="badge badge-primary badge-pill">1</span>
-                      </li>
-                      <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <50%
-                        <span class="badge badge-primary badge-pill">1</span>
-                      </li>
-                      <li class="list-group-item d-flex justify-content-between align-items-center">
-                        50-54%
-                        <span class="badge badge-primary badge-pill">1</span>
-                      </li>
-                      <li class="list-group-item d-flex justify-content-between align-items-center">
-                        55-59%
-                        <span class="badge badge-primary badge-pill">1</span>
-                      </li>
-                    </ul>
-                  </div>
-                  <div class="col">
-                    <ul class="list-group">
-                      <li class="list-group-item d-flex justify-content-between align-items-center">
-                        60-63%
-                        <span class="badge badge-primary badge-pill">14</span>
-                      </li>
-                      <li class="list-group-item d-flex justify-content-between align-items-center">
-                        64-67%
-                        <span class="badge badge-primary badge-pill">2</span>
-                      </li>
-                      <li class="list-group-item d-flex justify-content-between align-items-center">
-                        68-71%
-                        <span class="badge badge-primary badge-pill">1</span>
-                      </li>
-                      <li class="list-group-item d-flex justify-content-between align-items-center">
-                        72-75%
-                        <span class="badge badge-primary badge-pill">1</span>
-                      </li>
-                      <li class="list-group-item d-flex justify-content-between align-items-center">
-                        76-79%
-                        <span class="badge badge-primary badge-pill">1</span>
-                      </li>
-                      <li class="list-group-item d-flex justify-content-between align-items-center">
-                        80-84%
-                        <span class="badge badge-primary badge-pill">1</span>
-                      </li>
-                      <li class="list-group-item d-flex justify-content-between align-items-center">
-                        85-89%
-                        <span class="badge badge-primary badge-pill">1</span>
-                      </li>
-                      <li class="list-group-item d-flex justify-content-between align-items-center">
-                        90-100%
-                        <span class="badge badge-primary badge-pill">1</span>
-                      </li>
-                    </ul>
-                  </div>
+  <div class="container mt--7 pb-6">
+    <div class="collapse" id="content-container">
+      <!-- PAIR Reports Grade Information -->
+      <div class="row mb-4 d-none" id="pair-reports-row">
+        <div class="col">
+          <div class="card shadow">
+            <div class="card-header bg-transparent bg-gradient-lighter">
+              <div class="row text-center">
+                <div class="col">
+                  <h3 class="mb-0 text-muted">UBCV 2017W MATH 101 201</h3>
+                  <h2 class="mb-0">INT CALC AP PH S</h2>
                 </div>
               </div>
             </div>
-            <!-- Teaching Team -->
-            <hr style="margin-left: -1.5rem; margin-right: -1.5rem;">
-            <div class="row mt-4 align-items-center">
-              <div class="col-sm-3">
-                <h3>Teaching Team</h3>
+            <div class="card-body">
+              <!-- Course Information -->
+              <div class="row" id="vg-headmatter-v1">
+                <div class="col">
+                  <h6 class="text-uppercase text-muted ls-1 mb-1">Average</h6>
+                  <h2 class="mb-0">59.17</h2>
+                </div>
+                <br>
+                <div class="col">
+                  <h6 class="text-uppercase text-muted ls-1 mb-1">Stdev</h6>
+                  <h2 class="mb-0">15.57</h2>
+                </div>
+                <div class="col">
+                  <h6 class="text-uppercase text-muted ls-1 mb-1">High</h6>
+                  <h2 class="mb-0">93</h2>
+                </div>
+                <div class="col">
+                  <h6 class="text-uppercase text-muted ls-1 mb-1">Low</h6>
+                  <h2 class="mb-0">22</h2>
+                </div>
+                <div class="col">
+                  <h6 class="text-uppercase text-muted ls-1 mb-1">Pass</h6>
+                  <h2 class="mb-0">111</h2>
+                </div>
+                <div class="col">
+                  <h6 class="text-uppercase text-muted ls-1 mb-1">Fail</h6>
+                  <h2 class="mb-0">32</h2>
+                </div>
+                <div class="mw-100"></div>
+                <div class="col">
+                  <h6 class="text-uppercase text-muted ls-1 mb-1">Enrolled</h6>
+                  <h2 class="mb-0">32</h2>
+                </div>
+                <div class="col">
+                  <h6 class="text-uppercase text-muted ls-1 mb-1">Withdrew</h6>
+                  <h2 class="mb-0">5</h2>
+                </div>
+                <div class="col">
+                  <h6 class="text-uppercase text-muted ls-1 mb-1">Audit</h6>
+                  <h2 class="mb-0">0</h2>
+                </div>
+                <div class="col">
+                  <h6 class="text-uppercase text-muted ls-1 mb-1">Other</h6>
+                  <h2 class="mb-0">3</h2>
+                </div>
               </div>
-              <div class="col-sm-9" id="teaching-team-v1">
-                <p>MacLean, Mark Thomson</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Tableau Dashboard Grade Information -->
-    <div class="row mb-4 d-none" id="tableau-dashboard-row">
-      <div class="col">
-        <div class="card shadow">
-          <!-- Card Header -->
-          <div class="card-header bg-transparent bg-gradient-lighter" id="card-header">
-            <div class="row text-center">
-              <div class="col">
-                <h3 class="mb-0 text-muted">UBCV 2017W MATH 101 201</h3>
-                <h2 class="mb-0">Integral Calculus with Applications to Physical Sciences and Engineering</h2>
-              </div>
-            </div>
-          </div>
-          <div class="card-body">
-            <!-- Course Information -->
-            <div class="row" id="vg-headmatter-v2">
-              <div class="col">
-                <h6 class="text-uppercase text-muted ls-1 mb-1">Average</h6>
-                <h2 class="mb-0">59.17</h2>
-              </div>
-              <br>
-              <div class="col">
-                <h6 class="text-uppercase text-muted ls-1 mb-1">Stdev</h6>
-                <h2 class="mb-0">15.57</h2>
-              </div>
-              <div class="col">
-                <h6 class="text-uppercase text-muted ls-1 mb-1">High</h6>
-                <h2 class="mb-0">93</h2>
-              </div>
-              <div class="col">
-                <h6 class="text-uppercase text-muted ls-1 mb-1">Low</h6>
-                <h2 class="mb-0">22</h2>
-              </div>
-              <div class="col">
-                <h6 class="text-uppercase text-muted ls-1 mb-1">Enrolled</h6>
-                <h2 class="mb-0">5</h2>
-              </div>
-            </div>
-            <!-- Grade Data -->
-            <hr style="margin-left: -1.5rem; margin-right: -1.5rem;">
-            <div class="row mt-4 align-items-center">
-              <div class="col-sm-3">
-                <h3>Grades</h3>
-              </div>
-              <div class="col-9">
-                <div class="row" id="grades-v2">
-                  <div class="col">
-                    <ul class="list-group">
-                      <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <50%
-                        <span class="badge badge-primary badge-pill">1</span>
-                      </li>
-                      <li class="list-group-item d-flex justify-content-between align-items-center">
-                        50-54%
-                        <span class="badge badge-primary badge-pill">1</span>
-                      </li>
-                      <li class="list-group-item d-flex justify-content-between align-items-center">
-                        55-59%
-                        <span class="badge badge-primary badge-pill">1</span>
-                      </li>
-                      <li class="list-group-item d-flex justify-content-between align-items-center">
-                        60-63%
-                        <span class="badge badge-primary badge-pill">14</span>
-                      </li>
-                      <li class="list-group-item d-flex justify-content-between align-items-center">
-                        64-67%
-                        <span class="badge badge-primary badge-pill">2</span>
-                      </li>
-                      <li class="list-group-item d-flex justify-content-between align-items-center">
-                        68-71%
-                        <span class="badge badge-primary badge-pill">1</span>
-                      </li>
-                    </ul>
-                  </div>
-                  <div class="col">
-                    <ul class="list-group">
-                      <li class="list-group-item d-flex justify-content-between align-items-center">
-                        72-75%
-                        <span class="badge badge-primary badge-pill">1</span>
-                      </li>
-                      <li class="list-group-item d-flex justify-content-between align-items-center">
-                        76-79%
-                        <span class="badge badge-primary badge-pill">1</span>
-                      </li>
-                      <li class="list-group-item d-flex justify-content-between align-items-center">
-                        80-84%
-                        <span class="badge badge-primary badge-pill">1</span>
-                      </li>
-                      <li class="list-group-item d-flex justify-content-between align-items-center">
-                        85-89%
-                        <span class="badge badge-primary badge-pill">1</span>
-                      </li>
-                      <li class="list-group-item d-flex justify-content-between align-items-center">
-                        90-100%
-                        <span class="badge badge-primary badge-pill">1</span>
-                      </li>
-                    </ul>
+              <!-- Grade Data -->
+              <hr style="margin-left: -1.5rem; margin-right: -1.5rem;">
+              <div class="row mt-4 align-items-center">
+                <div class="col-sm-3">
+                  <h3>Grades</h3>
+                </div>
+                <div class="col-sm-9">
+                  <div class="row" id="grades-v1">
+                    <div class="col">
+                      <ul class="list-group">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                          0-9%
+                          <span class="badge badge-primary badge-pill">14</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                          10-19%
+                          <span class="badge badge-primary badge-pill">2</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                          20-29%
+                          <span class="badge badge-primary badge-pill">1</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                          30-39%
+                          <span class="badge badge-primary badge-pill">1</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                          40-49%
+                          <span class="badge badge-primary badge-pill">1</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                          <50%
+                          <span class="badge badge-primary badge-pill">1</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                          50-54%
+                          <span class="badge badge-primary badge-pill">1</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                          55-59%
+                          <span class="badge badge-primary badge-pill">1</span>
+                        </li>
+                      </ul>
+                    </div>
+                    <div class="col">
+                      <ul class="list-group">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                          60-63%
+                          <span class="badge badge-primary badge-pill">14</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                          64-67%
+                          <span class="badge badge-primary badge-pill">2</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                          68-71%
+                          <span class="badge badge-primary badge-pill">1</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                          72-75%
+                          <span class="badge badge-primary badge-pill">1</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                          76-79%
+                          <span class="badge badge-primary badge-pill">1</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                          80-84%
+                          <span class="badge badge-primary badge-pill">1</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                          85-89%
+                          <span class="badge badge-primary badge-pill">1</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                          90-100%
+                          <span class="badge badge-primary badge-pill">1</span>
+                        </li>
+                      </ul>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <!-- Teaching Team -->
-            <hr style="margin-left: -1.5rem; margin-right: -1.5rem;">
-            <div class="row align-items-center">
-              <div class="col-sm-3">
-                <h3 class="mb-sm-0">Teaching Team</h3>
+              <!-- Teaching Team -->
+              <hr style="margin-left: -1.5rem; margin-right: -1.5rem;">
+              <div class="row mt-4 align-items-center mb-1">
+                <div class="col-sm-3">
+                  <h3>Teaching Team</h3>
+                </div>
+                <div class="col-sm-9" id="teaching-team-v1">
+                </div>
               </div>
-              <div class="col-sm-9" id="teaching-team-v2">
-                <p>Alejandra Herrera Reyes;Anthony Wachs;Howard Lin;Kaitai Tong;Malcolm Bowles;Malcolm Norman Stanley
-                  Bowles;Mark Thomson Maclean;Prajeet Bajpai;Pulkit Gandhi;Zezhong Li</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tableau Dashboard Grade Information -->
+      <div class="row mb-4 d-none" id="tableau-dashboard-row">
+        <div class="col">
+          <div class="card shadow">
+            <!-- Card Header -->
+            <div class="card-header bg-transparent bg-gradient-lighter" id="card-header">
+              <div class="row text-center">
+                <div class="col">
+                  <h3 class="mb-0 text-muted">UBCV 2017W MATH 101 201</h3>
+                  <h2 class="mb-0">Integral Calculus with Applications to Physical Sciences and Engineering</h2>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <!-- Course Information -->
+              <div class="row" id="vg-headmatter-v2">
+                <div class="col">
+                  <h6 class="text-uppercase text-muted ls-1 mb-1">Average</h6>
+                  <h2 class="mb-0">59.17</h2>
+                </div>
+                <br>
+                <div class="col">
+                  <h6 class="text-uppercase text-muted ls-1 mb-1">Stdev</h6>
+                  <h2 class="mb-0">15.57</h2>
+                </div>
+                <div class="col">
+                  <h6 class="text-uppercase text-muted ls-1 mb-1">High</h6>
+                  <h2 class="mb-0">93</h2>
+                </div>
+                <div class="col">
+                  <h6 class="text-uppercase text-muted ls-1 mb-1">Low</h6>
+                  <h2 class="mb-0">22</h2>
+                </div>
+                <div class="col">
+                  <h6 class="text-uppercase text-muted ls-1 mb-1">Enrolled</h6>
+                  <h2 class="mb-0">5</h2>
+                </div>
+              </div>
+              <!-- Grade Data -->
+              <hr style="margin-left: -1.5rem; margin-right: -1.5rem;">
+              <div class="row mt-4 align-items-center">
+                <div class="col-sm-3">
+                  <h3>Grades</h3>
+                </div>
+                <div class="col-sm-9">
+                  <div class="row" id="grades-v2">
+                    <div class="col">
+                      <ul class="list-group">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                          <50%
+                          <span class="badge badge-primary badge-pill">1</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                          50-54%
+                          <span class="badge badge-primary badge-pill">1</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                          55-59%
+                          <span class="badge badge-primary badge-pill">1</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                          60-63%
+                          <span class="badge badge-primary badge-pill">14</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                          64-67%
+                          <span class="badge badge-primary badge-pill">2</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                          68-71%
+                          <span class="badge badge-primary badge-pill">1</span>
+                        </li>
+                      </ul>
+                    </div>
+                    <div class="col">
+                      <ul class="list-group">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                          72-75%
+                          <span class="badge badge-primary badge-pill">1</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                          76-79%
+                          <span class="badge badge-primary badge-pill">1</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                          80-84%
+                          <span class="badge badge-primary badge-pill">1</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                          85-89%
+                          <span class="badge badge-primary badge-pill">1</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                          90-100%
+                          <span class="badge badge-primary badge-pill">1</span>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Teaching Team -->
+              <hr style="margin-left: -1.5rem; margin-right: -1.5rem;">
+              <div class="row align-items-center mb-1">
+                <div class="col-sm-3">
+                  <h3 class="mb-sm-0">Teaching Team</h3>
+                </div>
+                <div class="col-sm-9" id="teaching-team-v2">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row mb-4">
+        <div class="col">
+          <div class="card bg-gradient-default shadow">
+            <div class="card-header bg-transparent">
+              <div class="row align-items-center">
+                <div class="col">
+                  <h2 class="text-white mb-0">Grade Distribution</h2>
+                </div>
+                <div class="col" id="chart-grades-toggles">
+                  <ul class="nav nav-pills justify-content-end">
+                    <li class="nav-item mr-2 mr-md-0" data-toggle="chart" data-target="#chart-grades"
+                        data-update='{"data":{"labels":["<50%", "50-54%", "55-59%", "60-63%", "64-67%", "68-71%", "72-75%", "76-79%", "80-84%", "85-89%", "90-100%"]}}'>
+                      <a href="#" class="nav-link py-2 px-3 active" data-toggle="tab">
+                        <span class="d-block">%</span>
+                      </a>
+                    </li>
+                    <li class="nav-item" data-toggle="chart" data-target="#chart-grades"
+                        data-update='{"data":{"labels":["F", "D", "C-", "C", "C+", "B-", "B", "B+", "A-", "A", "A+"]}}'>
+                      <a href="#" class="nav-link py-2 px-3" data-toggle="tab">
+                        <span class="d-block">Letter</span>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <!-- Chart -->
+              <div class="chart">
+                <!-- Chart wrapper -->
+                <canvas id="chart-grades" class="chart-canvas"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row mb-4">
+        <div class="col">
+          <div class="card shadow" id="recent-section-averages">
+            <div class="card-header bg-transparent">
+              <div class="row text-center">
+                <div class="col">
+                  <h2 class="mb-0">Section averages from recent years</h2>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col">
+                  <h5 class="text-uppercase text-muted ls-1 mb-1">2019W - 206</h5>
+                  <h2 class="mb-0">60.12</h2>
+                </div>
+                <div class="col">
+                  <h5 class="text-uppercase text-muted ls-1 mb-1">2019W - 206</h5>
+                  <h2 class="mb-0">60.12</h2>
+                </div>
+                <div class="col">
+                  <h5 class="text-uppercase text-muted ls-1 mb-1">2019W - 206</h5>
+                  <h2 class="mb-0">60.12</h2>
+                </div>
+                <div class="col">
+                  <h5 class="text-uppercase text-muted ls-1 mb-1">2019W - 206</h5>
+                  <h2 class="mb-0">60.12</h2>
+                </div>
+                <div class="col">
+                  <h5 class="text-uppercase text-muted ls-1 mb-1">2019W - 206</h5>
+                  <h2 class="mb-0">60.12</h2>
+                </div>
               </div>
             </div>
           </div>
@@ -356,82 +428,8 @@
       </div>
     </div>
 
-    <div class="row mb-4">
-      <div class="col">
-        <div class="card bg-gradient-default shadow">
-          <div class="card-header bg-transparent">
-            <div class="row align-items-center">
-              <div class="col">
-                <h2 class="text-white mb-0">Grade Distribution</h2>
-              </div>
-              <div class="col" id="chart-grades-toggles">
-                <ul class="nav nav-pills justify-content-end">
-                  <li class="nav-item mr-2 mr-md-0" data-toggle="chart" data-target="#chart-grades"
-                      data-update='{"data":{"labels":["<50%", "50-54%", "55-59%", "60-63%", "64-67%", "68-71%", "72-75%", "76-79%", "80-84%", "85-89%", "90-100%"]}}'>
-                    <a href="#" class="nav-link py-2 px-3 active" data-toggle="tab">
-                      <span class="d-none d-md-block">%</span>
-                    </a>
-                  </li>
-                  <li class="nav-item" data-toggle="chart" data-target="#chart-grades"
-                      data-update='{"data":{"labels":["F", "D", "C-", "C", "C+", "B-", "B", "B+", "A-", "A", "A+"]}}'>
-                    <a href="#" class="nav-link py-2 px-3" data-toggle="tab">
-                      <span class="d-none d-md-block">Letter</span>
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-          <div class="card-body">
-            <!-- Chart -->
-            <div class="chart">
-              <!-- Chart wrapper -->
-              <canvas id="chart-grades" class="chart-canvas"></canvas>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row mb-4">
-      <div class="col">
-        <div class="card shadow" id="recent-section-averages">
-          <div class="card-header bg-transparent">
-            <div class="row text-center">
-              <div class="col">
-                <h2 class="mb-0">Section averages from recent years</h2>
-              </div>
-            </div>
-          </div>
-          <div class="card-body">
-            <div class="row">
-              <div class="col">
-                <h5 class="text-uppercase text-muted ls-1 mb-1">2019W - 206</h5>
-                <h2 class="mb-0">60.12</h2>
-              </div>
-              <div class="col">
-                <h5 class="text-uppercase text-muted ls-1 mb-1">2019W - 206</h5>
-                <h2 class="mb-0">60.12</h2>
-              </div>
-              <div class="col">
-                <h5 class="text-uppercase text-muted ls-1 mb-1">2019W - 206</h5>
-                <h2 class="mb-0">60.12</h2>
-              </div>
-              <div class="col">
-                <h5 class="text-uppercase text-muted ls-1 mb-1">2019W - 206</h5>
-                <h2 class="mb-0">60.12</h2>
-              </div>
-              <div class="col">
-                <h5 class="text-uppercase text-muted ls-1 mb-1">2019W - 206</h5>
-                <h2 class="mb-0">60.12</h2>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    {% include "site_template/footer.html" %}
   </div>
-
-  {% include "site_template/footer.html" %}
 
 {% endblock content %}
 

@@ -16879,6 +16879,8 @@ textarea[resize=horizontal] {
 .card .table th {
   padding-left: 1.5rem;
   padding-right: 1.5rem;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
 }
 
 p {
@@ -17874,6 +17876,38 @@ html:not([dir=rtl]) .noUi-horizontal .noUi-handle {
   width: 10px;
   height: 10px;
   margin-right: 10px;
+}
+
+.dataTables_wrapper {
+  font-size: 0.875rem;
+}
+
+table.dataTable {
+  margin-bottom: 1.25rem !important;
+  border-bottom: 1px solid #e9ecef;
+}
+table.dataTable tbody > tr.selected {
+  background-color: #5e72e4;
+}
+
+.dataTables_length,
+.dataTables_info,
+.dt-buttons {
+  padding-left: 1.5rem;
+}
+
+.dataTables_length .form-control {
+  margin: 0 0.375rem;
+}
+
+.dataTables_filter {
+  padding-right: 1.5rem;
+  display: inline-block;
+  float: right;
+}
+
+.dataTables_paginate {
+  padding-right: 1.5rem;
 }
 
 .ct-navbar {

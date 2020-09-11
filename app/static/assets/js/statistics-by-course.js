@@ -70,6 +70,8 @@ $(function () {
                     templateSelection: function (val) {
                         return val.id;
                     }
+                }).on('select2:select', function(e) {
+                    $('#sc-dropdown-form').submit();
                 }).select2('open');
             },
             error: function () {
@@ -135,12 +137,31 @@ $(function () {
         }
 
         // Retrieve the data
-        // Retrieve the data
         $.ajax({
             url: `${API_HOST_URL}/api/v2/course-statistics/${campus}//${subject}/${course}`,
             type: "GET",
             success: function (response) {
                 updateCourseHeadmatter(response);
+
+                // Retrieve historical averages
+                $.ajax({
+                    url: `${API_HOST_URL}/api/v2/course-statistics/average-history/${campus}/${subject}/${course}`,
+                    type: "GET",
+                    success: function (response) {
+                        updateHistoricalAveragesChart(response);
+                    }
+                });
+
+                // Retrieve professors
+                $.ajax({
+                    url: `${API_HOST_URL}/api/v2/course-statistics/teaching-team/${campus}/${subject}/${course}`,
+                    type: "GET",
+                    success: function (response) {
+                        updateTeachingTeamTable(response);
+                        $('#teaching-team h3').text(`${subject} ${course} Teaching Team`);
+                    }
+                });
+
                 displayContentContainer();
             },
             error: function (response) {
@@ -167,8 +188,131 @@ $(function () {
 
         // // Update the chart
         // $('#chart-grades-toggles').show();
-        // updateGradesChart(data);
     }
 
+    let historicalAveragesChart;
 
+    function updateHistoricalAveragesChart(apiResponseData) {
+        let avgHistData = apiResponseData;
+        Object.entries(avgHistData).forEach(function(ele) {
+            const [key, value] = ele;
+            if (value === '') {
+                delete avgHistData[key];
+            }
+        });
+        delete avgHistData['campus'];
+        delete avgHistData['course'];
+        delete avgHistData['detail'];
+        delete avgHistData['subject'];
+        let chartValues = Object.values(avgHistData);
+
+        // Update the 5 Years/All Years switcher
+        let recentValues = [], recentLabels = [];
+        YEARSESSIONS_RECENT.slice().reverse().forEach(function(yearsession) {
+            if (yearsession in avgHistData) {
+                recentValues.push(avgHistData[yearsession]);
+                recentLabels.push(yearsession);
+            }
+        })
+
+        $('#five-years-toggle').on('click', function () {
+            historicalAveragesChart.data.labels = recentLabels;
+            historicalAveragesChart.data.datasets[0].data = recentValues;
+            historicalAveragesChart.update();
+        });
+
+        $('#all-years-toggle').on('click', function () {
+            historicalAveragesChart.data.labels = Object.keys(avgHistData)
+            historicalAveragesChart.data.datasets[0].data = chartValues
+            historicalAveragesChart.update();
+        });
+        
+        let $chart = $('#chart-course-avg-hist');
+
+        if (historicalAveragesChart) historicalAveragesChart.destroy();
+        historicalAveragesChart = new Chart($chart, {
+            type: 'line',
+            options: {
+                scales: {
+                    yAxes: [{
+                        gridLines: {
+                            lineWidth: 1,
+                            color: Charts.colors.gray[900],
+                            zeroLineColor: Charts.colors.gray[900]
+                        }
+                    }]
+                },
+                tooltips: {
+                    callbacks: {
+                        label: function (item, data) {
+                            let label = data.datasets[item.datasetIndex].label || '';
+                            let content = '';
+                            if (data.datasets.length > 1) {
+                                content += `<span class="popover-body-label mr-auto">${label}</span>`;
+                            }
+
+                            // Distinguish between entries with 0 values and no data
+                            if (chartValues[item.index] !== '') {
+                                content += `<span class="popover-body-value">${parseFloat(item.yLabel).toFixed(2)}</span>`;
+                            } else {
+                                content += `<span class="popover-body-value">No Data</span>`;
+                            }
+                            return content;
+                        }
+                    }
+                }
+            },
+            data: {
+                labels: Object.keys(avgHistData),
+                datasets: [{
+                    pointRadius: 5,
+                    data: chartValues
+                }]
+            }
+        });
+        // Save to jQuery object
+
+        $chart.data('chart', historicalAveragesChart);
+    }
+
+    // Init data table
+    let teachingTeamTable = $('#teaching-team table').DataTable({
+        columns: [
+            { title: "Instructor or TA" , className: 'font-weight-bold'},
+            { title: "YearSessions Active" },
+        ],
+        keys: !0,
+        select: {
+            style: "multi"
+        },
+        language: {
+            paginate: {
+                previous: "<i class='fas fa-angle-left'>",
+                next: "<i class='fas fa-angle-right'>"
+            }
+        },
+    });
+
+    function updateTeachingTeamTable(apiResp) {
+        // Parse the API response to map an instructor/TA to yearsessions they were active
+        // Format needs to be array of arrays for datatables
+        let teachingTeam = [];
+        apiResp.forEach(function(ele) {
+            if (ele['professor'] === '') return;
+            let activeSessions = [];
+            Object.entries(ele).forEach(function (person) {
+                const [key, value] = person;
+                if (typeof value == 'number') {
+                    activeSessions.push(key);
+                }
+            })
+            // To string
+            teachingTeam.push([ele['professor'], activeSessions.join(', ')])
+        });
+
+        // Update the table
+        teachingTeamTable.clear();
+        teachingTeamTable.rows.add(teachingTeam);
+        teachingTeamTable.draw();
+    }
 });
