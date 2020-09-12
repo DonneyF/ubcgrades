@@ -117,9 +117,14 @@ $(function () {
     });
 
     function displayContentContainer() {
-        if ($('#content-container').hasClass("collapse")) {
+        let $content = $('#content-container')
+        if ($content.hasClass("collapse")) {
             setTimeout(function () {
-                $('#content-container').collapse();
+                $content.collapse();
+                // Scroll user to the container
+                // $([document.documentElement, document.body]).animate({
+                //     scrollTop: $content.offset().top - 25
+                // }, 500);
             }, 250);
         }
     }

@@ -14,9 +14,14 @@ from nameparser.util import u
 CAMPUSES = [CampusEnum.UBCV, CampusEnum.UBCO]
 
 
+# Modified HumanName class
 class HumanNameHashable(HumanName):
     def __hash__(self):
         return hash((u(self)).lower())
+
+    def is_equal_except_middle(self, name):
+        return self.first == name.first and self.last == name.last and self.title == name.title and \
+               self.suffix == name.suffix and self.nickname == name.nickname and self.middle != name.middle
 
 
 def get_sections_separated(course):
@@ -72,6 +77,43 @@ def main():
                         prof_map[prof_name][section_ys] += 1
                     except KeyError:
                         prof_map[prof_name][section_ys] = 1
+
+            # Sections from TDG also include the middle name where possible. Iterate through all the keys and check similarity of the keys
+            # Keep only the HumanName with the middle name, add sections to the HumanName with the middle name that have year < 2014, and
+            # discard the HumanName without the middle name
+            profs = set(prof_map.keys())  # This will change size during iteration
+            skip = set()
+            for prof in set(prof_map.keys()):
+                if prof in skip:
+                    continue
+                # Check similarity of this prof against every other prof. This is O(n^2) maybe can be improved.
+                del_profs = set()
+                for other_prof in profs:
+                    if prof.is_equal_except_middle(other_prof) and prof not in del_profs:
+                        # Find which one has the longer middle name
+                        if len(prof.middle) > len(other_prof.middle):
+                            # Keep the current prof
+                            keep_prof = prof
+                            del_prof = other_prof
+                        else:
+                            keep_prof = other_prof
+                            del_prof = prof
+
+                        ys_maps = prof_map.pop(del_prof)
+                        for ys, num_appearances in ys_maps.items():
+                            if ys[0:4] < '2014':
+                                try:
+                                    prof_map[keep_prof][ys] += num_appearances
+                                except KeyError:
+                                    prof_map[keep_prof][ys] = num_appearances
+
+                        del_profs.add(del_prof)
+
+                for del_prof in del_profs:
+                    profs.remove(del_prof)
+                    skip.add(del_prof)
+
+
 
             for prof, ys_map in prof_map.items():
                 prof_entry = Professor(campus=course.campus, subject=course.subject, course=course.course, detail=course.detail,

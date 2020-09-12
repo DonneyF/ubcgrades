@@ -12,7 +12,7 @@
     <div class="card-header">
       <div class="row">
         <h1 class="mb-0 col">Statistics by Course</h1>
-        <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+        <ul class="nav nav-pills d-none d-sm-flex" id="pills-tab" role="tablist">
           <li class="nav-item mr-2 mr-md-0">
             <a class="nav-link py-2 px-3 active" data-toggle="pill" href="#sc-dropdown-form" role="tab"
                aria-controls="pills-form" aria-selected="true">Dropdowns</a>
@@ -30,20 +30,20 @@
       <div class="tab-content">
         <div class="tab-pane fade show active" id="sc-dropdown-form" role="tabpanel" aria-labelledby="sc-form-tab">
           <form class="row">
-            <div class="col-lg col-6">
+            <div class="col-lg col-sm-6">
               <select id="sc-drop-subject" data-toggle="select" data-placeholder="Subject"
                       class="mb-sm-2 form-control col"
                       required>
               </select>
             </div>
-            <div class="col-lg col-6">
+            <div class="col-lg col-sm-6">
               <select id="sc-drop-course" data-toggle="select" data-placeholder="Course"
                       class="mb-sm-2 form-control col"
                       required>
               </select>
             </div>
-            <div class="col-lg-2 col-6 text-center">
-              <button id="sc-dropdown-submit" class="submit-margin btn btn-xl btn-primary" type="submit">
+            <div class="col-lg-2 col-sm-6 mt-2 mt-lg-0 text-center">
+              <button id="sc-dropdown-submit" class="submit-margin btn btn-block btn-xl btn-primary" type="submit">
                 Submit
               </button>
             </div>

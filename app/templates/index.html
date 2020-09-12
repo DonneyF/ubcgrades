@@ -10,9 +10,9 @@
   <div class="card mb-4 mt-4">
     <!-- Card header -->
     <div class="card-header">
-      <div class="row">
+      <div class="row mb-sm-2">
         <h1 class="mb-0 col">View Grades by Section</h1>
-        <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+        <ul class="nav nav-pills d-none d-sm-flex" id="pills-tab" role="tablist">
           <li class="nav-item mr-2 mr-md-0">
             <a class="nav-link py-2 px-3 active" data-toggle="pill" href="#vg-dropdown-form" role="tab"
                aria-controls="pills-form" aria-selected="true">Dropdowns</a>
@@ -30,33 +30,33 @@
         <div class="tab-content">
           <div class="tab-pane fade show active" id="vg-dropdown-form" role="tabpanel" aria-labelledby="vg-form-tab">
             <form class="row">
-              <div class="col-lg col-6">
+              <div class="col-lg col-sm-6">
                 <select id="vg-drop-year" data-toggle="select" data-placeholder="YearSession"
                         class="mb-sm-2 form-control col"
                         required>
                 </select>
               </div>
-              <div class="col-lg col-6">
+              <div class="col-lg col-sm-6">
                 <select id="vg-drop-subject" data-toggle="select" data-placeholder="Subject"
                         class="mb-sm-2 form-control col"
                         required>
                 </select>
               </div>
-              <div class="col-lg col-6">
+              <div class="col-lg col-sm-6">
                 <select id="vg-drop-course" data-toggle="select" data-placeholder="Course #"
                         class="mb-sm-2 form-control col"
                         required>
                 </select>
               </div>
-              <div class="col-lg col-6">
+              <div class="col-lg col-sm-6">
                 <select id="vg-drop-section" data-toggle="select" data-placeholder="Section"
                         class="mb-sm-2 form-control col"
                         required>
                   <option value="" disabled selected>Section</option>
                 </select>
               </div>
-              <div class="col-lg-2 col-6 text-center">
-                <button id="vg-dropdown-submit" class="submit-margin btn btn-xl btn-primary" type="submit">
+              <div class="col-lg-2 col-sm-6 mt-2 mt-lg-0 text-center">
+                <button id="vg-dropdown-submit" class="submit-margin btn btn-block btn-xl btn-primary" type="submit" action="#content-container">
                   Submit
                 </button>
               </div>
@@ -64,12 +64,12 @@
           </div>
           <div class="tab-pane fade" id="vg-id-form" role="tabpanel" aria-labelledby="vg-id-tab">
             <form class="row">
-              <div class="col-lg col-6">
+              <div class="col-lg col-8">
                 <input type="text" class="form-control" placeholder="Ex: 2017W MATH 101 201" aria-label="Username"
                        aria-describedby="basic-addon1">
               </div>
-              <div class="col-lg-2 col-6 text-center">
-                <button id="vg-id-submit" class="submit-margin btn btn-xl btn-primary" type="submit">
+              <div class="col-lg-2 col-4 text-center">
+                <button id="vg-id-submit" class="submit-margin btn btn-block btn-xl btn-primary" type="submit">
                   Submit
                 </button>
               </div>

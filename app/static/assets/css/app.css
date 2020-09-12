@@ -30,3 +30,10 @@
 .bigdrop {
     width: 600px !important;
 }
+
+/* Smaller h1 on small screens */
+@media screen and (max-width: 576px) {
+    h1 {
+        font-size: 1.5em;
+    }
+}
