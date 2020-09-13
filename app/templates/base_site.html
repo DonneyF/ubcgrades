@@ -22,29 +22,29 @@
     {% block meta %}
       <meta charset="utf-8"/>
       <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    {% endblock meta %}
+      <meta property="og:title" content="UBCGrades - Historical Grade Data" />
+      <meta property="og:type" content="website" />
+      <meta name="description" content="A tool to look up UBC historical grade distributions. Visualize some data and make important choices.">    {% endblock meta %}
 
     <title>
-      {% block title %}{% endblock %} | UBC Grades
+      {% block title %}{% endblock %} | UBCGrades
     </title>
 
     {% block stylesheets %}
       <!-- Favicon -->
-      <link href="{{ url_for('static', filename='assets/img/brand/favicon.png') }}" rel="icon" type="image/png">
+      <link rel="apple-touch-icon" sizes="76x76" href="{{ url_for('static', filename='assets/img/brand/apple-touch-icon.png') }}">
+      <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='assets/img/brand/favicon-32x32.png') }}">
+      <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='assets/img/brand/favicon-16x16.png') }}">
+      <link rel="mask-icon" href="{{ url_for('static', filename='assets/img/brand/safari-pinned-tab.svg') }}" color="#5bbad5">
       <!-- Fonts -->
       <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
       <!-- Icons -->
-      {#    <link href="{{ url_for('static', filename='assets/js/plugins/nucleo/css/nucleo.css') }}" rel="stylesheet">#}
-      <link href="{{ url_for('static', filename='assets/js/plugins/@fortawesome/fontawesome-free/css/all.min.css') }}"
-            rel="stylesheet">
+      <link href="{{ url_for('static', filename='assets/js/plugins/@fortawesome/fontawesome-free/css/all.min.css') }}" rel="stylesheet">
       <!-- CSS Files -->
       <link href="{{ url_for('static', filename='assets/vendor/select2/dist/css/select2.min.css') }}" rel="stylesheet" >
       <link href="{{ url_for('static', filename='assets/css/argon-dashboard.css') }}" rel="stylesheet">
       <link href="{{ url_for('static', filename='assets/css/app.css') }}" rel="stylesheet">
-
       <link rel="stylesheet" href="{{ url_for('static', filename='assets/vendor/datatables.net-bs4/css/dataTables.bootstrap4.min.css') }}">
-      <link rel="stylesheet" href="{{ url_for('static', filename='assets/vendor/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css') }}">
-      <link rel="stylesheet" href="{{ url_for('static', filename='assets/vendor/datatables.net-select-bs4/css/select.bootstrap4.min.css') }}">
     {% endblock stylesheets %}
 
   {% endblock head %}
@@ -58,11 +58,6 @@
   <!-- Header -->
   <div class="header bg-gradient-primary pb-8 pt-5">
     <div class="container">
-{#      <div class="row align-items-center py-4">#}
-{#        <div class="col-lg-6 col-7">#}
-{#          <h6 class="h1 text-white d-inline-block mb-0">{{ header_card_text }}</h6>#}
-{#        </div>#}
-{#      </div>#}
       {% block header_card %}
 
       {% endblock %}
@@ -88,12 +83,6 @@
   <script src="{{ url_for('static', filename='assets/vendor/select2/dist/js/select2.min.js') }}"></script>
   <script src="{{ url_for('static', filename='assets/vendor/datatables.net/js/jquery.dataTables.min.js') }}"></script>
   <script src="{{ url_for('static', filename='assets/vendor/datatables.net-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
-  <script src="{{ url_for('static', filename='assets/vendor/datatables.net-buttons/js/dataTables.buttons.min.js') }}"></script>
-  <script src="{{ url_for('static', filename='assets/vendor/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js') }}"></script>
-  <script src="{{ url_for('static', filename='assets/vendor/datatables.net-buttons/js/buttons.html5.min.js') }}"></script>
-  <script src="{{ url_for('static', filename='assets/vendor/datatables.net-buttons/js/buttons.flash.min.js') }}"></script>
-  <script src="{{ url_for('static', filename='assets/vendor/datatables.net-buttons/js/buttons.print.min.js') }}"></script>
-  <script src="{{ url_for('static', filename='assets/vendor/datatables.net-select/js/dataTables.select.min.js') }}"></script>
 
   <!-- Argon JS -->
   <script src="{{ url_for('static', filename='assets/js/argon-dashboard.js') }}"></script>

@@ -296,6 +296,10 @@ $(function () {
                 next: "<i class='fas fa-angle-right'>"
             }
         },
+        style_cell: {
+            'whiteSpace': 'normal',
+            'height': 'auto',
+        },
     });
 
     function updateTeachingTeamTable(apiResp) {
