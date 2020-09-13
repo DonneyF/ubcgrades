@@ -1,0 +1,3 @@
+[submodule "ubc-pair-grade-data"]
+	path = ubc-pair-grade-data
+	url = https://github.com/DonneyF/ubc-pair-grade-data
