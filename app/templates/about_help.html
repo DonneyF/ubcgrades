@@ -1,0 +1,108 @@
+{% extends "base_site.html" %}
+{% set active_page = "about_help" %}
+{% block title %} About & Help {% endblock title %}
+
+{% block stylesheets %}
+  {{ super() }}
+{% endblock stylesheets %}
+
+{% block header_card %}
+<h1 class="text-center text-white" style="font-size: 3.5rem;">About &amp; Help</h1>
+{% endblock %}
+
+{% block content %}
+  <div class="container mt-4 mt-xl-6 pb-6">
+    <p class="has-line-data" data-line-start="2" data-line-end="3"><a href="http://UBCGrades.com">UBCGrades.com</a> is a
+      simple website for you to view and visualize historic grade distribution of courses at the University of British
+      Columbia Vancouver and Okanagan. <a href="http://UBCGrades.com">UBCGrades.com</a> is no way affiliated with the
+      University of British Columbia.</p>
+    <p class="has-line-data" data-line-start="4" data-line-end="5">The purpose of this website is to simply display
+      grade
+      reports in a more useable manner than what is officially provided by UBC as well as to report older grade data
+      that
+      has been removed from public access.</p>
+    <h2 class="code-line" data-line-start=6 data-line-end=7><a id="Data_Source_6"></a>Data Source</h2>
+    <p class="has-line-data" data-line-start="8" data-line-end="9">The source of data for this website is from <a
+            href="https://github.com/DonneyF/ubc-pair-grade-data">ubc-pair-grade-data</a>.</p>
+    <blockquote>
+      <p class="has-line-data" data-line-start="10" data-line-end="11">There are two main sources for the data. The
+        first
+        (now deprecated) source was from the old PAIR Reports dashboard located <a
+                href="https://webprd01.pair.ubc.ca/reports/welcome.action">here</a>. This tool was removed in the summer
+        of
+        2019 in favor of a Tableau dashboard found <a
+                href="http://pair.ubc.ca/student-performance/grades-distribution/">here</a>
+        (the UBC VPN is needed to access), serving as the second source.</p>
+    </blockquote>
+    <p class="has-line-data" data-line-start="12" data-line-end="13"><strong>Q: How are statistics computed?</strong>
+    </p>
+    <p class="has-line-data" data-line-start="14" data-line-end="15">A: See the scripts in the source code.</p>
+    <p class="has-line-data" data-line-start="16" data-line-end="17"><strong>Q: How updated is this website</strong>:
+    </p>
+    <p class="has-line-data" data-line-start="18" data-line-end="19">A: Grade data changes all the time, due to various
+      reasons like deferred exams, appeals, etc. This website is as up to date as the latest commits of the grade data
+      repo
+      mentioned above.</p>
+    <h2 class="code-line" data-line-start=20 data-line-end=21><a id="View_Grades_20"></a>View Grades</h2>
+    <p class="has-line-data" data-line-start="22" data-line-end="23">This page allows you to retrieve single-section
+      grade
+      reports.</p>
+    <p class="has-line-data" data-line-start="24" data-line-end="25"><strong>Q: Why are some grade entries
+      missing?</strong>
+    </p>
+    <p class="has-line-data" data-line-start="26" data-line-end="27">A: For section grades 2014S and later, the page
+      loads
+      data from the Tableau dashboard. The dashboard does not report grades for grade categories with entries of 6 or
+      less
+      for privacy reasons.</p>
+    <p class="has-line-data" data-line-start="28" data-line-end="29"><strong>Q: So then why do I see some grade entries
+      with
+      6 or less?</strong>:</p>
+    <p class="has-line-data" data-line-start="30" data-line-end="31">A: Where possible, it is possible to extrapolate
+      the
+      value of the missing grade entry (for example, if every grade category was populated and only one was missing, we
+      simply subtract the sum from the number of enrolled students).</p>
+    <h2 class="code-line" data-line-start=32 data-line-end=33><a id="Statistics_by_Course_32"></a>Statistics by Course
+    </h2>
+    <p class="has-line-data" data-line-start="34" data-line-end="35">This page allows you to retrieve basic course
+      statistics.</p>
+    <p class="has-line-data" data-line-start="36" data-line-end="37"><strong>Q: Why can’t why is there no
+      pass-percentage?</strong></p>
+    <p class="has-line-data" data-line-start="38" data-line-end="39">A: It is not possible to compute the pass
+      percentage
+      from sections from the Tableau dashboard as it does not report the number of students who failed for all
+      sections.</p>
+    <p class="has-line-data" data-line-start="40" data-line-end="41"><strong>Q: What is “Teaching Team”?</strong>:</p>
+    <p class="has-line-data" data-line-start="42" data-line-end="43">A: This is the names of all personnel credited with
+      the
+      delivery of the course. You will see TA and other facilitators if the Tableau Dashboard has reported them. For
+      courses
+      delivered earlier than 2014S, only the professor(s) were reported.</p>
+    <h2 class="code-line" data-line-start=44 data-line-end=45><a id="Other_44"></a>Other</h2>
+    <p class="has-line-data" data-line-start="46" data-line-end="47"><strong>Q: Why did you make this website?</strong>
+    </p>
+    <p class="has-line-data" data-line-start="48" data-line-end="49">A: Back in 2018W when the Pair Reports website was
+      still up, I was interested in questions like “what is the average grade of a first-year student?” or “Does MATH
+      grade
+      harshly more than other subjects?”. While you can’t directly answer these questions from this website, the data is
+      there for you to get some idea of the answer to these questions. Retrieving all the data from the Pair Reports
+      website
+      was also a fun challenge.</p>
+    <p class="has-line-data" data-line-start="50" data-line-end="51"><strong>Q: How can I use the data already computed
+      in
+      my application?</strong></p>
+    <p class="has-line-data" data-line-start="52" data-line-end="53">A: You can use the API for this website, which does
+      not
+      require a key.</p>
+
+    {% include "site_template/footer.html" %}
+
+  </div>
+
+{% endblock content %}
+
+
+{% block javascripts %}
+  {{ super() }}
+  <script src="{{ url_for('static', filename='assets/js/statistics-by-course.js') }}"></script>
+{% endblock javascripts %}

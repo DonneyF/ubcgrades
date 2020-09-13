@@ -24,7 +24,7 @@ class PAIRReportsGrade(db.Model):
     detail = db.Column(db.String(3), primary_key=True)  # Ex: A, B, C
     section = db.Column(db.String(7), primary_key=True)  # Ex: 001, 100, GIS, T1A, OVERALL
     course_title = db.Column(db.String())
-    professor = db.Column(db.String())
+    educators = db.Column(db.String())
     enrolled = db.Column(db.Integer())
     average = db.Column(db.Float(), nullable=True)
     stdev = db.Column(db.Float(), nullable=True)
@@ -86,7 +86,7 @@ class PAIRReportsGrade(db.Model):
             "detail": self.detail,
             "section": self.section,
             "course_title": self.course_title,
-            "professor": self.professor,
+            "educators": self.educators,
             "enrolled": self.enrolled,
             "average": self.average if self.average is not None else '',
             "stdev": self.stdev if self.stdev is not None else '',
@@ -112,7 +112,7 @@ class TableauDashboardGrade(db.Model):
     detail = db.Column(db.String(3), primary_key=True)  # Ex: A, B, C
     section = db.Column(db.String(7), primary_key=True)  # Ex: 001, 100, GIS, T1A, OVERALL
     course_title = db.Column(db.String())
-    professor = db.Column(db.String())
+    educators = db.Column(db.String())
     enrolled = db.Column(db.Integer())
     average = db.Column(db.Float())
     stdev = db.Column(db.Float())
@@ -160,7 +160,7 @@ class TableauDashboardGrade(db.Model):
             "detail": self.detail,
             "section": self.section,
             "course_title": self.course_title,
-            "professor": self.professor,
+            "educators": self.educators,
             "enrolled": self.enrolled,
             "average": self.average,
             "stdev": self.stdev,
@@ -265,13 +265,13 @@ class CourseDistributions(db.Model):
         }
 
 
-class Professor(db.Model):
-    __tablename__ = 'Professor'
+class Educator(db.Model):
+    __tablename__ = 'Educator'
     campus = db.Column(db.Enum(CampusEnum), primary_key=True)  # UBCV or UBCO
     subject = db.Column(db.String(4), primary_key=True)  # Ex: BA, KIN, MATH
     course = db.Column(db.String(3), primary_key=True)  # Ex: 001, 200
     detail = db.Column(db.String(3), primary_key=True)  # Ex: A, B, C
-    professor = db.Column(db.String(), primary_key=True)
+    name = db.Column(db.String(), primary_key=True)
     ys_1996S = db.Column(db.Integer())
     ys_1996W = db.Column(db.Integer())
     ys_1997S = db.Column(db.Integer())
@@ -322,7 +322,7 @@ class Professor(db.Model):
     ys_2019W = db.Column(db.Integer())
 
     def __repr__(self):
-        return f"<Professor {self.campus}-{self.subject}-{self.course}{self.course.detail}>"
+        return f"<Educator {self.campus}-{self.subject}-{self.course}{self.course.detail}>"
 
     def to_dict(self):
         data = {}

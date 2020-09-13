@@ -307,7 +307,7 @@ $(function () {
         // Format needs to be array of arrays for datatables
         let teachingTeam = [];
         apiResp.forEach(function(ele) {
-            if (ele['professor'] === '') return;
+            if (ele['name'] === '') return;
             let activeSessions = [];
             Object.entries(ele).forEach(function (person) {
                 const [key, value] = person;
@@ -316,7 +316,7 @@ $(function () {
                 }
             })
             // To string
-            teachingTeam.push([ele['professor'], activeSessions.join(', ')])
+            teachingTeam.push([ele['name'], activeSessions.join(', ')])
         });
 
         // Update the table

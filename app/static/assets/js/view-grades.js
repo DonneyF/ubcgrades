@@ -284,7 +284,7 @@ $(function () {
         });
 
         // Update the teaching team
-        $("#teaching-team-v1").text(data['professor'].replace(/;/gi, ", "));
+        $("#teaching-team-v1").text(data['educators'].replace(/;/gi, ", "));
 
         // Update the chart
         $('#chart-grades-toggles').hide();
@@ -316,7 +316,7 @@ $(function () {
         });
 
         // Update the teaching team
-        $("#teaching-team-v2").text(data['professor'].replace(/;/gi, ", "));
+        $("#teaching-team-v2").text(data['educators'].replace(/;/gi, ", "));
 
         // Update the chart
         $('#chart-grades-toggles').show();

@@ -1,5 +1,5 @@
 """
-Preprocessor and data importer for professors and their courses. Uses a combination of PAIR Reports and Tableau
+Preprocessor and data importer for historical course averages. Uses a combination of PAIR Reports and Tableau
 Dashboard data.
 """
 
@@ -38,7 +38,7 @@ def main():
     with app.app_context():
         db.create_all()
         bulk_objects = []
-        # In the database, we have a sections -> professor. We wish to create course -> professor, yearsessions they are active
+        # In the database, we have a sections -> educators. We wish to create course -> educators, yearsessions they are active
         # Get all the courses
         courses = [row for row in
                    Course.query.with_entities(Course.campus, Course.subject, Course.course, Course.detail).all()]

@@ -60,8 +60,8 @@
         <ul class="navbar-nav mb-md-3">
 
           <li class="nav-item">
-              <a class="nav-link" href="https://appseed.us/admin-dashboards/flask-boilerplate-dashboard-argon">
-                <i class="fas fa-question-circle"></i> About
+              <a class="nav-link {% if active_page == "about_help" %} active {% endif %}" href="{{ url_for('main.about_help') }}">
+                <i class="fas fa-question-circle"></i> About & Help
               </a>
           </li>
           <li class="nav-item">

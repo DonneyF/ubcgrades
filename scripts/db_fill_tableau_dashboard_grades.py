@@ -40,7 +40,7 @@ def main():
                                                   subject_title=subjects[subject_key]['title'],
                                                   course=row['Course'], detail=row['Detail'],
                                                   section=row['Section'],
-                                                  course_title=row['Title'], professor=row['Professor'],
+                                                  course_title=row['Title'], educators=row['Educator'],
                                                   enrolled=row['Enrolled'], average=row['Avg'],
                                                   stdev=row['Std dev'], high=row['High'], low=row['Low'],
                                                   grade_lt50=row['<50'], grade_50_54=row['50-54'],

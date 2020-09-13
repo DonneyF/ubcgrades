@@ -29,44 +29,44 @@ def load_data(path_to_csv_files):
     return sections
 
 
-def fix_professors(path_to_corrections_file, sections):
+def fix_educators(path_to_corrections_file, sections):
     # There is an edge-case wherein two rows differ by an instructor, but one entry has an empty instructor
 
-    professor_corrections = json.load(open(path_to_corrections_file, 'r'))
+    educator_corrections = json.load(open(path_to_corrections_file, 'r'))
     # Begin by constructing a dictionary that maps the unqiue ID to a list of instructors for that ID
-    id_professors = {}
+    id_educators = {}
     for entry in sections:
         yearsession = "{}{}".format(entry['Year'], entry['Session'])
         # Guarantee uniqueness of rows by constructing an ID based on key elements
         id = "{}-{}-{}{}-{}".format(yearsession, entry['Subject'].strip(), entry['Course'], entry['Detail'].strip(),
                                     entry['Section'].strip())
         try:
-            id_professors[id].append(entry['Professor'])
+            id_educators[id].append(entry['Educator'])
         except KeyError:
-            id_professors[id] = [entry['Professor']]
+            id_educators[id] = [entry['Educator']]
 
     # Loop through the values of the dicionary, and ensure there is at most 2 entries for every ID
     # Build a dictionary that maps an ID to a single instructor
-    id_professor = {}
+    id_educator = {}
     id_instructor_duplicates = []
-    for id, professors in id_professors.items():
+    for id, educators in id_educators.items():
         # Remove all duplicate instructors
-        professors = list(set(professors))
+        educators = list(set(educators))
         # Remove all the entries in the array that are ""
-        professors = [instructor for instructor in professors if instructor != '']
-        if len(professors) == 0:
+        educators = [educator for educator in educators if educator != '']
+        if len(educators) == 0:
             # All entries are just ""
-            id_professor[id] = ""
-        elif len(professors) == 1:
-            id_professor[id] = professors[0]
+            id_educator[id] = ""
+        elif len(educators) == 1:
+            id_educator[id] = educators[0]
         else:
             # There are multiple instructor-strings for a single ID.
             # Solution: Look up the section on UBC pair and manually override the correct instructor
             try:
                 # Prefix UBC campus as that's the only available data source
-                id_professor[id] = professor_corrections["UBC-" + id]
+                id_educator[id] = educator_corrections["UBC-" + id]
             except KeyError:
-                print("{} has {} non-empty entries:\n".format(id, len(professors)) + "".join(professors))
+                print("{} has {} non-empty entries:\n".format(id, len(educators)) + "".join(educators))
                 exit()
 
     # Now loop through the original section array and remove the entries th
@@ -82,7 +82,7 @@ def fix_professors(path_to_corrections_file, sections):
         # and is now unique on the ID
         if id not in ids:
             ids[id] = 0
-            entry['Professor'] = id_professor[id]
+            entry['Educator'] = id_educator[id]
             temp_sections.append(entry)
 
     return temp_sections
@@ -105,7 +105,7 @@ def main():
                                            'pair-reports', 'UBC-instructor-corrections.json')
     sections = load_data(path_to_csv_files)
     sections = remove_overall_sections(sections)
-    sections = fix_professors(path_to_correction_file, sections)
+    sections = fix_educators(path_to_correction_file, sections)
 
     app, db = create_app(Config)
 
@@ -133,7 +133,7 @@ def main():
                                                   subject_title=subjects[subject_key]['title'],
                                                   course=section['Course'], detail=section['Detail'].strip(),
                                                   section=section['Section'],
-                                                  course_title=section['Title'], professor=section['Professor'],
+                                                  course_title=section['Title'], educators=section['Educator'],
                                      enrolled=section['Enrolled'], average=average,
                                      stdev=stdev, high=section['High'], low=section['Low'],
                                      num_pass=section['Pass'], num_fail=section['Fail'],
