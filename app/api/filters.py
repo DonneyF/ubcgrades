@@ -70,7 +70,7 @@ def get_yearsessions_v2(campus):
     return jsonify(result) if result != [] else error_response(404, "Not Found")
 
 
-# Filters v2
+# Filters v1
 @bp.route('/v1/sections/<string:campus>/<string:yearsession>/<string:subject>/<string:course>', methods=['GET'])
 def get_sections_v1(campus, yearsession, subject, course):
     if g.bad_yearsession:
@@ -109,6 +109,15 @@ def get_subjects_v1(campus, yearsession):
         return bad_request("Bad yearsession")
     query = PRG.query.with_entities(PRG.subject, PRG.subject_title).filter_by(campus=campus, year=g.year,
                                                                               session=g.session).distinct()
+    result = [{
+        'subject': row.subject,
+        'subject_title': row.subject_title
+    } for row in query]
+    return jsonify(result) if result != [] else error_response(404, "Not Found")
+
+@bp.route('/v1/subjects/<string:campus>', methods=['GET'])
+def get_subjects_no_yearsession_v1(campus):
+    query = PRG.query.with_entities(PRG.subject, PRG.subject_title).filter_by(campus=campus).distinct()
     result = [{
         'subject': row.subject,
         'subject_title': row.subject_title

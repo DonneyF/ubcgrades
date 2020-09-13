@@ -1,0 +1,91 @@
+{% extends "base_site.html" %}
+{% set active_page = "api_index" %}
+{% block title %}API Reference{% endblock title %}
+
+{% block stylesheets %}
+  {{ super() }}
+{% endblock stylesheets %}
+
+{% block header_card %}
+  <h1 class="text-center text-white" style="font-size: 3.5rem;">API Reference</h1>
+{% endblock %}
+
+{% block content %}
+  <div class="container mt-4 mt-xl-6 pb-6">
+    <div class="row justify-content-center">
+      <div class="col">
+        <p>The API served here requires no API key. All data will be served via JSON. The url is <code>https://ubcgrades.com/api</code>
+        </p>
+        <p>There are two versions of the API.</p>
+        <h1>Version 1 (v1)</h1>
+        <p>Version 1 of the API supports only retrieval of grade distributions and filtering through them. The data
+          source is from the PAIR Reports website, which is no longer available. As a result, some of the data 2014S and
+          later can be in accurate. There will be no more updates to the data served by this endpoint. <b>This API only supports the UBCV campus.</b></p>
+        <h1>Version 2 (v2)</h1>
+        <p>Version 2 of the API supports retrieval of grade distributions, filtering through them, and course statistics
+          as well. The data source for v2 is from the Tableau Dashboard for retrieval of individual grade distributions.
+          Data for the course statistics uses data from v1 for grade distributions earlier than 2014S. This API supports the UBCV and UBCO campus.</p>
+        <h1>Definitions</h1>
+        <figure>
+          <table class="table table-striped table-bordered">
+            <thead>
+            <tr>
+              <th>Key</th>
+              <th>Description</th>
+              <th>Examples</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td>campus</td>
+              <td>A four character string for the campus. This key must take one of two values: "UBCV" or "UBCO"
+              </td>
+              <td>UBCV, UBCO</td>
+            </tr>
+            <tr>
+              <td>yearsession</td>
+              <td>A 5-character string whose first 4 characters is a year and last character is either <code>W</code>
+                for winter or <code>S</code> for summer.
+              </td>
+              <td>2018W, 2012S</td>
+            </tr>
+            <tr>
+              <td>subject</td>
+              <td>A 2-4 character string that represents a subject code.</td>
+              <td>BA, KIN, APSC</td>
+            </tr>
+            <tr>
+              <td>course</td>
+              <td>A 3-4 character string whose first three characters is a three-digit number. The optional fourth
+                character is a detail modifier.
+              </td>
+              <td>001, 200, 230A, 342C</td>
+            </tr>
+            <tr>
+              <td>section</td>
+              <td>A 3-character string that represents a section in a course. This can be a lecture, tutorial, lab,
+                etc.
+              </td>
+              <td>001, 100, GIS, T1A</td>
+            </tr>
+            </tbody>
+          </table>
+        </figure>
+        <h1>Download Data</h1>
+        <p>Visit <a
+                href='https://github.com/DonneyF/ubc-pair-grade-data'>https://github.com/DonneyF/ubc-pair-grade-data</a>
+          for the raw data.</p>
+
+      </div>
+    </div>
+
+    {% include "site_template/footer.html" %}
+
+  </div>
+
+{% endblock content %}
+
+
+{% block javascripts %}
+  {{ super() }}
+{% endblock javascripts %}

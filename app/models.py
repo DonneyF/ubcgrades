@@ -326,18 +326,21 @@ class Educator(db.Model):
 
     def to_dict(self):
         data = {}
+        yearsessions = {}
         for key, val in vars(self).items():
             if "ys_" in key:
                 if val != 0:
-                    data[key[3:]] = val
+                    yearsessions[key[3:]] = val
             else:
                 data[key] = val
+
+        # TODO: Development. Reinstate after 2019W is populated
+        yearsessions.pop('2019W')
+        data['yearsessions'] = yearsessions
 
         data['campus'] = self.campus.name
         data.pop('_sa_instance_state')
 
-        # TODO: Development. Reinstate after 2019W is populated
-        data.pop('2019W')
         return data
 
 
@@ -401,16 +404,19 @@ class CourseAverageHistory(db.Model):
 
     def to_dict(self):
         data = {}
+        yearsessions = {}
         for key, val in vars(self).items():
             if "ys_" in key:
-                if key != '':
-                    data[key[3:]] = val
+                if val != 0:
+                    yearsessions[key[3:]] = val
             else:
                 data[key] = val
+
+        # TODO: Development. Reinstate after 2019W is populated
+        yearsessions.pop('2019W')
+        data['yearsessions'] = yearsessions
 
         data['campus'] = self.campus.name
         data.pop('_sa_instance_state')
 
-        # TODO: Development. Reinstate after 2019W is populated
-        data.pop('2019W')
         return data

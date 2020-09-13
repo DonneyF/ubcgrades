@@ -1,0 +1,163 @@
+{% extends "base_site.html" %}
+{% set active_page = "api_v2" %}
+{% block title %}API Version 2{% endblock title %}
+
+{% block stylesheets %}
+  {{ super() }}
+{% endblock stylesheets %}
+
+{% block header_card %}
+  <h1 class="text-center text-white" style="font-size: 3.5rem;">API Version 2</h1>
+{% endblock %}
+
+{% block content %}
+  <div class="container mt-4 mt-xl-6 pb-6">
+    <div class="row justify-content-center">
+      <div class="col">
+        <h1>Retrieve Grade Distributions</h1>
+        <p>Required URL parameters are <strong>bolded</strong>.</p>
+        <figure>
+          <table class="table table-responsive table-striped table-bordered">
+            <thead>
+            <tr>
+              <th>Endpoint</th>
+              <th>Description</th>
+              <th>Example</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td>
+                /grades/<strong>campus</strong>/<strong>yearsession</strong>/<strong>subject</strong>/<strong>course</strong>/<strong>section</strong>
+              </td>
+              <td>Retrieves a grade distribution report for a single section</td>
+              <td><a href='/api/v1/grades/UBCV/2018W/MATH/100/101'>/v1/grades/UBCV/2018W/MATH/100/101</a></td>
+            </tr>
+            <tr>
+              <td>
+                /grades/<strong>campus</strong>/<strong>yearsession</strong>/<strong>subject</strong>/<strong>course</strong>
+              </td>
+              <td>Retrieves a grade distribution report for a course</td>
+              <td><a href='/api/v1/grades/UBCV/2018W/MATH/100'>/api/v1/grades/UBCV/2018W/MATH/100</a></td>
+            </tr>
+            <tr>
+              <td>/grades/<strong>campus</strong>/<strong>yearsession</strong>/<strong>subject</strong></td>
+              <td>Retrieves a grade distribution report for a subject</td>
+              <td><a href='/api/v1/grades/UBCV/2018W/POLI'>/api/v1/grades/UBCV/2018W/POLI</a></td>
+            </tr>
+            <tr>
+              <td>/grades/<strong>campus</strong>/<strong>yearsession</strong></td>
+              <td>Retrieves a grade distribution report for a yearsession</td>
+              <td><a href='/api/v1/grades/UBCV/2017S'>/api/v1/grades/UBCV/2017S</a></td>
+            </tr>
+            <tr>
+              <td>
+                /grades/<strong>campus</strong>/<strong>yearsession</strong>/<strong>subject</strong>/<strong>course</strong>/<strong>section</strong>
+              </td>
+              <td>Retrieves a grade distribution report for a single section</td>
+              <td><a href='/api/v1/grades/UBCV/2018W/MATH/100/101'>/api/v1/grades/UBCV/2018W/MATH/100/101</a></td>
+            </tr>
+            </tbody>
+          </table>
+        </figure>
+        <h1>Filters</h1>
+        <p>Required URL parameters are <strong>bolded</strong>.</p>
+        <figure>
+          <table class="table table-responsive table-striped table-bordered">
+            <thead>
+            <tr>
+              <th>Endpoint</th>
+              <th>Description</th>
+              <th>Example</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td>
+                /sections/<strong>campus</strong>/<strong>yearsession</strong>/<strong>subject</strong>/<strong>course</strong>
+              </td>
+              <td>Retrieves all the section numbers under a particular course</td>
+              <td><a href='/api/v1/sections/UBCV/2018W/BIOL/200'>/api/v1/sections/UBCV/2018W/BIOL/200</a></td>
+            </tr>
+            <tr>
+              <td>/courses/<strong>campus</strong>/<strong>yearsession</strong>/<strong>subject</strong></td>
+              <td>Retrieves all the course labels under a particular subject and yearsession</td>
+              <td><a href='/api/v1/courses/UBCV/2018W/POLI'>/api/v1/courses/UBCV/2018W/POLI</a></td>
+            </tr>
+            <tr>
+              <td>/courses/<strong>campus</strong>/<strong>subject</strong></td>
+              <td>Retrieves all the distinct course labels under a particular subject</td>
+              <td><a href='/api/v1/courses/UBCV/ELEC'>/api/v1/courses/UBCV/ELEC</a></td>
+            </tr>
+            <tr>
+              <td>/subjects/<strong>campus</strong>/<strong>yearsession</strong></td>
+              <td>Retrieves all distinct subjects under a particular yearsession</td>
+              <td><a href='/api/v1/subjects/UBCV/2016W'>/api/v1/subjects/UBCV/2016W</a></td>
+            </tr>
+            <tr>
+              <td>/subjects/<strong>campus</strong></td>
+              <td>Retrieves all distinct subjects across all yearsessions</td>
+              <td><a href='/api/v1/subjects/UBCV'>/api/v1/subjects/UBCV</a></td>
+            </tr>
+            <tr>
+              <td>/yearsessions/<strong>campus</strong></td>
+              <td>Retrieves all available yearsessions</td>
+              <td><a href='/api/v1/yearsessions/UBCV'>/api/v1/yearsessions/UBCV/</a></td>
+            </tr>
+            </tbody>
+          </table>
+        </figure>
+        <h2>Course Profile Data</h2>
+        <figure>
+          <table class="table table-responsive table-striped table-bordered">
+            <thead>
+            <tr>
+              <th>Endpoints</th>
+              <th>Description</th>
+              <th>Examples</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td>/course-statistics/<strong>campus</strong>/<strong>subject</strong> <br> /course-statistics/<strong>campus</strong>/<strong>subject</strong>/<strong>course</strong>
+              </td>
+              <td>Retrieves general data regarding course averages, pass percentage, etc.</td>
+              <td><a href='/api/v2/course-statistics/UBCV/ENGL'>/api/v2/course-statistics/UBCV/ENGL</a> <br> <a
+                      href='/api/v2/course-statistics/ENGL/UBCV/112'>/api/v2/course-statistics/UBCV/ENGL/112</a></td>
+            </tr>
+            <tr>
+              <td>/course-statistics/distributions/<strong>campus</strong>/<strong>subject</strong> <br>
+                /course-statistics/distributions/<strong>campus</strong>/<strong>subject</strong>/<strong>course</strong>
+              </td>
+              <td>Retrieves historical course distributions</td>
+              <td><a href='/api/v2/course-statistics/distributions/UBCV/SCIE'>/api/v2/course-statistics/distributions/UBCV/SCIE</a>
+                <br> <a href='/api/v2/course-statistics/distributions/UBCV/SCIE/001'>/api/v2/course-statistics/distributions/UBCV/SCIE/001</a>
+              </td>
+            </tr>
+            <tr>
+              <td>/course-statistics/teaching-team/<strong>campus</strong>/<strong>subject</strong> <br>
+                /course-statistics/teaching-team/<strong>campus</strong>/<strong>subject</strong>/<strong>course</strong>
+              </td>
+              <td>Retrieves who and when educators taught a course by yearsession (1)</td>
+              <td><a href='/api/v2/course-statistics/teaching-team/UBCV/LING'>/api/v2/course-statistics/teaching-team/UBCV/LING</a>
+                <br> <a href='/api/v2/course-statistics/teaching-team/UBCV/LING/100'>/api/v2/course-statistics/teaching-team/UBCV/LING/100</a>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </figure>
+        <p>(1) An <em>educator</em> is any person that was involved in delivery of the course. This includes lecturers,
+          teaching assistants, and professors.</p>
+      </div>
+    </div>
+
+    {% include "site_template/footer.html" %}
+
+  </div>
+
+{% endblock content %}
+
+
+{% block javascripts %}
+  {{ super() }}
+{% endblock javascripts %}

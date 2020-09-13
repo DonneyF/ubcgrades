@@ -88,7 +88,7 @@ def main():
             hist_entry = CourseAverageHistory(campus=course.campus, subject=course.subject, course=course.course, detail=course.detail)
 
             for ys, avg in year_session_map.items():
-                setattr(hist_entry, f'ys_{ys}', avg)
+                setattr(hist_entry, f'ys_{ys}', avg) if avg != '' else setattr(hist_entry, f'ys_{ys}', None)
 
             bulk_objects.append(hist_entry)
 

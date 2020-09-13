@@ -16818,7 +16818,7 @@ textarea[resize=horizontal] {
 .table thead th {
   padding-top: 0.75rem;
   padding-bottom: 0.75rem;
-  font-size: 0.65rem;
+  font-size: 0.9rem;
   text-transform: uppercase;
   letter-spacing: 1px;
   border-bottom: 1px solid #e9ecef;
@@ -16833,8 +16833,7 @@ textarea[resize=horizontal] {
 }
 .table td,
 .table th {
-  font-size: 0.8125rem;
-  white-space: nowrap;
+  font-size: 0.9rem;
 }
 .table.align-items-center td,
 .table.align-items-center th {
@@ -16885,7 +16884,7 @@ textarea[resize=horizontal] {
 
 p {
   font-size: 1rem;
-  font-weight: 300;
+  font-weight: 400;
   line-height: 1.7;
 }
 

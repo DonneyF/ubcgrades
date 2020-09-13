@@ -24,3 +24,18 @@ def statistics_by_course():
 @bp.route('/about-help', methods=['GET'])
 def about_help():
     return render_template('about_help.html')
+
+
+@bp.route('/api-reference', methods=['GET'])
+def api_index():
+    return render_template('api/api_index.html')
+
+
+@bp.route('/api-reference/v1', methods=['GET'])
+def api_v1():
+    return render_template('api/v1.html')
+
+
+@bp.route('/api-reference/v2', methods=['GET'])
+def api_v2():
+    return render_template('api/v2.html')

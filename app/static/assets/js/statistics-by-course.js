@@ -198,17 +198,13 @@ $(function () {
     let historicalAveragesChart;
 
     function updateHistoricalAveragesChart(apiResponseData) {
-        let avgHistData = apiResponseData;
+        let avgHistData = apiResponseData['yearsessions'];
         Object.entries(avgHistData).forEach(function(ele) {
             const [key, value] = ele;
-            if (value === '') {
+            if (value === null) {
                 delete avgHistData[key];
             }
         });
-        delete avgHistData['campus'];
-        delete avgHistData['course'];
-        delete avgHistData['detail'];
-        delete avgHistData['subject'];
         let chartValues = Object.values(avgHistData);
 
         // Update the 5 Years/All Years switcher
@@ -308,15 +304,8 @@ $(function () {
         let teachingTeam = [];
         apiResp.forEach(function(ele) {
             if (ele['name'] === '') return;
-            let activeSessions = [];
-            Object.entries(ele).forEach(function (person) {
-                const [key, value] = person;
-                if (typeof value == 'number') {
-                    activeSessions.push(key);
-                }
-            })
-            // To string
-            teachingTeam.push([ele['name'], activeSessions.join(', ')])
+            // To string and push to datatable
+            teachingTeam.push([ele['name'], Object.keys(ele['yearsessions']).join(', ')])
         });
 
         // Update the table

@@ -379,7 +379,7 @@ $display4-weight:             $font-weight-bold !default;
 $display-line-height:         $headings-line-height !default;
 
 $paragraph-font-size:         1rem !default;
-$paragraph-font-weight:       300 !default;
+$paragraph-font-weight:       400 !default;
 $paragraph-line-height:       1.7 !default;
 
 $lead-font-size:              ($paragraph-font-size * 1.25) !default;
@@ -431,12 +431,12 @@ $table-head-bg:               $gray-100 !default;
 $table-head-color:            $gray-600 !default;
 $table-head-spacer-y:         .75rem !default;
 
-$table-head-font-size:        .65rem !default;
+$table-head-font-size:        0.9rem !default;
 $table-head-font-weight:      $font-weight-bold !default;
 $table-head-text-transform:   uppercase !default;
 $table-head-letter-spacing:   1px !default;
 
-$table-body-font-size:        .8125rem !default;
+$table-body-font-size:        0.9rem !default;
 
 $table-dark-bg:               theme-color("default") !default;
 $table-dark-accent-bg:        rgba($white, .05) !default;

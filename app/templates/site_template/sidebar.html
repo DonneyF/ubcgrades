@@ -65,13 +65,23 @@
               </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="https://github.com/DonneyF/ubc-grades">
-              <i class="fas fa-code"></i> Source Code
+            <a class="nav-link {% if active_page == "api_index" %} active {% endif %}"  href="{{ url_for('main.api_index') }}">
+              <i class="fas fa-book"></i> API Reference
             </a>
+            <div class="collapse {% if active_page in ["api_index", "api_v1", "api_v2"] %} show {% endif %}" id="navbar-api" style="">
+                <ul class="nav nav-sm flex-column">
+                  <li class="nav-item">
+                    <a class="nav-link {% if active_page == "api_v1" %} active {% endif %}" href="{{ url_for('main.api_v1') }}">Version 1</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link {% if active_page == "api_v2" %} active {% endif %}" href="{{ url_for('main.api_v2') }}">Version 2</a>
+                  </li>
+                </ul>
+              </div>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="https://docs.appseed.us/admin-dashboards/flask-boilerplate-dashboard-argon/">
-              <i class="fas fa-book"></i> API Reference
+            <a class="nav-link" href="https://github.com/DonneyF/ubc-grades">
+              <i class="fas fa-code"></i> Source Code
             </a>
           </li>
         </ul>
