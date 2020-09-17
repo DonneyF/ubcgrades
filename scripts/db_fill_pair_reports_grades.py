@@ -41,9 +41,9 @@ def fix_educators(path_to_corrections_file, sections):
         id = "{}-{}-{}{}-{}".format(yearsession, entry['Subject'].strip(), entry['Course'], entry['Detail'].strip(),
                                     entry['Section'].strip())
         try:
-            id_educators[id].append(entry['Educator'])
+            id_educators[id].append(entry['Professor'])
         except KeyError:
-            id_educators[id] = [entry['Educator']]
+            id_educators[id] = [entry['Professor']]
 
     # Loop through the values of the dicionary, and ensure there is at most 2 entries for every ID
     # Build a dictionary that maps an ID to a single instructor
@@ -102,7 +102,7 @@ def main():
     path_to_csv_files = os.path.join(os.path.abspath(os.path.dirname(__file__)), os.pardir, 'ubc-pair-grade-data',
                                      'pair-reports', 'UBC')
     path_to_correction_file = os.path.join(os.path.abspath(os.path.dirname(__file__)), os.pardir, 'ubc-pair-grade-data',
-                                           'pair-reports', 'UBC-instructor-corrections.json')
+                                           'extra', 'pair-reports-UBC-instructor-corrections.json')
     sections = load_data(path_to_csv_files)
     sections = remove_overall_sections(sections)
     sections = fix_educators(path_to_correction_file, sections)
@@ -133,7 +133,7 @@ def main():
                                                   subject_title=subjects[subject_key]['title'],
                                                   course=section['Course'], detail=section['Detail'].strip(),
                                                   section=section['Section'],
-                                                  course_title=section['Title'], educators=section['Educator'],
+                                                  course_title=section['Title'], educators=section['Professor'],
                                      enrolled=section['Enrolled'], average=average,
                                      stdev=stdev, high=section['High'], low=section['Low'],
                                      num_pass=section['Pass'], num_fail=section['Fail'],

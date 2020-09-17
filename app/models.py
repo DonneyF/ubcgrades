@@ -334,8 +334,6 @@ class Educator(db.Model):
             else:
                 data[key] = val
 
-        # TODO: Development. Reinstate after 2019W is populated
-        yearsessions.pop('2019W')
         data['yearsessions'] = yearsessions
 
         data['campus'] = self.campus.name
@@ -412,8 +410,6 @@ class CourseAverageHistory(db.Model):
             else:
                 data[key] = val
 
-        # TODO: Development. Reinstate after 2019W is populated
-        yearsessions.pop('2019W')
         data['yearsessions'] = yearsessions
 
         data['campus'] = self.campus.name
