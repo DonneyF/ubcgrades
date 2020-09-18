@@ -10,6 +10,18 @@ import os
 import json
 import csv
 
+from nameparser import HumanName
+from nameparser.util import u
+
+# Modified HumanName class
+class HumanNameHashable(HumanName):
+    def __hash__(self):
+        return hash((u(self)).lower())
+
+    def is_equal_except_middle(self, name):
+        return self.first == name.first and self.last == name.last and self.title == name.title and \
+               self.suffix == name.suffix and self.nickname == name.nickname and self.middle != name.middle
+
 
 def main():
     app, db = create_app(Config)
@@ -33,14 +45,17 @@ def main():
                 # Convert to normal dictionaries
                 grades_dict = [dict(ele) for ele in csv_reader]
                 for row in grades_dict:
+                    educators = combine_educator(row['Professor'])
                     subject_key = f'{row["Campus"]}-{row["Subject"]}'
+                    section = str(row['Section']).zfill(3) if type(row['Section']) == int or row['Section'].isnumeric() else row['Section']
+                    course = str(row['Course']).zfill(3) if type(row['Course']) == int or row['Course'].isnumeric() else row['Course']
                     entry = TableauDashboardGrade(campus=row['Campus'], year=row['Year'], session=row['Session'],
                                                   faculty_title=subjects[subject_key]['faculty_school'],
                                                   subject=row['Subject'],
                                                   subject_title=subjects[subject_key]['title'],
-                                                  course=row['Course'], detail=row['Detail'],
-                                                  section=row['Section'],
-                                                  course_title=row['Title'], educators=row['Professor'],
+                                                  course=course, detail=row['Detail'],
+                                                  section=section,
+                                                  course_title=row['Title'], educators=educators,
                                                   enrolled=row['Enrolled'], average=row['Avg'],
                                                   stdev=row['Std dev'], high=row['High'], low=row['Low'],
                                                   grade_lt50=row['<50'], grade_50_54=row['50-54'],
@@ -51,6 +66,31 @@ def main():
                                                   grade_90_100=row['90-100'])
                     db.session.add(entry)
         db.session.commit()
+
+def combine_educator(educators: str):
+    """Combines educators if they differ only by middle name. Keep the one with the middle name."""
+
+    educators_set = {HumanNameHashable(educator) for educator in educators.split(';')}
+    skip = set()
+    for educator in set(educators_set):
+        if educator in skip:
+            continue
+        # Check similarity of this educator against every other educator. This is O(n^2) maybe can be improved.
+        educators_to_rm = set()
+        for other_educator in educators_set:
+            if educator.is_equal_except_middle(other_educator) and educator not in educators_to_rm:
+                # Find which one has the longer middle name
+                if len(educator.middle) > len(other_educator.middle):
+                    # Keep the current educator
+                    educators_to_rm.add(other_educator)
+                else:
+                    educators_to_rm.add(educator)
+
+        for del_educator in educators_to_rm:
+            educators_set.remove(del_educator)
+            skip.add(del_educator)
+
+    return ';'.join({str(educator) for educator in educators_set})
 
 
 if __name__ == "__main__":

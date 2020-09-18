@@ -7,16 +7,9 @@ from app import create_app
 from config import Config
 from app.models import PAIRReportsGrade as PRG, TableauDashboardGrade as TDG, Course, CourseAverageHistory, CampusEnum
 from multiprocessing import Pool
-from nameparser import HumanName
-from nameparser.util import u
 
 
 CAMPUSES = [CampusEnum.UBCV, CampusEnum.UBCO]
-
-
-class HumanNameHashable(HumanName):
-    def __hash__(self):
-        return hash((u(self)).lower())
 
 
 def get_sections_separated(course):

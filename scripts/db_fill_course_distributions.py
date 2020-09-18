@@ -127,7 +127,7 @@ def main():
 
                         db.session.add(new_entry)
 
-            db.session.commit()
+        db.session.commit()
 
 
 if __name__ == '__main__':

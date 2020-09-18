@@ -127,12 +127,14 @@ def main():
             average = None if section['Avg'] == '' else section['Avg']
             stdev = None if section['Std dev'] == '' else section['Std dev']
             subject_key = f'{section["Campus"]}-{section["Subject"].strip()}'
+            section_val = str(section['Section']).zfill(3) if type(section['Section']) == int or section['Section'].isnumeric() else section['Section']
+            course = str(section['Course']).zfill(3) if type(section['Course']) == int or section['Course'].isnumeric() else section['Course']
             entry = PAIRReportsGrade(campus=campus, year=section['Year'], session=session,
                                                   faculty_title=subjects[subject_key]['faculty_school'],
                                                   subject=section['Subject'].strip(),
                                                   subject_title=subjects[subject_key]['title'],
-                                                  course=section['Course'], detail=section['Detail'].strip(),
-                                                  section=section['Section'],
+                                                  course=course, detail=section['Detail'].strip(),
+                                                  section=section_val,
                                                   course_title=section['Title'], educators=section['Professor'],
                                      enrolled=section['Enrolled'], average=average,
                                      stdev=stdev, high=section['High'], low=section['Low'],

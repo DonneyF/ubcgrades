@@ -101,11 +101,9 @@ def main():
 
                         ys_maps = educator_map.pop(del_educator)
                         for ys, num_appearances in ys_maps.items():
-                            if ys[0:4] < '2014':
-                                try:
-                                    educator_map[keep_educator][ys] += num_appearances
-                                except KeyError:
-                                    educator_map[keep_educator][ys] = num_appearances
+                            # Merge the appearances
+                            if ys not in educator_map[keep_educator]:
+                                educator_map[keep_educator][ys] = num_appearances
 
                         educators_to_rm.add(del_educator)
 

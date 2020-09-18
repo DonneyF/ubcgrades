@@ -163,7 +163,7 @@ $(function () {
                     type: "GET",
                     success: function (response) {
                         updateTeachingTeamTable(response);
-                        $('#teaching-team h3').text(`${subject} ${course} Teaching Team`);
+                        $('#teaching-team h2').text(`${subject} ${course} Teaching Team`);
                     }
                 });
 
