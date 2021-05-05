@@ -79,9 +79,17 @@ $(function () {
         });
 
         $("#sc-copy-url-form").on("submit", () => {
-            navigator.clipboard.writeText(document.location.href);
-            displayInfo("Copied!");
+            try {
+                navigator.clipboard.writeText(document.location.href);
+                displayInfo("Copied!");
+            } catch (e) {
+                displayError("Failed to copy, try manually.");
+            }
             return false;
+        });
+
+        $("#sc-copy-url-input").on("click", (e) => {
+            e.target.setSelectionRange(0, e.target.value.length)
         });
     }
 

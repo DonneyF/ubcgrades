@@ -37,3 +37,7 @@
         font-size: 1.5em;
     }
 }
+
+input:read-only, input:read-only:focus {
+    color: black;
+}
