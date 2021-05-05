@@ -59,6 +59,7 @@ $(function () {
             // This shouldn't push a new state to the history stack
             // if the hashes are the same, so we don't need to check
             window.location.hash = constructHash();
+            $("#vg-copy-url-input").val(document.location.href);
         };
 
         this.resetState = () => {
@@ -94,6 +95,12 @@ $(function () {
             if (constructHash() !== window.location.hash.substring(1)) {
                 this.synchronizeState();
             }
+        });
+
+        $("#vg-copy-url-form").on("submit", () => {
+            navigator.clipboard.writeText(document.location.href);
+            displayInfo("Copied!");
+            return false;
         });
     }
 

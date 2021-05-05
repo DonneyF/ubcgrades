@@ -38,6 +38,7 @@ $(function () {
         this.updateState = () => {
             _synchronizing = false;
             window.location.hash = constructHash();
+            $("#sc-copy-url-input").val(document.location.href);
         };
 
         this.resetState = () => {
@@ -75,6 +76,12 @@ $(function () {
             if (constructHash() !== window.location.hash.substring(1)) {
                 this.synchronizeState();
             }
+        });
+
+        $("#sc-copy-url-form").on("submit", () => {
+            navigator.clipboard.writeText(document.location.href);
+            displayInfo("Copied!");
+            return false;
         });
     }
 
