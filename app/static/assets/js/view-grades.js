@@ -2,6 +2,107 @@
 
 $(function () {
 
+    /**
+     * State machine that controls state and history handling as students
+     * navigate between different courses. It follows the update order of
+     * year, subject, course, section.
+     *
+     * When the state of the app changes, this handler will try to resolve
+     * the new state in that given order until it reaches a mismatch. On
+     * mismatch, the old behaviour of opening the dropdown will occur.
+     *
+     * Browser history state is pushed to the browser on successful selection
+     * of a course. Invalid inputs are wiped from the history stack.
+     */
+    function StateHandler() {
+        let _year;
+        let _subject;
+        let _course;
+        let _section;
+
+        let updateOrder = [
+            "year",
+            "subject",
+            "course",
+            "section",
+        ];
+
+        let constructHash = () => {
+            return `${_year}-${_subject}-${_course}-${_section}`;
+        };
+
+        this.updateYear = async (year) => {
+            _year = year;
+            let response = await updateVGSubjectDrop();
+            updateVGDropdown('subject', response, _subject);
+        };
+
+        this.updateSubject = async (subject) => {
+            _subject = subject;
+            let response = await updateVGCourseDrop(subject);
+            updateVGDropdown('course', response, _course);
+        };
+
+        this.updateCourse = async (course) => {
+            _course = course;
+            let response = await updateVGSectionDrop(course);
+            updateVGDropdown('section', response, _section);
+        };
+
+        this.updateSection = async (section) => {
+            _section = section;
+            this.updateState();
+            $('#vg-dropdown-form').submit();
+        };
+
+        this.updateState = () => {
+            // This shouldn't push a new state to the history stack
+            // if the hashes are the same, so we don't need to check
+            window.location.hash = constructHash();
+        };
+
+        this.resetState = () => {
+            let data = [(yearsession) ? yearsession.toString() : null, null, null, null];
+            [_year, _subject, _course, _section] = data;
+            for (let i = 0; i < data.length; i++) {
+                $(`#vg-drop-${updateOrder[i]}`).val(data[i]).trigger("change");
+            }
+            window.history.replaceState(undefined, undefined, " ");
+        };
+
+        this.synchronizeState = () => {
+            let fragments = window.location.hash.substring(1).split("-");
+            if (fragments.length === 4) {
+                [_year, _subject, _course, _section] = fragments;
+                $("#vg-drop-year").select2("trigger", "select", {
+                    data: {
+                        id: _year,
+                    }
+                });
+            } else {
+                this.resetState();
+            }
+        };
+
+        this.init = () => {
+            if (window.location.hash) {
+                this.synchronizeState();
+            }
+        };
+
+        window.addEventListener("hashchange", () => {
+            if (constructHash() !== window.location.hash.substring(1)) {
+                this.synchronizeState();
+            }
+        });
+    }
+
+    let stateHandler = new StateHandler();
+    // This will get arbitrarily large but it makes the app speedier on nav
+    // We'll just hope users don't OOM before refreshing the page ¯\_(ツ)_/¯
+    const apiCache = {};
+
+
     /*-----------------------------------
     * Campus Selector and Dropdowns
     *-----------------------------------*/
@@ -15,10 +116,10 @@ $(function () {
             campus = localStorage.getItem("campus");
 
             populateYearSessionDrop();
+            stateHandler.init();
         });
     });
 
-    // Update the dropdown on all subsequent page loads. TODO: Maybe a better solution?
     function populateYearSessionDrop() {
         $('#vg-drop-year').prepend('<option></option>').select2({
             data: campus === "UBCV" ? YEARSESSIONS_UBCV.map(item => ({
@@ -28,38 +129,51 @@ $(function () {
         }).on("select2:select", function (e) {
             yearsession = new YearSession($(this).select2('data')[0]['id']);
             apiVersion = yearsession.year < 2014 ? "v1" : "v2";
-            updateVGSubjectDrop();
+            stateHandler.updateYear(yearsession.toString());
         });
     }
 
-    if (campus != null) {
-       populateYearSessionDrop();
-    }
-
     $('#vg-drop-subject').select2().on("select2:select", function (e) {
-        updateVGCourseDrop($(this).select2('data')[0]['id']);
+        stateHandler.updateSubject($(this).select2('data')[0]['id']);
     });
 
     $('#vg-drop-course').select2().on("select2:select", function (e) {
-        updateVGSectionDrop($(this).select2('data')[0]['id']);
+        stateHandler.updateCourse($(this).select2('data')[0]['id']);
     });
 
-    $('#vg-drop-section').select2();
+    $('#vg-drop-section').select2().on("select2:select", function (e) {
+        stateHandler.updateSection($(this).select2('data')[0]['id']);
+    });
 
+    if (campus != null) {
+        populateYearSessionDrop();
+        stateHandler.init();
+    }
 
     /**
      * Retrieves the subjects and updates the View Grades Subject dropdown
      * @param yearsession a 5 character yearsession code.
+     * @returns promise that resolves the data
      */
     function updateVGSubjectDrop() {
-        $.ajax({
-            url: `${API_HOST_URL}/api/${apiVersion}/subjects/${campus}/${yearsession}`,
-            type: "GET",
-            success: function (response) {
-                updateVGDropdown('subject', response);
-            },
-            error: function () {
-                displayError("Unable to connect to API");
+        return new Promise((resolve, reject) => {
+            let url = `${API_HOST_URL}/api/${apiVersion}/subjects/${campus}/${yearsession}`;
+            if (url in apiCache) {
+                resolve(apiCache[url]);
+            } else {
+                $.ajax({
+                    url: url,
+                    type: "GET",
+                    cache: true,
+                    success: function (response) {
+                        apiCache[url] = response;
+                        resolve(response);
+                    },
+                    error: function () {
+                        displayError("Unable to connect to API");
+                        reject();
+                    }
+                });
             }
         });
     }
@@ -67,35 +181,55 @@ $(function () {
     /**
      * Retrieves the subjects and updates the View Grades Subject dropdown
      * @param subject is the 2 to 4 character subject code
+     * @returns promise that resolves the data
      */
     function updateVGCourseDrop(subject) {
-        $.ajax({
-            url: `${API_HOST_URL}/api/${apiVersion}/courses/${campus}/${yearsession}/${subject}`,
-            type: "GET",
-            success: function (response) {
-                updateVGDropdown('course', response);
-            },
-            error: function () {
-                displayError("Unable to connect to API");
+        return new Promise((resolve, reject) => {
+            let url = `${API_HOST_URL}/api/${apiVersion}/courses/${campus}/${yearsession}/${subject}`;
+            if (url in apiCache) {
+                resolve(apiCache[url]);
             }
+            $.ajax({
+                url: url,
+                type: "GET",
+                cache: true,
+                success: function (response) {
+                    apiCache[url] = response;
+                    resolve(response);
+                },
+                error: function () {
+                    displayError("Unable to connect to API");
+                    reject();
+                }
+            });
         });
     }
 
     /**
      * Retrieves the subjects and updates the View Grades Subject dropdown
      * @param course is the 3 to 4 character course code
+     * @returns promise that resolves the data
      */
     function updateVGSectionDrop(course) {
         let subject = $("#vg-drop-subject").select2('data')[0]['id'];
-        $.ajax({
-            url: `${API_HOST_URL}/api/${apiVersion}/sections/${campus}/${yearsession}/${subject}/${course}`,
-            type: "GET",
-            success: function (response) {
-                updateVGDropdown('section', response);
-            },
-            error: function () {
-                displayError("Unable to connect to API");
+        return new Promise((resolve, reject) => {
+            let url = `${API_HOST_URL}/api/${apiVersion}/sections/${campus}/${yearsession}/${subject}/${course}`;
+            if (url in apiCache) {
+                resolve(apiCache[url]);
             }
+            $.ajax({
+                url: url,
+                type: "GET",
+                cache: true,
+                success: function (response) {
+                    apiCache[url] = response;
+                    resolve(response);
+                },
+                error: function () {
+                    displayError("Unable to connect to API");
+                    reject();
+                }
+            });
         });
     }
 
@@ -105,12 +239,11 @@ $(function () {
      * @param id is the CSS id of the dropdown
      * @param response is the API response data
      */
-    function updateVGDropdown(id, response) {
+    function updateVGDropdown(id, response, previousSelection) {
         let dropdown = $(`#vg-drop-${id}`);
-
+        let data;
         // Populate the dropdown with the new data
         if (["subject", "course"].indexOf(id) >= 0) {
-            let data;
             if (id === "course") {
                 data = response.map(item => ({
                     'id': `${item['course']}${item['detail']}`,
@@ -120,7 +253,7 @@ $(function () {
                 data = response.map(item => ({
                     'id': item[id],
                     'text': `${item[id]} - ${item[`${id}_title`]}`
-                }))
+                }));
             }
             dropdown.empty().prepend('<option></option>').select2({
                 data: data,
@@ -132,20 +265,29 @@ $(function () {
                 }
             });
         } else {
+            data = response.map(item => ({'id': item, 'text': item}));
             dropdown.empty().prepend('<option></option>').select2({
-                data: response.map(item => ({'id': item, 'text': item})),
+                data: data,
             });
         }
-        // If the response contains only one element or the section is length 2 with OVERALL, automatically select it
-        if (id === "section" && response.length === 2 && response.includes("OVERALL")) {
-            // Find the entry that is not OVERALL
+
+        // If the previous selection was found, trigger the selection automatically
+        if (data.find((e) => e.id === previousSelection)) {
             dropdown.select2("trigger", "select", {
-                data: {id: response.filter(x => x !== "OVERALL")[0]}
+                data: {
+                    id: previousSelection,
+                }
             });
-            $('#vg-dropdown-form').submit();
         } else {
-            // Open the dropdown
-            dropdown.select2('open');
+            // If the response contains only one element or the section is length 2 with OVERALL, automatically select it
+            if (id === "section" && response.length === 2 && response.includes("OVERALL")) {
+                // Find the entry that is not OVERALL
+                dropdown.select2("trigger", "select", {
+                    data: {id: response.filter(x => x !== "OVERALL")[0]}
+                });
+            } else {
+                dropdown.select2("open");
+            }
         }
     }
 
