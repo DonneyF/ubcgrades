@@ -20,27 +20,38 @@ $(function () {
             return `${_subject}-${_course}`;
         };
 
-        this.updateSubject = async (subject) => {
+        this.updateSubject = async (subject, dropdown = true) => {
             _subject = subject;
             if (!_synchronizing) {
                 // Reset the course so we get the dropdown
                 _course = null;
             }
-            updateCourseDropdown(subject, _course);
+            if (dropdown) {
+                updateCourseDropdown(subject, _course);
+            }
         };
 
-        this.updateCourse = async (course) => {
+        this.updateCourse = async (course, dropdown = true) => {
             _course = course;
             this.updateState();
-            $('#sc-dropdown-form').submit();
+            if (dropdown) {
+                $('#sc-dropdown-form').submit();
+            }
         };
 
+        /**
+         * Last stage of the state machine that consolidates all
+         * the substates and pushes the state to the browser history stack.
+         */
         this.updateState = () => {
             _synchronizing = false;
             window.location.hash = constructHash();
             $("#sc-copy-url-input").val(document.location.href);
         };
 
+        /**
+         * Resets the state machine and updates the browser history.
+         */
         this.resetState = () => {
             _synchronizing = false;
             let data = [null, null];
@@ -51,6 +62,9 @@ $(function () {
             window.history.replaceState(undefined, undefined, " ");
         };
 
+        /**
+         * Synchronizes the state machine with the URL fragment.
+         */
         this.synchronizeState = () => {
             _synchronizing = true;
             let fragments = window.location.hash.substring(1).split("-");
@@ -78,6 +92,9 @@ $(function () {
             }
         });
 
+        /**
+         * Share URL handlers below.
+         */
         $("#sc-copy-url-form").on("submit", () => {
             try {
                 navigator.clipboard.writeText(document.location.href);
@@ -204,10 +221,12 @@ $(function () {
 
     // Entry via ID
     $("#sc-id-form").on('submit', function () {
-        let idSplit = parseStatisticsByCourseID($('#vg-id-form input').val());
+        let idSplit = parseStatisticsByCourseID($('#sc-id-form input').val());
         if (idSplit === false) {
             displayError("Invalid ID. Check again.");
         } else {
+            stateHandler.updateSubject(idSplit[0], false);
+            stateHandler.updateCourse(idSplit[1], false);
             getCourseStatistics('#sc-id-submit', idSplit[0], idSplit[1]);
         }
         return false;

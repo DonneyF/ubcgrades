@@ -47,7 +47,10 @@ function displayError(message) {
 
 function displayInfo(message) {
     displayMessage(message, "Info.", "info");
+}
 
+function displayWarning(message) {
+    displayMessage(message, "Warning.", "warning");
 }
 
 function displayMessage(message, title, type) {
