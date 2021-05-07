@@ -321,8 +321,8 @@ $(function () {
         if (["subject", "course"].indexOf(id) >= 0) {
             if (id === "course") {
                 data = response.map(item => ({
-                    'id': `${item['course']}${item['detail']}`,
-                    'text': `${item['course']}${item['detail']} - ${item['course_title']}`
+                    'id': `${item['course']}${item['detail'] ? item['detail'] : ''}`,
+                    'text': `${item['course']}${item['detail'] ? item['detail'] : ''} - ${item['course_title']}`
                 }));
             } else {
                 data = response.map(item => ({
