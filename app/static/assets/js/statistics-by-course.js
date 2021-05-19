@@ -2,6 +2,115 @@
 
 $(function () {
 
+    /**
+     * Similar to the state machine for viewing grades, but much simpler
+     * since we only care about two variables.
+     */
+    function StateHandler() {
+        let _subject;
+        let _course;
+        let _synchronizing = false;
+
+        let updateOrder = [
+            "subject",
+            "course",
+        ]
+
+        let constructHash = () => {
+            return `${_subject}-${_course}`;
+        };
+
+        this.updateSubject = async (subject, dropdown = true) => {
+            _subject = subject;
+            if (!_synchronizing) {
+                // Reset the course so we get the dropdown
+                _course = null;
+            }
+            if (dropdown) {
+                updateCourseDropdown(subject, _course);
+            }
+        };
+
+        this.updateCourse = async (course, dropdown = true) => {
+            _course = course;
+            this.updateState();
+            if (dropdown) {
+                $('#sc-dropdown-form').submit();
+            }
+        };
+
+        /**
+         * Last stage of the state machine that consolidates all
+         * the substates and pushes the state to the browser history stack.
+         */
+        this.updateState = () => {
+            _synchronizing = false;
+            window.location.hash = constructHash();
+            $("#sc-copy-url-input").val(document.location.href);
+        };
+
+        /**
+         * Resets the state machine and updates the browser history.
+         */
+        this.resetState = () => {
+            _synchronizing = false;
+            let data = [null, null];
+            [_subject, _course] = data;
+            for (let i = 0; i < data.length; i++) {
+                $(`#sc-drop-${updateOrder[i]}`).val(data[i]).trigger("change");
+            }
+            window.history.replaceState(undefined, undefined, " ");
+        };
+
+        /**
+         * Synchronizes the state machine with the URL fragment.
+         */
+        this.synchronizeState = () => {
+            _synchronizing = true;
+            let fragments = window.location.hash.substring(1).split("-");
+            if (fragments.length === 2) {
+                [_subject, _course] = fragments;
+                $("#sc-drop-subject").select2("trigger", "select", {
+                    data: {
+                        id: _subject,
+                    }
+                });
+            } else {
+                this.resetState();
+            }
+        };
+
+        this.init = () => {
+            if (window.location.hash) {
+                this.synchronizeState();
+            }
+        };
+
+        window.addEventListener("hashchange", () => {
+            if (constructHash() !== window.location.hash.substring(1)) {
+                this.synchronizeState();
+            }
+        });
+
+        /**
+         * Share URL handlers below.
+         */
+        $("#sc-copy-url-form").on("submit", () => {
+            try {
+                navigator.clipboard.writeText(document.location.href);
+                displayInfo("Copied!");
+            } catch (e) {
+                displayError("Failed to copy, try manually.");
+            }
+            return false;
+        });
+
+        $("#sc-copy-url-input").on("click", (e) => {
+            e.target.setSelectionRange(0, e.target.value.length)
+        });
+    }
+
+    let stateHandler = new StateHandler();
     /*-----------------------------------
     * Campus Selector and Dropdowns
     *-----------------------------------*/
@@ -36,9 +145,8 @@ $(function () {
                     templateSelection: function (val) {
                         return val.text === 'Subject' ? val.text : val.id; // Manual placeholder override as it has
                     }
-                }).on("select2:select", function (e) {
-                    updateCourseDropdown($(this).select2('data')[0]['id']);
                 });
+                stateHandler.init();
             },
             error: function () {
                 displayError("Unable to connect to API");
@@ -46,14 +154,20 @@ $(function () {
         });
     }
 
+    $('#sc-drop-subject').select2().on("select2:select", function (e) {
+        stateHandler.updateSubject($(this).select2('data')[0]['id']);
+    });
+
+    $('#sc-drop-course').select2().on('select2:select', function(e) {
+        stateHandler.updateCourse($(this).select2('data')[0]['id']);
+    });
+
     if (campus != null) {
         // If the campus is already filled, automatically load the subjects
         populateSubjectDrop();
     }
 
-    $('#sc-drop-course').select2();
-
-    function updateCourseDropdown(subject) {
+    function updateCourseDropdown(subject, previousCourse) {
         $.ajax({
             url: `${API_HOST_URL}/api/v2/courses/${campus}/${subject}`,
             type: "GET",
@@ -62,7 +176,8 @@ $(function () {
                     'id': `${item['course']}${item['detail']}`,
                     'text': `${item['course']}${item['detail']} - ${item['course_title']}`
                 }));
-                $('#sc-drop-course').empty().prepend('<option selected=""></option>').select2({
+                let dropdown = $('#sc-drop-course');
+                dropdown.empty().prepend('<option selected=""></option>').select2({
                     data: data,
                     // Auto adjust the dropdown
                     dropdownAutoWidth: true,
@@ -70,9 +185,16 @@ $(function () {
                     templateSelection: function (val) {
                         return val.id;
                     }
-                }).on('select2:select', function(e) {
-                    $('#sc-dropdown-form').submit();
-                }).select2('open');
+                });
+                if (!previousCourse) {
+                    dropdown.select2("open");
+                } else {
+                    dropdown.select2("trigger", "select", {
+                        data: {
+                            id: previousCourse,
+                        }
+                    });
+                }
             },
             error: function () {
                 displayError("Unable to connect to API");
@@ -99,10 +221,12 @@ $(function () {
 
     // Entry via ID
     $("#sc-id-form").on('submit', function () {
-        let idSplit = parseStatisticsByCourseID($('#vg-id-form input').val());
+        let idSplit = parseStatisticsByCourseID($('#sc-id-form input').val());
         if (idSplit === false) {
             displayError("Invalid ID. Check again.");
         } else {
+            stateHandler.updateSubject(idSplit[0], false);
+            stateHandler.updateCourse(idSplit[1], false);
             getCourseStatistics('#sc-id-submit', idSplit[0], idSplit[1]);
         }
         return false;

@@ -39,17 +39,26 @@ if (localStorage.getItem("campus") == null) $('#campusModal').modal('show');
 * Display Errors
 *-----------------------------------*/
 // Use a counter to generate and collapse multiple alerts
-let errorCounter = 0;
+let messageCounter = 0;
 
 function displayError(message) {
-    // Show error
-    let errorId = `error-${errorCounter}`;
-    $("#notification").append(`<div class="alert alert-danger mt-3" id="${errorId}"><strong>Error.</strong> ${message}</div>`);
-    // Fade the error after a second
-    $(`#${errorId}`).fadeTo(1500, 500).slideUp(500, function () {
-        $(`#${errorId}`).slideUp(1000);
-        // Delete the HTML element after its hidden.
-        $(`#${errorId}`).remove();
+    displayMessage(message, "Error.", "danger");
+}
+
+function displayInfo(message) {
+    displayMessage(message, "Info.", "info");
+}
+
+function displayWarning(message) {
+    displayMessage(message, "Warning.", "warning");
+}
+
+function displayMessage(message, title, type) {
+    let messageId = `error-${messageCounter}`;
+    $("#notification").append(`<div class="alert alert-${type} mt-3" id="${messageId}"><strong>${title}</strong> ${message}</div>`);
+    $(`#${messageId}`).fadeTo(1500, 500).slideUp(500, function () {
+        $(`#${messageId}`).slideUp(1000);
+        $(`#${messageId}`).remove();
     });
-    errorCounter++;
+    messageCounter++;
 }
