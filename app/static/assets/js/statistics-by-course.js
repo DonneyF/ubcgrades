@@ -311,9 +311,15 @@ $(function () {
         // Update the headmatter
         let elements_h2 = $('#sc-headmatter h2');
         $(elements_h2[0]).text(parseFloat(data['average']).toFixed(2));
-        $(elements_h2[1]).text(parseFloat(data['average_past_5_yrs'].toFixed(2)));
         $(elements_h2[2]).text(parseFloat(data['max_course_avg'].toFixed(2)));
         $(elements_h2[3]).text(parseFloat(data['min_course_avg'].toFixed(2)));
+
+        if (isNaN(parseFloat(data['average_past_5_yrs']))) {
+            $(elements_h2[1]).text("None");
+        } else {
+            $(elements_h2[1]).text(parseFloat(data['average_past_5_yrs'].toFixed(2)));
+        }
+
 
         // // Update the chart
         // $('#chart-grades-toggles').show();
