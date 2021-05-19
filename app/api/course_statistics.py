@@ -6,6 +6,7 @@ from flask import jsonify, g
 
 deselected_cols = {'campus', 'detail', 'course', 'subject'}
 
+
 @bp.route('/v2/course-statistics/<string:campus>/<string:subject>/<string:course>', methods=['GET'])
 def get_course_statistics(campus, subject, course):
     result = Course.query.filter_by(campus=campus, subject=subject, course=g.course, detail=g.detail).one_or_none()

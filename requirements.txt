@@ -1,4 +1,5 @@
-flask
+flask~=2.0.0
 flask_sqlalchemy
-nameparser
+nameparser~=1.0.6
 flask_migrate
+Werkzeug~=2.0.1

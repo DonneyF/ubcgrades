@@ -5,21 +5,17 @@ from flask import jsonify, g
 
 
 # Filters v2
-@bp.route('/v2/sections/<string:campus>/<string:yearsession>/<string:subject>/<string:course>', methods=['GET'])
-def get_sections_v2(campus, yearsession, subject, course):
-    if g.bad_yearsession:
-        return bad_request("Bad yearsession")
+@bp.route('/v2/sections/<string:campus>/<yearsession:ys>/<string:subject>/<string:course>', methods=['GET'])
+def get_sections_v2(campus, ys, subject, course):
     result = [row.section for row in TDG.query.filter_by(
-        campus=campus, year=g.year, session=g.session, subject=subject, course=g.course, detail=g.detail).distinct()]
+        campus=campus, year=ys.year, session=ys.session, subject=subject, course=g.course, detail=g.detail).distinct()]
     return jsonify(result) if result != [] else error_response(404, "Not Found")
 
 
-@bp.route('/v2/courses/<string:campus>/<string:yearsession>/<string:subject>', methods=['GET'])
-def get_courses_v2(campus, yearsession, subject):
-    if g.bad_yearsession:
-        return bad_request("Bad yearsession")
+@bp.route('/v2/courses/<string:campus>/<yearsession:ys>/<string:subject>', methods=['GET'])
+def get_courses_v2(campus, ys, subject):
     query = TDG.query.with_entities(TDG.course, TDG.detail, TDG.course_title).filter_by(
-        campus=campus, year=g.year, session=g.session, subject=subject).distinct()
+        campus=campus, year=ys.year, session=ys.session, subject=subject).distinct()
     result = [{
         'course': row.course,
         'detail': row.detail,
@@ -39,12 +35,10 @@ def get_courses_no_yearsession_v2(campus, subject):
     return jsonify(result) if result != [] else error_response(404, "Not Found")
 
 
-@bp.route('/v2/subjects/<string:campus>/<string:yearsession>', methods=['GET'])
-def get_subjects_v2(campus, yearsession):
-    if g.bad_yearsession:
-        return bad_request("Bad yearsession")
-    query = TDG.query.with_entities(TDG.subject, TDG.subject_title).filter_by(campus=campus, year=g.year,
-                                                                              session=g.session).distinct()
+@bp.route('/v2/subjects/<string:campus>/<yearsession:ys>', methods=['GET'])
+def get_subjects_v2(campus, ys):
+    query = TDG.query.with_entities(TDG.subject, TDG.subject_title).filter_by(campus=campus, year=ys.year,
+                                                                              session=ys.session).distinct()
     result = [{
         'subject': row.subject,
         'subject_title': row.subject_title
@@ -71,20 +65,16 @@ def get_yearsessions_v2(campus):
 
 
 # Filters v1
-@bp.route('/v1/sections/<string:campus>/<string:yearsession>/<string:subject>/<string:course>', methods=['GET'])
-def get_sections_v1(campus, yearsession, subject, course):
-    if g.bad_yearsession:
-        return bad_request("Bad yearsession")
+@bp.route('/v1/sections/<string:campus>/<yearsession:ys>/<string:subject>/<string:course>', methods=['GET'])
+def get_sections_v1(campus, ys, subject, course):
     result = [row.section for row in PRG.query.filter_by(
-        campus=campus, year=g.year, session=g.session, subject=subject, course=g.course, detail=g.detail).distinct()]
+        campus=campus, year=ys.year, session=ys.session, subject=subject, course=g.course, detail=g.detail).distinct()]
     return jsonify(result) if result != [] else error_response(404, "Not Found")
 
 
-@bp.route('/v1/courses/<string:campus>/<string:yearsession>/<string:subject>', methods=['GET'])
-def get_courses_v1(campus, yearsession, subject):
-    if g.bad_yearsession:
-        return bad_request("Bad yearsession")
-    query = PRG.query.with_entities(PRG.course, PRG.course_title).filter_by(campus=campus, year=g.year, session=g.session,
+@bp.route('/v1/courses/<string:campus>/<yearsession:ys>/<string:subject>', methods=['GET'])
+def get_courses_v1(campus, ys, subject):
+    query = PRG.query.with_entities(PRG.course, PRG.course_title).filter_by(campus=campus, year=ys.year, session=ys.session,
                                                           subject=subject).distinct()
     result = [{
         'course': row.course,
@@ -103,12 +93,10 @@ def get_courses_no_yearsession_v1(campus, subject):
     return jsonify(result) if result != [] else error_response(404, "Not Found")
 
 
-@bp.route('/v1/subjects/<string:campus>/<string:yearsession>', methods=['GET'])
-def get_subjects_v1(campus, yearsession):
-    if g.bad_yearsession:
-        return bad_request("Bad yearsession")
-    query = PRG.query.with_entities(PRG.subject, PRG.subject_title).filter_by(campus=campus, year=g.year,
-                                                                              session=g.session).distinct()
+@bp.route('/v1/subjects/<string:campus>/<yearsession:ys>', methods=['GET'])
+def get_subjects_v1(campus, ys):
+    query = PRG.query.with_entities(PRG.subject, PRG.subject_title).filter_by(campus=campus, year=ys.year,
+                                                                              session=ys.session).distinct()
     result = [{
         'subject': row.subject,
         'subject_title': row.subject_title
