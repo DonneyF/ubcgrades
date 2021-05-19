@@ -17,7 +17,7 @@ $(function () {
         ]
 
         let constructHash = () => {
-            return `${_subject}-${_course}`;
+            return `${campus}-${_subject}-${_course}`;
         };
 
         this.updateSubject = async (subject, dropdown = true) => {

@@ -28,7 +28,7 @@ $(function () {
         ];
 
         let constructHash = () => {
-            return `${_year}-${_subject}-${_course}-${_section}`;
+            return `${campus}-${_year}-${_subject}-${_course}-${_section}`;
         };
 
         this.updateYear = async (year, dropdown = true) => {
@@ -128,7 +128,7 @@ $(function () {
          * Synchronizes the state machine with the URL fragment.
          */
         this.synchronizeState = () => {
-            let fragments = window.location.hash.substring(1).split("-");
+            let fragments = window.location.hash.substring(6).split("-");
             if (fragments.length === 4) {
                 [_year, _subject, _course, _section] = fragments;
                 $("#vg-drop-year").select2("trigger", "select", {
@@ -148,7 +148,7 @@ $(function () {
         };
 
         window.addEventListener("hashchange", () => {
-            if (constructHash() !== window.location.hash.substring(1)) {
+            if (constructHash() !== window.location.hash.substring(6)) {
                 this.synchronizeState();
             }
         });

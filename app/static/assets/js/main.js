@@ -31,8 +31,12 @@ class YearSession {
 * Campus Selector
 *-----------------------------------*/
 // Populate local storage with the desired campus if not already existing
-if (localStorage.getItem("campus") == null) $('#campusModal').modal('show');
-
+if (['UBCV', 'UBCO'].includes(document.location.hash.substring(1,5))) {
+    campus = document.location.hash.substring(1,5)
+    localStorage.setItem("campus", campus);
+} else if (localStorage.getItem("campus") == null) {
+    $('#campusModal').modal('show');
+}
 
 
 /*-----------------------------------
