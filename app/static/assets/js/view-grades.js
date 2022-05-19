@@ -131,11 +131,6 @@ $(function () {
             let fragments = window.location.hash.substring(6).split("-");
             if (fragments.length === 4) {
                 [_year, _subject, _course, _section] = fragments;
-                $("#vg-drop-year").select2("trigger", "select", {
-                    data: {
-                        id: _year,
-                    }
-                });
             } else {
                 this.resetState();
             }
@@ -144,6 +139,11 @@ $(function () {
         this.init = () => {
             if (window.location.hash) {
                 this.synchronizeState();
+                $("#vg-drop-year").select2("trigger", "select", {
+                    data: {
+                        id: _year,
+                    }
+                });
             }
         };
 

@@ -70,11 +70,6 @@ $(function () {
             let fragments = window.location.hash.substring(6).split("-");
             if (fragments.length === 2) {
                 [_subject, _course] = fragments;
-                $("#sc-drop-subject").select2("trigger", "select", {
-                    data: {
-                        id: _subject,
-                    }
-                });
             } else {
                 this.resetState();
             }
@@ -83,6 +78,11 @@ $(function () {
         this.init = () => {
             if (window.location.hash) {
                 this.synchronizeState();
+                $("#sc-drop-subject").select2("trigger", "select", {
+                    data: {
+                        id: _subject,
+                    }
+                });
             }
         };
 

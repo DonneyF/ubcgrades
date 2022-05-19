@@ -3,3 +3,4 @@ flask_sqlalchemy
 nameparser~=1.0.6
 flask_migrate
 Werkzeug~=2.0.1
+Flask-Cors
