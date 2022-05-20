@@ -322,6 +322,8 @@ class Educator(db.Model):
     ys_2019W = db.Column(db.Integer())
     ys_2020S = db.Column(db.Integer())
     ys_2020W = db.Column(db.Integer())
+    ys_2021S = db.Column(db.Integer())
+    ys_2021W = db.Column(db.Integer())
 
     def __repr__(self):
         return f"<Educator {self.campus}-{self.subject}-{self.course}{self.course.detail}>"
@@ -400,6 +402,8 @@ class CourseAverageHistory(db.Model):
     ys_2019W = db.Column(db.Integer())
     ys_2020S = db.Column(db.Integer())
     ys_2020W = db.Column(db.Integer())
+    ys_2021S = db.Column(db.Integer())
+    ys_2021W = db.Column(db.Integer())
 
     def __repr__(self):
         return f"<CourseAverageHistory {self.campus}-{self.subject}-{self.course}{self.course.detail}>"

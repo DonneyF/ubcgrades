@@ -6,7 +6,7 @@ These scripts fill the database and perform some computations. They have an orde
 
 First, populate the database with the data:
 - `db_fill_tableau_dashboard_grades.py`
-- `db_fill_tableau_dashboard_grades.py`
+- `db_fill_pair_reports_grades.py`
 
 Then run the computational scripts:
 - `db_fill_course_stats.py`

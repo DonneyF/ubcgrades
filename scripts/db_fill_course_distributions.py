@@ -100,9 +100,9 @@ def main():
                         section = sections_to_compute[0]
                         for section in sections_to_compute:
                             for item, val in section.to_dict()['grades'].items():
-                                if grades[item] is '' and val != '':
+                                if grades[item] == '' and val != '':
                                     grades[item] = val
-                                elif grades[item] is not '' and val != '':
+                                elif grades[item] != '' and val != '':
                                     grades[item] += val
 
                         new_entry = CourseDistributions(campus=campus, subject=section.subject,

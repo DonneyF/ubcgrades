@@ -14,7 +14,7 @@ This is the source code for https://ubcgrades.com/. This repo is a [Flask](https
    |    |-- templates/           # Jinja2 templates
    |    |-- tests/               # Tests
    |    |
-   |   __init__.py               # Initialize the app
+   |    __init__.py              # Initialize the app
    |
    |-- ubc-pair-grade-data/      # Data submodule dependency
    |
@@ -27,8 +27,8 @@ This is the source code for https://ubcgrades.com/. This repo is a [Flask](https
 
 ```bash
 $ # Clone the sources
-$ git clone https://github.com/app-generator/flask-argon-dashboard.git
-$ cd flask-argon-dashboard
+$ git clone https://github.com/DonneyF/ubcgrades.git
+$ cd ubcgrades
 $
 $ # Virtualenv modules installation (Unix based systems)
 $ virtualenv --no-site-packages env

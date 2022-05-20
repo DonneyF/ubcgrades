@@ -12,7 +12,7 @@ import json
 import csv
 from sqlalchemy.exc import StatementError
 
-PAST_5_YEARS = set(str(i) for i in range(2015, 2020))  # Update on each new Winter session release of grades
+PAST_5_YEARS = set(str(i) for i in range(2015, 2022))  # Update on each new Winter session release of grades
 
 def get_sections_combined(course):
     """

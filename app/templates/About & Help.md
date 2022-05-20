@@ -24,17 +24,17 @@ This page allows you to retrieve single-section grade reports.
 
 **Q: Why are some grade entries missing?**
 
-A: For section grades 2014S and later, the page loads data from the Tableau dashboard. The dashboard does not report grades for grade categories with entries of 6 or less for privacy reasons.
+A: For section grades 2014S and later, the page loads data from the Tableau dashboard. For some years, the dashboard does not report grades for grade categories with entries of 6 or less for privacy reasons.
 
 **Q: So then why do I see some grade entries with 6 or less?**:
 
-A: Where possible, it is possible to extrapolate  the value of the missing grade entry (for example, if every grade category was populated and only one was missing, we simply subtract the sum from the number of enrolled students).
+A: Where possible, it is possible to extrapolate the value of the missing grade entry (for example, if every grade category was populated and only one was missing, we simply subtract the sum from the number of enrolled students).
 
 ## Statistics by Course
 
 This page allows you to retrieve basic course statistics.
 
-**Q: Why can't why is there no pass-percentage?**
+**Q: Why is there no pass-percentage?**
 
 A: It is not possible to compute the pass percentage from sections from the Tableau dashboard as it does not report the number of students who failed for all sections.
 
