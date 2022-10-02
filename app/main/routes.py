@@ -39,3 +39,8 @@ def api_v1():
 @bp.route('/api-reference/v2', methods=['GET'])
 def api_v2():
     return render_template('api/v2.html')
+
+
+@bp.route('/api-reference/v3', methods=['GET'])
+def api_v3():
+    return render_template('api/v3.html')

@@ -5,7 +5,7 @@ Dashboard data.
 
 from app import create_app
 from config import Config
-from app.models import PAIRReportsGrade as PRG, TableauDashboardGrade as TDG, Course, CourseDistributions, CampusEnum
+from app.models import PAIRReportsGrade as PRG, TableauDashboardGrade as TDG, TableauDashboardV2Grade as TDG2, CourseV2, CourseDistributions, CampusEnum
 from multiprocessing import Pool
 
 GRADES_V1 = ["0-9%", "10-19%", "20-29%", "30-39%", "40-49%", "<50%", "50-54%", "55-59%", "60-63%", "64-67%", "68-71%",
@@ -20,11 +20,16 @@ def get_sections_combined(course):
     :param course: Type: sqlalchemy.util._collections.result
     :return: A list of sqlalchemy.util._collections.result with sections under the course for that campus, ignoring OVERALL sections
     """
-    sections = [row for row in TDG.query.filter(TDG.section == "OVERALL").filter_by(campus=course.campus, subject=course.subject,
-                                                                    course=course.course, detail=course.detail)]
+    sections = []
+    for row in TDG2.query.filter(TDG2.year >= '2022').filter_by(campus=course.campus, subject=course.subject, course=course.course, detail=course.detail):
+        sections.append(row)
 
-    sections += [row for row in PRG.query.filter(PRG.section != "OVERALL").filter(PRG.year < '2014') \
-            .filter_by(campus=course.campus, subject=course.subject, course=course.course, detail=course.detail)]
+    for row in TDG.query.filter(TDG.section != "OVERALL").filter_by(campus=course.campus, subject=course.subject, course=course.course, detail=course.detail):
+        sections.append(row)
+
+    for row in PRG.query.filter(PRG.section != "OVERALL").filter(PRG.year < '2014')\
+            .filter_by(campus=course.campus, subject=course.subject, course=course.course, detail=course.detail):
+        sections.append(row)
 
     return sections
 
@@ -35,11 +40,12 @@ def main():
         db.create_all()
 
         # Get all the courses
-        courses = [row for row in
-                   Course.query.with_entities(Course.campus, Course.subject, Course.course, Course.detail).all()]
+        courses = [row for row in CourseV2.query.with_entities(CourseV2.campus, CourseV2.subject, CourseV2.course, CourseV2.detail).all()]
 
         # Get all the yearsessions
         year_sessions = set([row for row in TDG.query.with_entities(TDG.year, TDG.session).distinct()])
+        year_sessions = year_sessions.union(
+            set([row for row in TDG2.query.with_entities(TDG2.year, TDG2.session).distinct()]))
         year_sessions = year_sessions.union(
             set([row for row in PRG.query.with_entities(PRG.year, PRG.session).distinct()]))
 

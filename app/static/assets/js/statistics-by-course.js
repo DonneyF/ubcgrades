@@ -130,7 +130,7 @@ $(function () {
     function populateSubjectDrop() {
         // Restrict lookup to courses offered in the past 5 years
         $.ajax({
-            url: `${API_HOST_URL}/api/v2/subjects/${campus}`,
+            url: `${API_HOST_URL}/api/v3/subjects/${campus}`,
             type: "GET",
             success: function (response) {
                 let data = response.map(item => ({
@@ -169,7 +169,7 @@ $(function () {
 
     function updateCourseDropdown(subject, previousCourse) {
         $.ajax({
-            url: `${API_HOST_URL}/api/v2/courses/${campus}/${subject}`,
+            url: `${API_HOST_URL}/api/v3/courses/${campus}/${subject}`,
             type: "GET",
             success: function (response) {
                 let data = response.map(item => ({
@@ -267,14 +267,14 @@ $(function () {
 
         // Retrieve the data
         $.ajax({
-            url: `${API_HOST_URL}/api/v2/course-statistics/${campus}//${subject}/${course}`,
+            url: `${API_HOST_URL}/api/v3/course-statistics/${campus}/${subject}/${course}`,
             type: "GET",
             success: function (response) {
                 updateCourseHeadmatter(response);
 
                 // Retrieve historical averages
                 $.ajax({
-                    url: `${API_HOST_URL}/api/v2/course-statistics/average-history/${campus}/${subject}/${course}`,
+                    url: `${API_HOST_URL}/api/v3/course-statistics/average-history/${campus}/${subject}/${course}`,
                     type: "GET",
                     success: function (response) {
                         updateHistoricalAveragesChart(response);
@@ -283,7 +283,7 @@ $(function () {
 
                 // Retrieve professors
                 $.ajax({
-                    url: `${API_HOST_URL}/api/v2/course-statistics/teaching-team/${campus}/${subject}/${course}`,
+                    url: `${API_HOST_URL}/api/v3/course-statistics/teaching-team/${campus}/${subject}/${course}`,
                     type: "GET",
                     success: function (response) {
                         updateTeachingTeamTable(response);

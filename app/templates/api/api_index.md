@@ -1,6 +1,6 @@
-The API served here requires no API key. All data will be served via JSON. The url is `https://ubcgrades.com/api`
+The API served here requires no API key. All data will be served via JSON. The base url is `https://ubcgrades.com/api`
 
-There are two versions of the API.
+There are multiple versions of the API to conform to different data sources.
 
 # Version 1 (v1)
 
@@ -9,6 +9,10 @@ Version 1 of the API supports only retrieval of grade distributions and filterin
 # Version 2 (v2)
 
 Version 2 of the API supports retrieval of grade distributions, filtering through them, and course statistics as well. The data source for v2 is from the Tableau Dashboard for retrieval of individual grade distributions. Data for the course statistics uses data from v1 for grade distributions earlier than 2014S. This API supports the UBCV and UBCO campus.
+
+# Version 3 (v3)
+
+Version 3 is v2 with additional data dependencies on the second version Tableau Dashboard. It carries data from 2019W onward. Data for course statistics uses data from both v1 and v2 for grade distributions earlier than 2021W. This API supports the UBCV and UBCO campus. Some endpoints are not available in v3, and v2 should be used instead.
 
 # Definitions
 

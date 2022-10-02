@@ -5,7 +5,7 @@ Dashboard data.
 
 from app import create_app
 from config import Config
-from app.models import PAIRReportsGrade as PRG, TableauDashboardGrade as TDG, Course, Educator, CampusEnum
+from app.models import PAIRReportsGrade as PRG, TableauDashboardGrade as TDG, TableauDashboardV2Grade as TDG2, CourseV2, Educator, CampusEnum
 from multiprocessing import Pool
 from nameparser import HumanName
 from nameparser.util import u
@@ -29,13 +29,16 @@ def get_sections_separated(course):
     :param course: Type: sqlalchemy.util._collections.result
     :return: A list of sqlalchemy.util._collections.result with sections under the course for that campus, ignoring OVERALL sections
     """
-    sections_TDG = [row for row in TDG.query.with_entities(TDG.year, TDG.session, TDG.educators, TDG.section).filter(TDG.section != "OVERALL").filter_by(campus=course.campus, subject=course.subject,
-                                                                                                                                                         course=course.course, detail=course.detail)]
+    sections_TDG2 = [row for row in TDG2.query.filter(TDG2.year > '2021').with_entities(TDG2.year, TDG2.session, TDG2.educators, TDG2.section)\
+        .filter(TDG2.section != "OVERALL").filter_by(campus=course.campus, subject=course.subject,  course=course.course, detail=course.detail)]
+
+    sections_TDG = [row for row in TDG.query.with_entities(TDG.year, TDG.session, TDG.educators, TDG.section)\
+        .filter(TDG.section != "OVERALL").filter_by(campus=course.campus, subject=course.subject,  course=course.course, detail=course.detail)]
 
     sections_PRG = [row for row in PRG.query.with_entities(PRG.year, PRG.session, PRG.educators, PRG.section).filter(PRG.section != "OVERALL").filter(PRG.year < '2014') \
             .filter_by(campus=course.campus, subject=course.subject, course=course.course, detail=course.detail)]
 
-    return sections_TDG, sections_PRG
+    return sections_TDG2, sections_TDG, sections_PRG
 
 
 def main():
@@ -46,10 +49,12 @@ def main():
         # In the database, we have a sections -> educators. We wish to create course -> educators, yearsessions they are active
         # Get all the courses
         courses = [row for row in
-                   Course.query.with_entities(Course.campus, Course.subject, Course.course, Course.detail).all()]
+                   CourseV2.query.with_entities(CourseV2.campus, CourseV2.subject, CourseV2.course, CourseV2.detail).all()]
 
         # Get all the yearsessions
         year_sessions = set([row for row in TDG.query.with_entities(TDG.year, TDG.session).distinct()])
+        year_sessions = year_sessions.union(
+            set([row for row in TDG2.query.with_entities(TDG2.year, TDG2.session).distinct()]))
         year_sessions = year_sessions.union(
             set([row for row in PRG.query.with_entities(PRG.year, PRG.session).distinct()]))
 
@@ -58,14 +63,14 @@ def main():
             if index % 100 == 0:
                 print(f'{index}/{N}')
             # Get all the sections
-            sections_TDG, sections_PRG = get_sections_separated(course)
+            sections_TDG2, sections_TDG, sections_PRG = get_sections_separated(course)
             # Dictionary that maps a educators to a dictionary that maps a yearsession to the number of sections the
             # educators was active in that yearsession
             educator_map = {}
 
             # Sections have Educator fields that contain a list of names. Sections from PRG can have names that
             # are in all-caps. We check equality between names using nameparser
-            for section in sections_TDG + sections_PRG:
+            for section in sections_TDG + sections_PRG + sections_TDG2:
                 section_ys = f'{section.year}{section.session.name}'
                 educator_str = section.educators
                 for educator in educator_str.split(";"):

@@ -1,11 +1,11 @@
 """
-Imports data from Tableau Dashboard into the database. This assumes the database has been created with the proper
+Imports data from Tableau Dashboard v2 into the database. This assumes the database has been created with the proper
 models and the data exist in the project directory in /ubc-pair-grade-data.
 """
 
 from app import create_app
 from config import Config
-from app.models import TableauDashboardGrade
+from app.models import TableauDashboardV2Grade
 import os
 import json
 import csv
@@ -30,7 +30,7 @@ def main():
         db.create_all()
 
         path_to_csv_files = os.path.join(os.path.abspath(os.path.dirname(__file__)), os.pardir, 'ubc-pair-grade-data',
-                                         'tableau-dashboard')
+                                         'tableau-dashboard-v2')
 
         # Build subject dict
         extra = os.path.join(os.path.abspath(os.path.dirname(__file__)), os.pardir, 'ubc-pair-grade-data', 'extra')
@@ -51,15 +51,16 @@ def main():
                     subject_key = f'{row["Campus"]}-{row["Subject"]}'
                     section = str(row['Section']).zfill(3) if type(row['Section']) == int or row['Section'].isnumeric() else row['Section']
                     course = str(row['Course']).zfill(3) if type(row['Course']) == int or row['Course'].isnumeric() else row['Course']
-                    entry = TableauDashboardGrade(campus=row['Campus'], year=row['Year'], session=row['Session'],
+                    entry = TableauDashboardV2Grade(campus=row['Campus'], year=row['Year'], session=row['Session'],
                                                   faculty_title=subjects[subject_key]['faculty_school'],
                                                   subject=row['Subject'],
                                                   subject_title=subjects[subject_key]['title'],
                                                   course=course, detail=row['Detail'],
                                                   section=section,
                                                   course_title=row['Title'], educators=educators,
-                                                  enrolled=row['Enrolled'], average=row['Avg'],
-                                                  stdev=row['Std dev'], high=row['High'], low=row['Low'],
+                                                  reported=row['Reported'], average=row['Avg'],
+                                                  percentile_25=row['Percentile (25)'], percentile_75=row['Percentile (75)'],
+                                                  median=row['Median'], high=row['High'], low=row['Low'],
                                                   grade_lt50=row['<50'], grade_50_54=row['50-54'],
                                                   grade_55_59=row['55-59'], grade_60_63=row['60-63'],
                                                   grade_64_67=row['64-67'], grade_68_71=row['68-71'],

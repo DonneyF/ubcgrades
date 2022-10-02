@@ -202,7 +202,13 @@ $(function () {
             })) : YEARSESSIONS_UBCO.map(item => ({'id': item, 'text': item})),
         }).on("select2:select", function (e) {
             yearsession = new YearSession($(this).select2('data')[0]['id']);
-            apiVersion = yearsession.year < 2014 ? "v1" : "v2";
+            if (yearsession.year < 2014) {
+                apiVersion = 'v1'
+            } else if (yearsession.year > 2021) {
+                apiVersion = 'v3'
+            } else {
+                apiVersion = 'v2'
+            }
             stateHandler.updateYear(yearsession.toString());
         });
     }
@@ -372,7 +378,13 @@ $(function () {
             displayError("Invalid ID. Check again.");
         } else {
             yearsession = new YearSession(idSplit[0]);
-            apiVersion = yearsession.year < 2014 ? "v1" : "v2";
+            if (yearsession.year < 2014) {
+                apiVersion = 'v1'
+            } else if (yearsession.year > 2021) {
+                apiVersion = 'v3'
+            } else {
+                apiVersion = 'v2'
+            }
             stateHandler.updateYear(idSplit[0], false);
             stateHandler.updateSubject(idSplit[1], false);
             stateHandler.updateCourse(idSplit[2], false);
@@ -396,9 +408,15 @@ $(function () {
      */
     function displayContentContainer() {
         if (yearsession.year < 2014) {
+            $('#tableau-dashboard-v2-row').addClass('d-none');
             $('#tableau-dashboard-row').addClass('d-none');
             $('#pair-reports-row').removeClass('d-none');
+        } else if (yearsession.year > 2021) {
+            $('#tableau-dashboard-v2-row').removeClass('d-none');
+            $('#tableau-dashboard-row').addClass('d-none');
+            $('#pair-reports-row').addClass('d-none');
         } else {
+            $('#tableau-dashboard-v2-row').addClass('d-none');
             $('#tableau-dashboard-row').removeClass('d-none');
             $('#pair-reports-row').addClass('d-none');
         }
@@ -435,8 +453,14 @@ $(function () {
             url: `${API_HOST_URL}/api/${apiVersion}/grades/${campus}/${yearsession}/${subject}/${course}/${section}`,
             type: "GET",
             success: function (response) {
-                if (apiVersion === "v1") updateGradeDatav1(response);
-                else updateGradeDatav2(response);
+                if (apiVersion === "v1") {
+                    updateGradeDatav1(response);
+                }
+                else if (apiVersion === 'v2') {
+                    updateGradeDatav2(response);
+                } else {
+                    updateGradeDatav3(response);
+                }
 
                 // Get the most recent sessions and update
                 $.ajax({
@@ -521,6 +545,38 @@ $(function () {
 
         // Update the teaching team
         $("#teaching-team-v2").text(data['educators'].replace(/;/gi, ", "));
+
+        // Update the chart
+        $('#chart-grades-toggles').show();
+        updateGradesChart(data);
+    }
+
+    function updateGradeDatav3(data) {
+        // Update the card header
+        $('#tableau-dashboard-v2-row .card-header h3').text(`${data['campus']} ${data['year']}${data['session']} ${data['subject']} ${data['course']}${data['detail']} ${data['section']}`);
+        $('#tableau-dashboard-v2-row .card-header h2').text(data['course_title']);
+        // Update the headmatter
+        $('#vg-headmatter-v3 h2').each(function (index) {
+            // Find each h2 and update
+            let headmatter_entry = $(this);
+            if (headmatter_entry != null) {
+                let number = data[HEADMATTER_V3_KEYS[index]];
+                if (number % 1 === 0) {
+                    // number_string is a int
+                    headmatter_entry.text(number);
+                } else {
+                    headmatter_entry.text(parseFloat(number).toFixed(2));
+                }
+            }
+        });
+
+        // Update the grades table
+        $('#grades-v3 span').each(function (index) {
+            $(this).text(data['grades'][GRADES_V3[index]]);
+        });
+
+        // Update the teaching team
+        $("#teaching-team-v3").text(data['educators'].replace(/;/gi, ", "));
 
         // Update the chart
         $('#chart-grades-toggles').show();

@@ -168,6 +168,77 @@ class TableauDashboardGrade(db.Model):
             "low": self.low,
         }
 
+class TableauDashboardV2Grade(db.Model):
+    __tablename__ = "TableauDashboardV2Grade"
+    campus = db.Column(db.Enum(CampusEnum), primary_key=True)  # UBCV or UBCO
+    year = db.Column(db.String(4), primary_key=True)  # Ex: 2012
+    session = db.Column(db.Enum(SessionEnum), primary_key=True)  # W or S
+    faculty_title = db.Column(db.String())
+    subject = db.Column(db.String(4), primary_key=True)  # Ex: BA, KIN, MATH
+    subject_title = db.Column(db.String())
+    course = db.Column(db.String(3), primary_key=True)  # Ex: 001, 200
+    detail = db.Column(db.String(3), primary_key=True)  # Ex: A, B, C
+    section = db.Column(db.String(7), primary_key=True)  # Ex: 001, 100, GIS, T1A, OVERALL
+    course_title = db.Column(db.String())
+    educators = db.Column(db.String())
+    reported = db.Column(db.Integer())
+    average = db.Column(db.Float())
+    median = db.Column(db.Float())
+    percentile_25 = db.Column(db.Float())
+    percentile_75 = db.Column(db.Float())
+    high = db.Column(db.Integer())
+    low = db.Column(db.Integer())
+    # We note these fields are nullable
+    grade_lt50 = db.Column(db.Integer())  # Num less than 50
+    grade_50_54 = db.Column(db.Integer())
+    grade_55_59 = db.Column(db.Integer())
+    grade_60_63 = db.Column(db.Integer())
+    grade_64_67 = db.Column(db.Integer())
+    grade_68_71 = db.Column(db.Integer())
+    grade_72_75 = db.Column(db.Integer())
+    grade_76_79 = db.Column(db.Integer())
+    grade_80_84 = db.Column(db.Integer())
+    grade_85_89 = db.Column(db.Integer())
+    grade_90_100 = db.Column(db.Integer())
+
+    def __repr__(self):
+        return f"<TableauDashboardV2Grade {self.campus.name}-{self.year}{self.session.name}-{self.subject}-{self.course}" \
+            f"{self.detail if self.detail != '' else ''}-{self.section}>"
+
+    def to_dict(self):
+        return {
+            "grades": {
+                "<50%": self.grade_lt50,
+                "50-54%": self.grade_50_54,
+                "55-59%": self.grade_55_59,
+                "60-63%": self.grade_60_63,
+                "64-67%": self.grade_64_67,
+                "68-71%": self.grade_68_71,
+                "72-75%": self.grade_72_75,
+                "76-79%": self.grade_76_79,
+                "80-84%": self.grade_80_84,
+                "85-89%": self.grade_85_89,
+                "90-100%": self.grade_90_100
+            },
+            "campus": self.campus.name,
+            "year": self.year,
+            "session": self.session.name,
+            "faculty_title": self.faculty_title,
+            "subject": self.subject,
+            "subject_title": self.subject_title,
+            "course": self.course,
+            "detail": self.detail,
+            "section": self.section,
+            "course_title": self.course_title,
+            "educators": self.educators,
+            "reported": self.reported,
+            "average": self.average,
+            "median": self.median,
+            "percentile_25": self.percentile_25,
+            "percentile_75": self.percentile_75,
+            "high": self.high,
+            "low": self.low,
+        }
 
 class Course(db.Model):
     __tablename__ = "Course"
@@ -199,6 +270,45 @@ class Course(db.Model):
             "average": self.average,
             "average_past_5_yrs": self.average_past_5_yrs,
             "stdev": self.stdev,
+            "max_course_avg": self.max_course_avg,
+            "min_course_avg": self.min_course_avg,
+        }
+
+        for key, val in values.items():
+            if val is None:
+                values[key] = ''
+
+        return values
+
+
+class CourseV2(db.Model):
+    __tablename__ = "CourseV2"
+    campus = db.Column(db.Enum(CampusEnum), primary_key=True)  # UBCV or UBCO
+    faculty_title = db.Column(db.String())
+    subject = db.Column(db.String(4), primary_key=True)  # Ex: BA, KIN, MATH
+    subject_title = db.Column(db.String())
+    course = db.Column(db.String(3), primary_key=True)  # Ex: 001, 200
+    detail = db.Column(db.String(3), primary_key=True)  # Ex: A, B, C
+    course_title = db.Column(db.String())
+    average = db.Column(db.Float())
+    average_past_5_yrs = db.Column(db.Float())
+    max_course_avg = db.Column(db.Integer())
+    min_course_avg = db.Column(db.Integer())
+
+    def __repr__(self):
+        return f"<Course {self.campus.name}--{self.subject}-{self.course}{self.detail if self.detail != '' else ''}>"
+
+    def to_dict(self):
+        values = {
+            "campus": self.campus.name,
+            "faculty_title": self.faculty_title,
+            "subject": self.subject,
+            "subject_title": self.subject_title,
+            "course": self.course,
+            "detail": self.detail,
+            "course_title": self.course_title,
+            "average": self.average,
+            "average_past_5_yrs": self.average_past_5_yrs,
             "max_course_avg": self.max_course_avg,
             "min_course_avg": self.min_course_avg,
         }
@@ -324,6 +434,7 @@ class Educator(db.Model):
     ys_2020W = db.Column(db.Integer())
     ys_2021S = db.Column(db.Integer())
     ys_2021W = db.Column(db.Integer())
+    ys_2022S = db.Column(db.Integer())
 
     def __repr__(self):
         return f"<Educator {self.campus}-{self.subject}-{self.course}{self.course.detail}>"
@@ -404,6 +515,7 @@ class CourseAverageHistory(db.Model):
     ys_2020W = db.Column(db.Integer())
     ys_2021S = db.Column(db.Integer())
     ys_2021W = db.Column(db.Integer())
+    ys_2022S = db.Column(db.Integer())
 
     def __repr__(self):
         return f"<CourseAverageHistory {self.campus}-{self.subject}-{self.course}{self.course.detail}>"
