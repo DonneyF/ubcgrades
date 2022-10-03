@@ -8,7 +8,6 @@ Required URL parameters are **bolded**.
 | /grades/**campus**/**yearsession**/**subject**/**course**    | Retrieves a grade distribution report for a course         | [/api/v2/grades/UBCV/2018W/MATH/100](/api/v2/grades/UBCV/2018W/MATH/100)         |
 | /grades/**campus**/**yearsession**/**subject**               | Retrieves a grade distribution report for a subject        | [/api/v2/grades/UBCV/2018W/POLI](/api/v2/grades/UBCV/2018W/POLI)                 |
 | /grades/**campus**/**yearsession**                           | Retrieves a grade distribution report for a yearsession    | [/api/v2/grades/UBCV/2017S](/api/v2/grades/UBCV/2017S)                           |
-| /grades/**campus**/**yearsession**/**subject**/**course**/**section** | Retrieves a grade distribution report for a single section | [/api/v2/grades/UBCV/2018W/MATH/100/101](/api/v2/grades/UBCV/2018W/MATH/100/101) |
 
 # Filters
 
