@@ -8,8 +8,6 @@ The purpose of this website is to simply display grade reports in a more useable
 
 The source of data for this website is from [ubc-pair-grade-data](https://github.com/DonneyF/ubc-pair-grade-data). 
 
-> There are two main sources for the data. The first (now deprecated) source was from the old PAIR Reports dashboard located [here](https://webprd01.pair.ubc.ca/reports/welcome.action). This tool was removed in the summer of 2019 in favor of a Tableau dashboard found [here](http://pair.ubc.ca/student-performance/grades-distribution/) (the UBC VPN is needed to access), serving as the second source.
-
 **Q: How are statistics computed?**
 
 A: See the scripts in the source code.
@@ -40,7 +38,7 @@ A: It is not possible to compute the pass percentage from sections from the Tabl
 
 **Q: What is "Teaching Team"?**:
 
-A: This is the names of all personnel credited with the delivery of the course. You will see TA and other facilitators if the Tableau Dashboard has reported them. For courses delivered earlier than 2014S, only the professor(s) were reported.
+A: This is the names of all personnel credited with the delivery of the course. You will see TA and other facilitators if the Tableau Dashboard has reported them. For courses delivered earlier than 2014S and after 2021W, only the professor(s) were reported.
 
 ## Other
 

@@ -15,7 +15,7 @@ Required URL parameters are **bolded**.
 
 | Endpoint                                                    | Description                                                  | Example                                                                      |
 | ----------------------------------------------------------- | ------------------------------------------------------------ |------------------------------------------------------------------------------|
-| /sections/**campus**/**yearsession**/**subject**/**course** | Retrieves all the section numbers under a particular course  | [/api/v3/sections/UBCV/2022S/BIOL/200](/api/v3/sections/UBCV/2022S/BIOL/200) |
+| /sections/**campus**/**yearsession**/**subject**/**course** | Retrieves all the section numbers under a particular course  | [/api/v3/sections/UBCV/2022W/BIOL/200](/api/v3/sections/UBCV/2022W/BIOL/200) |
 | /courses/**campus**/**yearsession**/**subject**             | Retrieves all the course labels under a particular subject and yearsession | [/api/v3/courses/UBCV/2022S/POLI](/api/v3/courses/UBCV/2022S/POLI)           |
 | /courses/**campus**/**subject**                             | Retrieves all the distinct course labels under a particular subject | [/api/v3/courses/UBCV/ELEC](/api/v3/courses/UBCV/ELEC)                       |
 | /subjects/**campus**/**yearsession**                        | Retrieves all distinct subjects under a particular yearsession | [/api/v3/subjects/UBCV/2022S](/api/v3/subjects/UBCV/2022S)                   |
