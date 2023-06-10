@@ -11,7 +11,7 @@ const YEARSESSIONS_UBCO = YEARSESSIONS_UBCV.slice(0, 16); // Update this for new
 const YEARSESSIONS_RECENT = YEARSESSIONS_UBCV.slice(0, 11); // fixed
 const HEADMATTER_V1_KEYS = ["average", "stdev", "high", "low", "pass", "fail", "enrolled", "withdrew", "audit", "other"];
 const HEADMATTER_V2_KEYS = ["average", "stdev", "high", "low", "enrolled"];
-const HEADMATTER_V3_KEYS = ["average", "median", "high", "low", "reported"];
+const HEADMATTER_V3_KEYS = ["average", "median", "percentile_25", "percentile_75", "high", "low", "reported"];
 const GRADES_V1 = ["0-9%", "10-19%", "20-29%", "30-39%", "40-49%", "<50%", "50-54%", "55-59%", "60-63%", "64-67%", "68-71%", "72-75%", "76-79%", "80-84%", "85-89%", "90-100%"];
 const GRADES_V2 = GRADES_V3 = GRADES_V1.slice(5);
 const API_HOST_URL = "http://localhost:5000";
