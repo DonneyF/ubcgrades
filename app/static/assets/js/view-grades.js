@@ -565,7 +565,7 @@ $(function () {
                     // number_string is a int
                     headmatter_entry.text(number);
                 } else {
-                    headmatter_entry.text(parseFloat(number).toFixed(2));
+                    headmatter_entry.text(parseFloat(number).toFixed(1));
                 }
             }
         });
