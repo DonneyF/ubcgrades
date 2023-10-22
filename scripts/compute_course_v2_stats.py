@@ -6,13 +6,11 @@ models and the data exist in the project directory in /ubc-pair-grade-data.
 from app import create_app
 from config import Config
 from app.models import PAIRReportsGrade as PRG, TableauDashboardGrade as TDG, TableauDashboardV2Grade as TDG2, CourseV2
-import math
-import re
-import json
-import csv
-from sqlalchemy.exc import StatementError
+import multiprocessing
+import tqdm
 
-PAST_5_YEARS = set(str(i) for i in range(2015, 2022))  # Update on each new Winter session release of grades
+curr_year = 2023
+PAST_5_YEARS = set(str(i) for i in range(curr_year - 4, curr_year + 1))  # Update on each new Winter session release of grades
 
 def get_sections_combined(course):
     """
@@ -34,7 +32,16 @@ def get_sections_combined(course):
 
 def compute_average_past_5_years(sections):
     averages = [section.average for section in sections if section.year in PAST_5_YEARS if section.average is not None]
-    num_students = [section.enrolled for section in sections if section.year in PAST_5_YEARS if section.average is not None]
+    num_students = []
+    for section in sections:
+        if section.year not in PAST_5_YEARS:
+            continue
+        if section.__tablename__ == "PAIRReportsGrade":
+            num_students.append(section.enrolled - section.audit - section.other - section.withdrew)
+        elif section.__tablename__ == 'TableauDashboardGrade':
+            num_students.append(section.enrolled)
+        else:
+            num_students.append(section.reported)
 
     if sum(num_students) > 0:
         weighted_average = sum(weight * value for weight, value in zip(num_students, averages)) / sum(num_students)
@@ -79,11 +86,50 @@ def compute_average(sections, averages):
 
         return weighted_average
 
+
+def init_worker():
+    global shared_app, shared_db
+    shared_app, shared_db = create_app(Config)
+
+
+def process_course(course):
+    with shared_app.app_context():
+        sections = get_sections_combined(course)
+        averages = [section.average for section in sections if section.average is not None]
+
+        # Compute the average
+        avg = compute_average(sections, averages)
+        avg_past_5_yrs = compute_average_past_5_years(sections)
+
+        max_course_avg = max(averages) if averages else None
+        min_course_avg = min(averages) if averages else None
+
+        # Get newest metadata
+        meta = TDG2.query.with_entities(TDG2.faculty_title, TDG2.course_title, TDG2.subject_title) \
+            .filter_by(campus=course.campus, subject=course.subject, course=course.course, detail=course.detail).first()
+
+        if meta is None:
+            meta = TDG.query.with_entities(TDG.faculty_title, TDG.course_title, TDG.subject_title) \
+                .filter_by(campus=course.campus, subject=course.subject, course=course.course,
+                           detail=course.detail).first()
+
+        if meta is None:
+            meta = PRG.query.with_entities(PRG.faculty_title, PRG.course_title, PRG.subject_title) \
+                .filter_by(campus=course.campus, subject=course.subject, course=course.course,
+                           detail=course.detail).first()
+
+        entry = CourseV2(campus=course.campus, faculty_title=meta.faculty_title, subject=course.subject,
+                             subject_title=meta.subject_title, course=course.course, course_title=meta.course_title,
+                             detail=course.detail, average=avg, average_past_5_yrs=avg_past_5_yrs,
+                             max_course_avg=max_course_avg, min_course_avg=min_course_avg)
+
+        return entry
+
 def main():
-    app, db = create_app(Config)
-    with app.app_context():
-        bulk_objects = []
-        db.create_all()
+    global shared_app, shared_db
+    shared_app, shared_db = create_app(Config)
+    with shared_app.app_context():
+        shared_db.create_all()
 
         # First get a set of all the courses
         courses = set()  # Set of sqlalchemy.util._collections.result
@@ -96,42 +142,14 @@ def main():
         for row in PRG.query.with_entities(PRG.campus, PRG.subject, PRG.course, PRG.detail).filter(PRG.year < '2014').distinct():
             courses.add(row)
 
-        N = len(courses)
-        for index, course in enumerate(courses):
-            if index % 100 == 0:
-                print(f'{index}/{N}')
-            sections = get_sections_combined(course)
-            averages = [section.average for section in sections if section.average is not None]
+        num_processes = multiprocessing.cpu_count()
+        pool = multiprocessing.Pool(processes=num_processes, initializer=init_worker)
+        pool_results = list(tqdm.tqdm(pool.imap(process_course, courses), total=len(courses)))
+        pool.close()
+        pool.join()
 
-            # Compute the average
-            avg = compute_average(sections, averages)
-            avg_past_5_yrs = compute_average_past_5_years(sections)
-
-            max_course_avg = max(averages) if averages else None
-            min_course_avg = min(averages) if averages else None
-
-            # Get newest metadata
-            meta = TDG2.query.with_entities(TDG2.faculty_title, TDG2.course_title, TDG2.subject_title)\
-                .filter_by(campus=course.campus, subject=course.subject, course=course.course, detail=course.detail).first()
-
-            if meta is None:
-                meta = TDG.query.with_entities(TDG.faculty_title, TDG.course_title, TDG.subject_title)\
-                    .filter_by(campus=course.campus, subject=course.subject, course=course.course, detail=course.detail).first()
-
-            if meta is None:
-                meta = PRG.query.with_entities(PRG.faculty_title, PRG.course_title, PRG.subject_title) \
-                    .filter_by(campus=course.campus, subject=course.subject, course=course.course,
-                               detail=course.detail).first()
-
-            new_entry = CourseV2(campus=course.campus, faculty_title=meta.faculty_title, subject=course.subject,
-                               subject_title=meta.subject_title, course=course.course, course_title=meta.course_title,
-                               detail=course.detail, average=avg, average_past_5_yrs=avg_past_5_yrs,
-                               max_course_avg=max_course_avg, min_course_avg=min_course_avg)
-
-            bulk_objects.append(new_entry)
-
-        db.session.bulk_save_objects(bulk_objects)
-        db.session.commit()
+        shared_db.session.bulk_save_objects(pool_results)
+        shared_db.session.commit()
 
 
 if __name__ == "__main__":

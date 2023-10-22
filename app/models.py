@@ -202,7 +202,7 @@ class TableauDashboardV2Grade(db.Model):
     grade_90_100 = db.Column(db.Integer())
 
     def __repr__(self):
-        return f"<TableauDashboardV2Grade {self.campus.name}-{self.year}{self.session.name}-{self.subject}-{self.course}" \
+        return f"<TableauDashboardV2Grade {self.campus}-{self.year}{self.session}-{self.subject}-{self.course}" \
             f"{self.detail if self.detail != '' else ''}-{self.section}>"
 
     def to_dict(self):
@@ -436,6 +436,7 @@ class Educator(db.Model):
     ys_2021W = db.Column(db.Integer())
     ys_2022S = db.Column(db.Integer())
     ys_2022W = db.Column(db.Integer())
+    ys_2023S = db.Column(db.Integer())
 
     def __repr__(self):
         return f"<Educator {self.campus}-{self.subject}-{self.course}{self.course.detail}>"
@@ -518,6 +519,7 @@ class CourseAverageHistory(db.Model):
     ys_2021W = db.Column(db.Integer())
     ys_2022S = db.Column(db.Integer())
     ys_2022W = db.Column(db.Integer())
+    ys_2023S = db.Column(db.Integer())
 
     def __repr__(self):
         return f"<CourseAverageHistory {self.campus}-{self.subject}-{self.course}{self.course.detail}>"

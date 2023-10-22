@@ -7,11 +7,9 @@ from app import create_app
 from config import Config
 from app.models import PAIRReportsGrade, CampusEnum, SessionEnum
 import os
-import re
 import json
 import csv
-from sqlalchemy.exc import StatementError
-
+import tqdm
 
 def load_data(path_to_csv_files):
     # Load all the CSVs into an array
@@ -103,13 +101,12 @@ def main():
                                      'pair-reports', 'UBC')
     path_to_correction_file = os.path.join(os.path.abspath(os.path.dirname(__file__)), os.pardir, 'ubc-pair-grade-data',
                                            'extra', 'pair-reports-UBC-instructor-corrections.json')
+
     sections = load_data(path_to_csv_files)
     sections = remove_overall_sections(sections)
     sections = fix_educators(path_to_correction_file, sections)
 
     app, db = create_app(Config)
-
-    missing = set()
 
     with app.app_context():
         db.create_all()
@@ -121,7 +118,8 @@ def main():
             for subject in json.load(open(os.path.join(extra, file), 'r')):
                 subjects.update({f'{file[0:3]}-{subject["code"]}': subject})
 
-        for section in sections:
+        entries = []
+        for section in tqdm.tqdm(sections):
             campus = CampusEnum.UBCV
             session = SessionEnum.W if section['Session'] == "W" else SessionEnum.S
             average = None if section['Avg'] == '' else section['Avg']
@@ -150,9 +148,9 @@ def main():
                                      grade_68_71=section['68-71'], grade_72_75=section['72-75'],
                                      grade_76_79=section['76-79'], grade_80_84=section['80-84'],
                                      grade_85_89=section['85-89'], grade_90_100=section['90-100'])
-            db.session.add(entry)
+            entries.append(entry)
+        db.session.bulk_save_objects(entries)
         db.session.commit()
-
 
 
 if __name__ == "__main__":

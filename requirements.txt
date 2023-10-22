@@ -4,3 +4,5 @@ nameparser
 flask_migrate
 Werkzeug
 Flask-Cors
+tqdm
+pandas

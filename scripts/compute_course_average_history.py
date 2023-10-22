@@ -5,8 +5,10 @@ Dashboard data.
 
 from app import create_app
 from config import Config
-from app.models import PAIRReportsGrade as PRG, TableauDashboardGrade as TDG, TableauDashboardV2Grade as TDG2, Course, CourseAverageHistory, CampusEnum
-from multiprocessing import Pool
+from app.models import PAIRReportsGrade as PRG, TableauDashboardGrade as TDG, TableauDashboardV2Grade as TDG2, CourseV2, CourseAverageHistory, CampusEnum
+import multiprocessing
+import tqdm
+from functools import partial
 
 
 CAMPUSES = [CampusEnum.UBCV, CampusEnum.UBCO]
@@ -39,11 +41,13 @@ def compute_weighted_average(year_session_map, sections):
 
     for yearsession, section_list in sections_by_ys.items():
         # For each yearsession, compute the weighted average of the course average
-        if section_list and hasattr(section_list[0], 'enrolled'):
+        if hasattr(section_list[0], 'audit'):
             num_students = [section.enrolled - section.audit - section.other - section.withdrew for section in
                             section_list if section.average is not None]
-        else:
+        elif hasattr(section_list[0], 'reported'):
             num_students = [section.reported for section in section_list if section.average is not None]
+        elif hasattr(section_list[0], 'enrolled'):
+            num_students = [section.enrolled for section in section_list if section.average is not None]
         averages = [section.average for section in section_list if section.average is not None]
 
         if len(averages) == 1:
@@ -53,15 +57,47 @@ def compute_weighted_average(year_session_map, sections):
             year_session_map[yearsession] = weighted_average
 
 
+def init_worker():
+    global shared_app, shared_db
+    shared_app, shared_db = create_app(Config)
+
+
+def process_course(year_sessions, course):
+    with shared_app.app_context():
+        # Get all the sections
+        sections_TDG2, sections_TDG, sections_PRG = get_sections_separated(course)
+        # Dictionary that maps a yearsession to the average for that yearsession
+        year_session_map = {f'{ele.year}{ele.session.name}': '' for ele in year_sessions}
+
+        # TDG sections have OVERALL sections for each yearsession
+        for section in sections_TDG:
+            yearsession = f'{section.year}{section.session.name}'
+            year_session_map[yearsession] = section.average
+
+        # PRG and TDG2 sections do not have OVERALL sections. Manually compute for each yearsession
+        # Sort the sections into a map of yearsession -> year
+        compute_weighted_average(year_session_map, sections_PRG)
+        compute_weighted_average(year_session_map, sections_TDG)
+        compute_weighted_average(year_session_map, sections_TDG2)
+
+        # Build our db object to add
+        hist_entry = CourseAverageHistory(campus=course.campus, subject=course.subject, course=course.course,
+                                          detail=course.detail)
+
+        for ys, avg in year_session_map.items():
+            setattr(hist_entry, f'ys_{ys}', avg) if avg != '' else setattr(hist_entry, f'ys_{ys}', None)
+
+        return hist_entry
+
 def main():
-    app, db = create_app(Config)
-    with app.app_context():
-        db.create_all()
-        bulk_objects = []
+    global shared_app, shared_db
+    shared_app, shared_db = create_app(Config)
+    with shared_app.app_context():
+        shared_db.create_all()
         # In the database, we have a sections -> educators. We wish to create course -> educators, yearsessions they are active
         # Get all the courses
         courses = [row for row in
-                   Course.query.with_entities(Course.campus, Course.subject, Course.course, Course.detail).all()]
+                   CourseV2.query.with_entities(CourseV2.campus, CourseV2.subject, CourseV2.course, CourseV2.detail).all()]
 
         # Get all the yearsessions
         year_sessions = set([row for row in TDG.query.with_entities(TDG.year, TDG.session).distinct()])
@@ -70,35 +106,14 @@ def main():
         year_sessions = year_sessions.union(
             set([row for row in TDG2.query.with_entities(TDG2.year, TDG2.session).distinct()]))
 
-        N = len(courses)
-        for index, course in enumerate(courses):
-            if index % 100 == 0:
-                print(f'{index}/{N}')
-            # Get all the sections
-            sections_TDG2, sections_TDG, sections_PRG = get_sections_separated(course)
-            # Dictionary that maps a yearsession to the average for that yearsession
-            year_session_map = {f'{ele.year}{ele.session.name}': '' for ele in year_sessions}
+        num_processes = multiprocessing.cpu_count()
+        pool = multiprocessing.Pool(processes=num_processes, initializer=init_worker)
+        pool_results = list(tqdm.tqdm(pool.imap(partial(process_course, year_sessions), courses), total=len(courses)))
+        pool.close()
+        pool.join()
 
-            # TDG sections have OVERALL sections for each yearsession
-            for section in sections_TDG:
-                yearsession = f'{section.year}{section.session.name}'
-                year_session_map[yearsession] = section.average
-
-            # PRG and TDG2 sections do not have OVERALL sections. Manually compute for each yearsession
-            # Sort the sections into a map of yearsession -> year
-            compute_weighted_average(year_session_map, sections_PRG)
-            compute_weighted_average(year_session_map, sections_TDG2)
-
-            # Build our db object to add
-            hist_entry = CourseAverageHistory(campus=course.campus, subject=course.subject, course=course.course, detail=course.detail)
-
-            for ys, avg in year_session_map.items():
-                setattr(hist_entry, f'ys_{ys}', avg) if avg != '' else setattr(hist_entry, f'ys_{ys}', None)
-
-            bulk_objects.append(hist_entry)
-
-        db.session.bulk_save_objects(bulk_objects)
-        db.session.commit()
+        shared_db.session.bulk_save_objects(pool_results)
+        shared_db.session.commit()
 
 
 if __name__ == '__main__':
