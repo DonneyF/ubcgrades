@@ -18,7 +18,7 @@ def get_sections_combined(course):
     :return: A list of sqlalchemy.util._collections.result with sections under the course for that campus, ignoring OVERALL sections
     """
     sections = []
-    for row in TDG2.query.filter(TDG2.year >= '2022').filter_by(campus=course.campus, subject=course.subject, course=course.course, detail=course.detail):
+    for row in TDG2.query.filter(TDG2.year >= '2022').filter(TDG2.section != "OVERALL").filter_by(campus=course.campus, subject=course.subject, course=course.course, detail=course.detail):
         sections.append(row)
 
     for row in TDG.query.filter(TDG.section != "OVERALL").filter_by(campus=course.campus, subject=course.subject, course=course.course, detail=course.detail):

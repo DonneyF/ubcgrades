@@ -19,7 +19,7 @@ def get_sections_separated(course):
     :param course: Type: sqlalchemy.util._collections.result
     :return: A list of sqlalchemy.util._collections.result with sections under the course for that campus, ignoring OVERALL sections
     """
-    sections_TDG2 = [row for row in TDG2.query.filter_by(campus=course.campus, subject=course.subject,
+    sections_TDG2 = [row for row in TDG2.query.filter(TDG2.year >= '2022').filter(TDG2.section != "OVERALL").filter_by(campus=course.campus, subject=course.subject,
                                                        course=course.course, detail=course.detail).all()]
     sections_TDG = [row for row in TDG.query.filter_by(campus=course.campus, subject=course.subject,
                                                                     course=course.course, detail=course.detail, section='OVERALL').all()]

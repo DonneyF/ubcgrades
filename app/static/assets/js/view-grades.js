@@ -561,7 +561,10 @@ $(function () {
             let headmatter_entry = $(this);
             if (headmatter_entry != null) {
                 let number = data[HEADMATTER_V3_KEYS[index]];
-                if (number % 1 === 0) {
+                if (number == null) {
+                    headmatter_entry.text('-');
+                }
+                else if (number % 1 === 0) {
                     // number_string is a int
                     headmatter_entry.text(number);
                 } else {
@@ -576,7 +579,8 @@ $(function () {
         });
 
         // Update the teaching team
-        $("#teaching-team-v3").text(data['educators'].replace(/;/gi, ", "));
+        if (data['section'] != 'OVERALL')
+            $("#teaching-team-v3").text(data['educators'].replace(/;/gi, ", "));
 
         // Update the chart
         $('#chart-grades-toggles').show();

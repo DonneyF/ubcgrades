@@ -11,6 +11,7 @@ import pandas as pd
 import tqdm
 from pathlib import Path
 from tools import combine_educator
+import numpy as np
 
 
 def main():
@@ -60,6 +61,56 @@ def main():
                                           grade_80_84=row['80-84'], grade_85_89=row['85-89'],
                                           grade_90_100=row['90-100'])
             entries.append(entry)
+
+        # Generate OVERALL sections
+        overall = df[df['Year'] >= 2022]
+
+        def weighted_average(group):
+            return np.average(group['Avg'], weights=group['Reported'])
+
+        group = overall.groupby(['Campus', 'Year', 'Session', 'Subject', 'Course', 'Detail'])
+        A = group.agg({
+            'Reported': 'sum',
+            'Low': 'min',
+            'High': 'max',
+            '<50': 'sum',
+            '50-54': 'sum',
+            '55-59': 'sum',
+            '60-63': 'sum',
+            '64-67': 'sum',
+            '68-71': 'sum',
+            '72-75': 'sum',
+            '76-79': 'sum',
+            '80-84': 'sum',
+            '85-89': 'sum',
+            '90-100': 'sum',
+            'Title': 'last'
+        })
+        B = group.apply(weighted_average)
+        overall = pd.concat([A, B.rename('Avg')], axis=1)
+        overall = overall.reset_index()
+
+        for index, row in tqdm.tqdm(overall.iterrows(), total=overall.shape[0]):
+            subject_key = f'{row["Campus"]}-{row["Subject"]}'
+            course = str(row['Course']).zfill(3) if type(row['Course']) == int or row['Course'].isnumeric() else row['Course']
+            entry = TableauDashboardV2Grade(campus=row['Campus'], year=row['Year'], session=row['Session'],
+                                          faculty_title=subjects[subject_key]['faculty_school'],
+                                          subject=row['Subject'],
+                                          subject_title=subjects[subject_key]['title'],
+                                          course=course, detail=row['Detail'],
+                                          section='OVERALL',
+                                          course_title=row['Title'], educators=None,
+                                          reported=row['Reported'], average=row['Avg'],
+                                          percentile_25=None, percentile_75=None,
+                                          median=None, high=row['High'], low=row['Low'],
+                                          grade_lt50=row['<50'], grade_50_54=row['50-54'],
+                                          grade_55_59=row['55-59'], grade_60_63=row['60-63'],
+                                          grade_64_67=row['64-67'], grade_68_71=row['68-71'],
+                                          grade_72_75=row['72-75'], grade_76_79=row['76-79'],
+                                          grade_80_84=row['80-84'], grade_85_89=row['85-89'],
+                                          grade_90_100=row['90-100'])
+            entries.append(entry)
+
         db.session.bulk_save_objects(entries)
         db.session.commit()
 
