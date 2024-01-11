@@ -613,7 +613,7 @@ $(function () {
                     yAxes: [{
                         gridLines: {
                             lineWidth: 1,
-                            color: Charts.colors.gray[900],
+                            color: Charts.colors.gray[700],
                             zeroLineColor: Charts.colors.gray[900]
                         }
                     }]

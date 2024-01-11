@@ -776,8 +776,8 @@ var Charts = (function () {
         // yAxes
         Chart.scaleService.updateScaleDefaults('linear', {
             gridLines: {
-                borderDash: [2],
-                borderDashOffset: [2],
+                //borderDash: [1],
+                //borderDashOffset: [4],
                 color: (mode == 'dark') ? colors.gray[900] : colors.gray[300],
                 drawBorder: false,
                 drawTicks: false,
