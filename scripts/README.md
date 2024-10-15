@@ -10,8 +10,8 @@ First, populate the database with the data:
 - `fill_pair_reports_grades.py`
 
 Then run the computational scripts of the API:
-- `db_compute_course_stats.py`
-- `db_compute_course_v2_stats.py`
+- `compute_course_stats.py`
+- `compute_course_v2_stats.py`
 - `compute_course_educators.py`
-- `compute_course-distributions.py`
+- `compute_course_distributions.py`
 - `compute_course_average_history.py`

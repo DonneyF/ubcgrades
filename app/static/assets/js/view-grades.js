@@ -581,6 +581,8 @@ $(function () {
         // Update the teaching team
         if (data['section'] != 'OVERALL')
             $("#teaching-team-v3").text(data['educators'].replace(/;/gi, ", "));
+        else
+             $("#teaching-team-v3").text('');
 
         // Update the chart
         $('#chart-grades-toggles').show();

@@ -9,7 +9,7 @@ from app.models import PAIRReportsGrade as PRG, TableauDashboardGrade as TDG, Ta
 import multiprocessing
 import tqdm
 
-curr_year = 2023
+curr_year = 2024
 PAST_5_YEARS = set(str(i) for i in range(curr_year - 4, curr_year + 1))  # Update on each new Winter session release of grades
 
 def get_sections_combined(course):
