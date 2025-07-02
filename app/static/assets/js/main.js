@@ -6,7 +6,7 @@ let yearsession;
 let apiVersion;
 let campus = localStorage.getItem("campus");
 
-const YEARSESSIONS_UBCV = ['2023W', '2023S', '2022W', '2022S', '2021W', '2021S', '2020W', '2020S', '2019W', '2019S', '2018W', '2018S', '2017W', '2017S', '2016W', '2016S', '2015W', '2015S', '2014W', '2014S', '2013W', '2013S', '2012W', '2012S', '2011W', '2011S', '2010W', '2010S', '2009W', '2009S', '2008W', '2008S', '2007W', '2007S', '2006W', '2006S', '2005W', '2005S', '2004W', '2004S', '2003W', '2003S', '2002W', '2002S', '2001W', '2001S', '2000W', '2000S', '1999W', '1999S', '1998W', '1998S', '1997W', '1997S', '1996W', '1996S'];
+const YEARSESSIONS_UBCV = ['2024W', '2024S', '2023W', '2023S', '2022W', '2022S', '2021W', '2021S', '2020W', '2020S', '2019W', '2019S', '2018W', '2018S', '2017W', '2017S', '2016W', '2016S', '2015W', '2015S', '2014W', '2014S', '2013W', '2013S', '2012W', '2012S', '2011W', '2011S', '2010W', '2010S', '2009W', '2009S', '2008W', '2008S', '2007W', '2007S', '2006W', '2006S', '2005W', '2005S', '2004W', '2004S', '2003W', '2003S', '2002W', '2002S', '2001W', '2001S', '2000W', '2000S', '1999W', '1999S', '1998W', '1998S', '1997W', '1997S', '1996W', '1996S'];
 const YEARSESSIONS_UBCO = YEARSESSIONS_UBCV.slice(0, YEARSESSIONS_UBCV.indexOf('2014W') + 1);
 const YEARSESSIONS_RECENT = YEARSESSIONS_UBCV.slice(0, 11); // fixed
 const HEADMATTER_V1_KEYS = ["average", "stdev", "high", "low", "pass", "fail", "enrolled", "withdrew", "audit", "other"];
